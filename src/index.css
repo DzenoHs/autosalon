@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Smooth scrolling for anchor links */
+html { scroll-behavior: smooth; }
+
+/* Base font and background */
+body { @apply font-ui bg-white text-ink; }
+
+/* Small helpers */
+.container-max { max-width: 1120px; margin-left: auto; margin-right: auto; }
