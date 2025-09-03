@@ -10,3 +10,23 @@ body { @apply font-ui bg-white text-ink; }
 
 /* Small helpers */
 .container-max { max-width: 1120px; margin-left: auto; margin-right: auto; }
+
+/* Marquee Animation */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+}
+
+/* Pause animation on hover for better UX */
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Smooth transitions */
+* {
+  transition: all 0.3s ease;
+}

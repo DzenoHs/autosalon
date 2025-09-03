@@ -4,9 +4,10 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Hero from './components/sections/Hero';
-import About from './components/sections/About';
+import Brands from './components/sections/Brands';
 import Cars from './components/sections/Cars';
-import Services from './components/sections/Services';
+import WhyChooseUs from './components/sections/WhyChooseUs';
+import About from './components/sections/About';
 import Contact from './components/sections/Contact';
 import Footer from './components/Footer';
 import CarDetails from './pages/CarDetails';
@@ -20,9 +21,10 @@ function App() {
           <div className="min-h-screen bg-neutral-900 text-white">
             <Header />
             <Hero />
-            <About />
             <Cars />
-            <Services />
+            <Brands />
+            <WhyChooseUs />
+            <About />
             <Contact />
             <Footer />
           </div>
