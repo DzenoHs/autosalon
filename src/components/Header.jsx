@@ -59,16 +59,9 @@ export default function Header() {
               Über uns
             </button>
           </li>
-          <li>
-            <button
-              onClick={() => scrollToSection("contact")}
-              className="hover:text-red-500 transition duration-300"
-            >
-              Kontakt
-            </button>
-          </li>
         </ul>
 
+        {/* CTA Button - OSTAJE */}
         <button 
           onClick={() => scrollToSection("contact")}
           className="hidden md:block bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-2 rounded-full font-bold shadow-lg hover:scale-105 transition"
@@ -111,14 +104,6 @@ export default function Header() {
                 className="hover:text-red-500 transition"
               >
                 Über uns
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => scrollToSection("contact")}
-                className="hover:text-red-500 transition"
-              >
-                Kontakt
               </button>
             </li>
             <li>

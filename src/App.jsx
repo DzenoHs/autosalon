@@ -6,11 +6,11 @@ import Header from './components/Header';
 import Hero from './components/sections/Hero';
 import Brands from './components/sections/Brands';
 import Cars from './components/sections/Cars';
-import About from './components/sections/About';
 import Contact from './components/sections/Contact';
 import Footer from './components/Footer';
 import CarDetails from './pages/CarDetails';
 import CarsPage from './pages/CarsPage';
+import WhyChooseUs from './components/sections/WhyChooseUs';
 
 function App() {
   return (
@@ -22,7 +22,8 @@ function App() {
             <Hero />
             <Cars />
             <Brands />
-            <About />
+            <WhyChooseUs />
+        
             <Contact />
             <Footer />
           </div>
