@@ -5,23 +5,23 @@ import { ShieldCheck, Users, Award, Star } from 'lucide-react';
 const features = [
   { 
     icon: <ShieldCheck size={32} />, 
-    title: "Garancija", 
-    desc: "Sva vozila sa garancijom i provjerenom istorijom." 
+    title: "Garantie", 
+    desc: "Alle Fahrzeuge mit Garantie und geprüfter Historie." 
   },
   { 
     icon: <Users size={32} />, 
-    title: "Profesionalizam", 
-    desc: "Stručan tim sa dugogodišnjim iskustvom." 
+    title: "Professionalität", 
+    desc: "Fachkundiges Team mit langjähriger Erfahrung." 
   },
   { 
     icon: <Award size={32} />, 
-    title: "Pouzdanost", 
-    desc: "Više od 1000 zadovoljnih kupaca." 
+    title: "Zuverlässigkeit", 
+    desc: "Über 1000 zufriedene Kunden." 
   },
   { 
     icon: <Star size={32} />, 
-    title: "Povjerenje", 
-    desc: "Transparentnost i sigurnost u svakoj kupovini." 
+    title: "Vertrauen", 
+    desc: "Transparenz und Sicherheit bei jedem Kauf." 
   },
 ];
 
@@ -32,35 +32,35 @@ export default function About() {
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left - Image */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
+            initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.6 }}
           >
             <img 
               src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=800&h=600&fit=crop&crop=center"
-              alt="Auto showroom"
+              alt="Auto Ausstellungsraum"
               className="w-full h-96 object-cover rounded-xl shadow-2xl"
             />
           </motion.div>
 
           {/* Right - Content */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
+            initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.6 }}
           >
-            <h2 className="text-5xl font-bold mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
               <span className="bg-gradient-to-r from-red-500 to-yellow-500 bg-clip-text text-transparent">
-                ZAŠTO BAŠE MI?
+                WARUM WIR?
               </span>
             </h2>
-            <p className="text-gray-300 text-lg mb-8 leading-relaxed">
-              Mi smo tim sa dugogodišnjim iskustvom u prodaji premium vozila. 
-              Naša misija je pružiti najbolju uslugu i povjerenje kupaca kroz 
-              transparentnost, profesionalizam i kvalitet.
+            <p className="text-gray-300 text-base sm:text-lg mb-8 leading-relaxed px-4">
+              Wir sind ein Team mit langjähriger Erfahrung im Verkauf von Premium-Fahrzeugen. 
+              Unsere Mission ist es, den besten Service und das Vertrauen der Kunden durch 
+              Transparenz, Professionalität und Qualität zu bieten.
             </p>
 
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               {features.map((feature, index) => (
                 <motion.div
                   key={index}

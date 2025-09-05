@@ -9,7 +9,7 @@ const allCars = [
     name: 'Audi RS7',
     brand: 'Audi',
     model: 'RS7',
-    type: 'Limuzina',
+    type: 'Limousine',
     price: 95000,
     priceDisplay: '€95,000',
     year: 2023,
@@ -19,7 +19,7 @@ const allCars = [
     transmission: 'Automatik',
     power: 600,
     powerDisplay: '600 PS',
-    condition: 'Polovan',
+    condition: 'Gebraucht',
     warranty: true,
     img: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&h=600&fit=crop&crop=center'
   },
@@ -38,7 +38,7 @@ const allCars = [
     transmission: 'Automatik',
     power: 510,
     powerDisplay: '510 PS',
-    condition: 'Polovan',
+    condition: 'Gebraucht',
     warranty: true,
     img: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?w=800&h=600&fit=crop&crop=center'
   },
@@ -53,11 +53,11 @@ const allCars = [
     year: 2021,
     km: 35000,
     kmDisplay: '35,000 km',
-    fuel: 'Dizel',
+    fuel: 'Diesel',
     transmission: 'Automatik',
     power: 330,
     powerDisplay: '330 PS',
-    condition: 'Polovan',
+    condition: 'Gebraucht',
     warranty: true,
     img: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&h=600&fit=crop&crop=center'
   },
@@ -66,7 +66,7 @@ const allCars = [
     name: 'Porsche Panamera',
     brand: 'Porsche',
     model: 'Panamera',
-    type: 'Limuzina',
+    type: 'Limousine',
     price: 110000,
     priceDisplay: '€110,000',
     year: 2022,
@@ -76,7 +76,7 @@ const allCars = [
     transmission: 'Automatik',
     power: 630,
     powerDisplay: '630 PS',
-    condition: 'Polovan',
+    condition: 'Gebraucht',
     warranty: true,
     img: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=800&h=600&fit=crop&crop=center'
   },
@@ -91,11 +91,11 @@ const allCars = [
     year: 2020,
     km: 42000,
     kmDisplay: '42,000 km',
-    fuel: 'Dizel',
+    fuel: 'Diesel',
     transmission: 'Automatik',
     power: 286,
     powerDisplay: '286 PS',
-    condition: 'Polovan',
+    condition: 'Gebraucht',
     warranty: false,
     img: 'https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?w=800&h=600&fit=crop&crop=center'
   },
@@ -110,11 +110,11 @@ const allCars = [
     year: 2021,
     km: 28000,
     kmDisplay: '28,000 km',
-    fuel: 'Dizel',
+    fuel: 'Diesel',
     transmission: 'Manuelni',
     power: 190,
     powerDisplay: '190 PS',
-    condition: 'Polovan',
+    condition: 'Gebraucht',
     warranty: true,
     img: 'https://images.unsplash.com/photo-1461632830798-3adb3034e4c8?w=800&h=600&fit=crop&crop=center'
   },
@@ -123,7 +123,7 @@ const allCars = [
     name: 'Tesla Model S',
     brand: 'Tesla',
     model: 'Model S',
-    type: 'Limuzina',
+    type: 'Limousine',
     price: 89000,
     priceDisplay: '€89,000',
     year: 2023,
@@ -133,7 +133,7 @@ const allCars = [
     transmission: 'Automatik',
     power: 670,
     powerDisplay: '670 PS',
-    condition: 'Novi',
+    condition: 'Neu',
     warranty: true,
     img: 'https://images.unsplash.com/photo-1536700503339-1e4b06520771?w=800&h=600&fit=crop&crop=center'
   },
@@ -152,7 +152,7 @@ const allCars = [
     transmission: 'Automatik',
     power: 670,
     powerDisplay: '670 PS',
-    condition: 'Polovan',
+    condition: 'Gebraucht',
     warranty: true,
     img: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=800&h=600&fit=crop&crop=center'
   },
@@ -171,7 +171,7 @@ const allCars = [
     transmission: 'Automatik',
     power: 380,
     powerDisplay: '380 PS',
-    condition: 'Novi',
+    condition: 'Neu',
     warranty: true,
     img: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&h=600&fit=crop&crop=center'
   },
@@ -190,7 +190,7 @@ const allCars = [
     transmission: 'Automatik',
     power: 635,
     powerDisplay: '635 PS',
-    condition: 'Novi',
+    condition: 'Neu',
     warranty: true,
     img: 'https://images.unsplash.com/photo-1615832936161-93a3fd0b2c89?w=800&h=600&fit=crop&crop=center'
   },
@@ -209,7 +209,7 @@ const allCars = [
     transmission: 'Automatik',
     power: 610,
     powerDisplay: '610 PS',
-    condition: 'Polovan',
+    condition: 'Gebraucht',
     warranty: true,
     img: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop&crop=center'
   },
@@ -228,7 +228,7 @@ const allCars = [
     transmission: 'Automatik',
     power: 720,
     powerDisplay: '720 PS',
-    condition: 'Novi',
+    condition: 'Neu',
     warranty: true,
     img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop&crop=center'
   }
@@ -390,17 +390,17 @@ export default function CarsPage() {
               className="flex items-center gap-3 text-white hover:text-red-500 transition-colors group"
             >
               <ArrowLeft size={24} className="group-hover:-translate-x-1 transition-transform" />
-              <span className="text-lg font-semibold">Nazad na početnu</span>
+              <span className="text-lg font-semibold">Zurück</span>
             </motion.button>
             
             <h1 className="text-2xl md:text-3xl font-bold">
               <span className="bg-gradient-to-r from-red-500 to-yellow-500 bg-clip-text text-transparent">
-                Sva vozila
+                Alle Fahrzeuge
               </span>
             </h1>
             
             <div className="text-white/60">
-              {filteredCars.length} od {allCars.length}
+              {filteredCars.length} von {allCars.length}
             </div>
           </div>
         </div>
@@ -436,7 +436,7 @@ export default function CarsPage() {
                   onChange={(e) => handleFilterChange('brand', e.target.value)}
                   className="bg-neutral-900 text-white px-4 py-3 rounded-xl border border-neutral-700 focus:border-red-500 focus:outline-none transition-all min-w-[120px]"
                 >
-                  <option value="">Sve marke</option>
+                  <option value="">Alle Marken</option>
                   {brands.map(brand => (
                     <option key={brand} value={brand}>{brand}</option>
                   ))}
@@ -447,7 +447,7 @@ export default function CarsPage() {
                   onChange={(e) => handleFilterChange('type', e.target.value)}
                   className="bg-neutral-900 text-white px-4 py-3 rounded-xl border border-neutral-700 focus:border-red-500 focus:outline-none transition-all min-w-[120px]"
                 >
-                  <option value="">Sve tipove</option>
+                  <option value="">Alle Typen</option>
                   {types.map(type => (
                     <option key={type} value={type}>{type}</option>
                   ))}
@@ -489,7 +489,7 @@ export default function CarsPage() {
             {/* Results Counter and Clear */}
             <div className="flex justify-between items-center mt-4 pt-4 border-t border-neutral-700">
               <div className="text-white/80">
-                Pronađeno <span className="font-bold text-red-500">{filteredCars.length}</span> od {allCars.length} vozila
+                Pronađeno <span className="font-bold text-red-500">{filteredCars.length}</span> von {allCars.length} Fahrzeuge
               </div>
               
               {activeFiltersCount > 0 && (
@@ -529,7 +529,7 @@ export default function CarsPage() {
                         onChange={(e) => handleFilterChange('condition', e.target.value)}
                         className="w-full bg-neutral-900 text-white px-3 py-2 rounded-lg border border-neutral-700 focus:border-red-500 focus:outline-none transition-all"
                       >
-                        <option value="">Sva stanja</option>
+                        <option value="">Alle Zust�nde</option>
                         {conditions.map(condition => (
                           <option key={condition} value={condition}>{condition}</option>
                         ))}
@@ -679,7 +679,7 @@ export default function CarsPage() {
                 className="text-center py-20"
               >
                 <div className="text-6xl mb-4">🚗</div>
-                <h3 className="text-2xl font-bold text-white mb-4">Nema rezultata</h3>
+                <h3 className="text-2xl font-bold text-white mb-4">Keine Ergebnisse</h3>
                 <p className="text-gray-400 mb-8">Pokušajte promijeniti filtere pretragu</p>
                 <motion.button
                   onClick={clearAllFilters}
@@ -732,9 +732,9 @@ export default function CarsPage() {
                         </motion.div>
 
                         {/* Condition badge */}
-                        {car.condition === 'Novi' && (
+                        {car.condition === 'Neu' && (
                           <div className="absolute top-4 left-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-2 py-1 rounded-full font-bold text-xs">
-                            NOVI
+                            Neu
                           </div>
                         )}
 
@@ -788,7 +788,7 @@ export default function CarsPage() {
                           className="mt-auto pt-4 border-t border-gray-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         >
                           <div className="bg-gradient-to-r from-red-500 to-red-600 text-white text-center py-2 rounded-lg font-semibold hover:from-red-600 hover:to-red-700 transition-all">
-                            Pogledaj detalje →
+                            Details ansehen →
                           </div>
                         </motion.div>
                       </div>

@@ -18,10 +18,10 @@ export default function Contact() {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!form.name.trim()) newErrors.name = "Name is required";
-    if (!form.email.trim()) newErrors.email = "Email is required";
-    if (!form.email.includes("@")) newErrors.email = "Valid email is required";
-    if (!form.message.trim()) newErrors.message = "Message is required";
+    if (!form.name.trim()) newErrors.name = "Name ist erforderlich";
+    if (!form.email.trim()) newErrors.email = "E-Mail ist erforderlich";
+    if (!form.email.includes("@")) newErrors.email = "Gültige E-Mail ist erforderlich";
+    if (!form.message.trim()) newErrors.message = "Nachricht ist erforderlich";
     return newErrors;
   };
 
@@ -32,7 +32,7 @@ export default function Contact() {
       setErrors(newErrors);
       return;
     }
-    alert("Message sent successfully!");
+    alert("Nachricht erfolgreich gesendet!");
     setForm({ name: "", email: "", message: "" });
   };
 
@@ -40,13 +40,13 @@ export default function Contact() {
     <section id="contact" className="bg-neutral-900 py-20 px-4">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-12">
         <div className="flex-1">
-          <h2 className="text-4xl font-bold text-white mb-6">Contact Our Dealership</h2>
+          <h2 className="text-4xl font-bold text-white mb-6">Kontaktieren Sie unser Autohaus</h2>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <input
                 type="text"
                 name="name"
-                placeholder="Your Name"
+                placeholder="Ihr Name"
                 value={form.name}
                 onChange={handleChange}
                 className={`w-full p-4 rounded-lg bg-neutral-800 text-white border ${
@@ -59,7 +59,7 @@ export default function Contact() {
               <input
                 type="email"
                 name="email"
-                placeholder="Your Email"
+                placeholder="Ihre E-Mail"
                 value={form.email}
                 onChange={handleChange}
                 className={`w-full p-4 rounded-lg bg-neutral-800 text-white border ${
@@ -71,7 +71,7 @@ export default function Contact() {
             <div>
               <textarea
                 name="message"
-                placeholder="Your Message"
+                placeholder="Ihre Nachricht"
                 value={form.message}
                 onChange={handleChange}
                 rows={4}
@@ -85,7 +85,7 @@ export default function Contact() {
               type="submit"
               className="bg-gradient-to-r from-red-500 to-red-600 text-white px-8 py-4 rounded-lg font-bold text-lg shadow-lg hover:scale-105 transition"
             >
-              Send Message
+              Nachricht senden
             </button>
           </form>
           
@@ -96,11 +96,11 @@ export default function Contact() {
             </div>
             <div className="flex items-center gap-3">
               <span className="text-red-500">✉️</span>
-              <span>info@autolux.com</span>
+              <span>info@autohausmiftari.com</span>
             </div>
             <div className="flex items-center gap-3">
               <span className="text-red-500">📍</span>
-              <span>Sarajevo, Bosnia and Herzegovina</span>
+              <span>Sarajevo, Bosnien und Herzegowina</span>
             </div>
           </div>
         </div>

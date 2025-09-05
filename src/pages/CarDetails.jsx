@@ -33,7 +33,7 @@ const carsData = {
     price: '€70,000',
     year: '2021',
     km: '35,000 km',
-    fuel: 'Dizel',
+    fuel: 'Diesel',
     transmission: 'Automatik',
     power: '3.0L R6 – 330 PS',
     img: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&h=800&fit=crop&crop=center',
@@ -57,7 +57,7 @@ const carsData = {
     price: '€38,000',
     year: '2020',
     km: '42,000 km',
-    fuel: 'Dizel',
+    fuel: 'Diesel',
     transmission: 'Automatik',
     power: '3.0L V6 – 286 PS',
     img: 'https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?w=1200&h=800&fit=crop&crop=center',
@@ -69,7 +69,7 @@ const carsData = {
     price: '€33,000',
     year: '2021',
     km: '28,000 km',
-    fuel: 'Dizel',
+    fuel: 'Diesel',
     transmission: 'Manuelni',
     power: '2.0L R4 – 190 PS',
     img: 'https://images.unsplash.com/photo-1461632830798-3adb3034e4c8?w=1200&h=800&fit=crop&crop=center',
@@ -252,7 +252,7 @@ export default function CarDetails() {
                 className="flex-1 bg-gradient-to-r from-red-600 to-yellow-500 px-8 py-4 rounded-full font-bold text-lg hover:shadow-lg transition-all shadow-red-500/25 flex items-center justify-center gap-3"
               >
                 <Phone size={20} />
-                Kontaktiraj nas
+                Kontaktieren Sie uns
               </motion.button>
               <motion.button 
                 whileHover={{ scale: 1.05 }}

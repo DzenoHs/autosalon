@@ -6,7 +6,6 @@ import Header from './components/Header';
 import Hero from './components/sections/Hero';
 import Brands from './components/sections/Brands';
 import Cars from './components/sections/Cars';
-import WhyChooseUs from './components/sections/WhyChooseUs';
 import About from './components/sections/About';
 import Contact from './components/sections/Contact';
 import Footer from './components/Footer';
@@ -23,7 +22,6 @@ function App() {
             <Hero />
             <Cars />
             <Brands />
-            <WhyChooseUs />
             <About />
             <Contact />
             <Footer />

@@ -2,23 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Smooth scrolling for anchor links */
-html { scroll-behavior: smooth; }
+/* Enhanced smooth scrolling */
+html { 
+  scroll-behavior: smooth; 
+  font-size: clamp(14px, 2.5vw, 18px);
+}
 
-/* Base font and background */
-body { @apply font-ui bg-white text-ink; }
+/* Responsive base font and background */
+body { 
+  @apply font-ui bg-neutral-900 text-white;
+  line-height: 1.6;
+}
 
-/* Small helpers */
-.container-max { max-width: 1120px; margin-left: auto; margin-right: auto; }
+/* Fluid container */
+.container-max { 
+  max-width: min(1200px, 95vw); 
+  margin-left: auto; 
+  margin-right: auto; 
+  padding-left: clamp(1rem, 5vw, 2rem);
+  padding-right: clamp(1rem, 5vw, 2rem);
+}
 
-/* Marquee Animation */
+/* Optimized Marquee Animation */
 @keyframes marquee {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-50%); }
 }
 
 .animate-marquee {
-  animation: marquee 25s linear infinite;
+  animation: marquee 30s linear infinite;
+  will-change: transform;
 }
 
 /* Pause animation on hover for better UX */
@@ -26,7 +39,26 @@ body { @apply font-ui bg-white text-ink; }
   animation-play-state: paused;
 }
 
-/* Smooth transitions */
+/* Enhanced smooth transitions */
 * {
-  transition: all 0.3s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Performance optimizations */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Responsive text utilities */
+@layer utilities {
+  .text-responsive {
+    font-size: clamp(1rem, 4vw, 1.5rem);
+  }
+  
+  .heading-responsive {
+    font-size: clamp(2rem, 8vw, 4rem);
+    line-height: 1.1;
+  }
 }

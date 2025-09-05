@@ -30,7 +30,7 @@ export default function Header() {
     >
       <nav className="max-w-7xl mx-auto flex items-center justify-between px-4 py-4">
         <div className="flex items-center">
-          <h1 className="text-2xl font-bold text-white">AUTO LUX</h1>
+          <h1 className="text-2xl font-bold text-white">Autohausmiftari</h1>
         </div>
 
         {/* Desktop Menu */}
@@ -40,7 +40,7 @@ export default function Header() {
               onClick={() => scrollToSection("hero")}
               className="hover:text-red-500 transition duration-300"
             >
-              Home
+              Startseite
             </button>
           </li>
           <li>
@@ -48,7 +48,7 @@ export default function Header() {
               onClick={() => scrollToSection("cars")}
               className="hover:text-red-500 transition duration-300"
             >
-              Cars
+              Fahrzeuge
             </button>
           </li>
           <li>
@@ -56,7 +56,7 @@ export default function Header() {
               onClick={() => scrollToSection("about")}
               className="hover:text-red-500 transition duration-300"
             >
-              About
+              Über uns
             </button>
           </li>
           <li>
@@ -64,13 +64,16 @@ export default function Header() {
               onClick={() => scrollToSection("contact")}
               className="hover:text-red-500 transition duration-300"
             >
-              Contact
+              Kontakt
             </button>
           </li>
         </ul>
 
-        <button className="hidden md:block bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-2 rounded-full font-bold shadow-lg hover:scale-105 transition">
-          Book Test Drive
+        <button 
+          onClick={() => scrollToSection("contact")}
+          className="hidden md:block bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-2 rounded-full font-bold shadow-lg hover:scale-105 transition"
+        >
+          Kontakt
         </button>
 
         {/* Mobile Menu Button */}
@@ -91,7 +94,7 @@ export default function Header() {
                 onClick={() => scrollToSection("hero")}
                 className="hover:text-red-500 transition"
               >
-                Home
+                Startseite
               </button>
             </li>
             <li>
@@ -99,7 +102,7 @@ export default function Header() {
                 onClick={() => scrollToSection("cars")}
                 className="hover:text-red-500 transition"
               >
-                Cars
+                Fahrzeuge
               </button>
             </li>
             <li>
@@ -107,7 +110,7 @@ export default function Header() {
                 onClick={() => scrollToSection("about")}
                 className="hover:text-red-500 transition"
               >
-                About
+                Über uns
               </button>
             </li>
             <li>
@@ -115,12 +118,15 @@ export default function Header() {
                 onClick={() => scrollToSection("contact")}
                 className="hover:text-red-500 transition"
               >
-                Contact
+                Kontakt
               </button>
             </li>
             <li>
-              <button className="bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-2 rounded-full font-bold mt-4">
-                Book Test Drive
+              <button 
+                onClick={() => scrollToSection("contact")}
+                className="bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-2 rounded-full font-bold mt-4"
+              >
+                Kontakt
               </button>
             </li>
           </ul>

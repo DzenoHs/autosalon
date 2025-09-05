@@ -8,7 +8,7 @@ export default function Hero() {
       <div className="absolute inset-0">
         <img 
           src="https://images.unsplash.com/photo-1542282088-fe8426682b8f?w=1920&h=1080&fit=crop&crop=center" 
-          alt="Luxury car background" 
+          alt="Luxusauto Hintergrund" 
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/60"></div>
@@ -21,13 +21,13 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.5 }}
         >
-          <h1 className="text-6xl md:text-8xl font-bold mb-6">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-6 leading-tight">
             <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-              FIND YOUR
+              FINDEN SIE IHR
             </span>
             <br />
             <span className="bg-gradient-to-r from-red-500 to-yellow-500 bg-clip-text text-transparent">
-              DREAM CAR
+              TRAUMAUTO
             </span>
           </h1>
         </motion.div>
@@ -36,28 +36,28 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 1 }}
-          className="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto"
+          className="text-lg sm:text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed px-4"
         >
-          Premium vozila za one koji zaslužuju najbolje
+          Premium-Fahrzeuge für diejenigen, die das Beste verdienen
         </motion.p>
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 1.5 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center"
+          className="flex flex-col sm:flex-row gap-4 justify-center px-4"
         >
           <button 
             onClick={() => document.getElementById('cars')?.scrollIntoView({ behavior: 'smooth' })}
-            className="bg-gradient-to-r from-red-600 to-yellow-500 px-8 py-4 rounded-full font-bold text-lg hover:scale-105 transition-transform shadow-xl"
+            className="bg-gradient-to-r from-red-600 to-yellow-500 px-6 sm:px-8 py-3 sm:py-4 rounded-full font-bold text-base sm:text-lg hover:scale-105 transition-transform shadow-xl w-full sm:w-auto"
           >
-            Pogledaj Aute
+            Fahrzeuge ansehen
           </button>
           <button 
             onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-            className="border-2 border-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-black transition-all"
+            className="border-2 border-white px-6 sm:px-8 py-3 sm:py-4 rounded-full font-bold text-base sm:text-lg hover:bg-white hover:text-black transition-all w-full sm:w-auto"
           >
-            Kontaktiraj Nas
+            Kontaktieren Sie uns
           </button>
         </motion.div>
       </div>
