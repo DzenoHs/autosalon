@@ -37,7 +37,11 @@ export default function WhyChooseUs() {
   const [hoveredStat, setHoveredStat] = useState(null);
 
   return (
-    <section className="relative py-24 bg-gradient-to-b from-black via-neutral-900 to-black overflow-hidden">
+      <section
+      id="about"
+      className="relative py-32 bg-gradient-to-b from-black via-neutral-900 to-black overflow-hidden"
+      style={{ overflowX: "hidden" }}
+    >
       {/* Background particles - optimizovano */}
       <div className="absolute inset-0">
         <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-pulse opacity-60"></div>

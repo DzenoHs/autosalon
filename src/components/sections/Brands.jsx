@@ -1,216 +1,162 @@
-import React, { useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import React from 'react';
 
 const brands = [
-  { 
-    name: 'BMW', 
+  {
+    name: 'BMW',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg',
     gradient: 'from-blue-500 to-cyan-600'
   },
-  { 
-    name: 'Mercedes-Benz', 
+  {
+    name: 'Mercedes-Benz',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Logo.svg',
     gradient: 'from-gray-400 to-gray-600'
   },
-  { 
-    name: 'Audi', 
+  {
+    name: 'Audi',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/9/92/Audi-Logo_2016.svg',
     gradient: 'from-red-500 to-pink-600'
   },
-  { 
-    name: 'Porsche', 
+  {
+    name: 'Porsche',
     logo: 'https://cdn.worldvectorlogo.com/logos/porsche.svg',
     gradient: 'from-yellow-500 to-orange-600'
   },
-  { 
-    name: 'Volkswagen', 
+  {
+    name: 'Volkswagen',
     logo: 'https://cdn.worldvectorlogo.com/logos/volkswagen-vw.svg',
     gradient: 'from-blue-600 to-indigo-700'
   },
-  { 
-    name: 'Ford', 
+  {
+    name: 'Ford',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/3/3e/Ford_logo_flat.svg',
     gradient: 'from-blue-700 to-blue-900'
   },
-  { 
-    name: 'Tesla', 
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/b/bb/Tesla_T_symbol.svg',
+  {
+    name: 'Toyota',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/f/f7/Toyota_Logo.svg',
     gradient: 'from-red-600 to-red-800'
   },
-  { 
-    name: 'Range Rover', 
-    logo: 'https://cdn.worldvectorlogo.com/logos/land-rover-2.svg',
-    gradient: 'from-green-600 to-emerald-800'
+  {
+    name: 'Honda',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/7/76/Honda_logo.svg',
+    gradient: 'from-gray-700 to-black'
   },
+  {
+    name: 'Hyundai',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/e/ee/Hyundai_Motor_Company_logo.svg',
+    gradient: 'from-blue-400 to-blue-700'
+  },
+  {
+    name: 'Nissan',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Nissan-logo.svg',
+    gradient: 'from-gray-600 to-gray-800'
+  },
+  {
+    name: 'Opel',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/8/8b/Opel-logo-2017.svg',
+    gradient: 'from-yellow-400 to-yellow-700'
+  },
+  {
+    name: 'Škoda',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/7/75/Skoda_logo_III.svg',
+    gradient: 'from-green-500 to-green-700'
+  },
+  {
+    name: 'SEAT',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/c/c8/SEAT_logo.svg',
+    gradient: 'from-red-500 to-red-700'
+  },
+  {
+    name: 'Peugeot',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/0/0c/Peugeot_logo_%282021%29.svg',
+    gradient: 'from-blue-500 to-blue-700'
+  },
+  {
+    name: 'Citroën',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/4/4e/Citroen_logo.svg',
+    gradient: 'from-red-400 to-red-600'
+  },
+  {
+    name: 'Renault',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/8/84/Renault_logo.svg',
+    gradient: 'from-yellow-500 to-yellow-700'
+  }
 ];
 
 export default function Brands() {
-  const scrollRef = useRef(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
-
-  const handleMouseDown = (e) => {
-    setIsDragging(true);
-    setStartX(e.pageX - scrollRef.current.offsetLeft);
-    setScrollLeft(scrollRef.current.scrollLeft);
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isDragging) return;
-    e.preventDefault();
-    const x = e.pageX - scrollRef.current.offsetLeft;
-    const walk = (x - startX) * 2;
-    scrollRef.current.scrollLeft = scrollLeft - walk;
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  const handleTouchStart = (e) => {
-    setIsDragging(true);
-    setStartX(e.touches[0].pageX - scrollRef.current.offsetLeft);
-    setScrollLeft(scrollRef.current.scrollLeft);
-  };
-
-  const handleTouchMove = (e) => {
-    if (!isDragging) return;
-    const x = e.touches[0].pageX - scrollRef.current.offsetLeft;
-    const walk = (x - startX) * 2;
-    scrollRef.current.scrollLeft = scrollLeft - walk;
-  };
-
-  const handleTouchEnd = () => {
-    setIsDragging(false);
-  };
+  // Dupliramo marke za infinity scroll
+  const duplicatedBrands = [...brands, ...brands];
 
   return (
-    <section className="relative py-24 bg-gradient-to-b from-black via-neutral-900 to-black overflow-hidden">
-      {/* Background effects */}
-      <div className="absolute inset-0">
-        <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-pulse opacity-40"></div>
-        <div className="absolute top-40 right-20 w-1.5 h-1.5 bg-yellow-500 rounded-full animate-ping opacity-30"></div>
-        <div className="absolute bottom-32 left-1/4 w-2 h-2 bg-blue-500 rounded-full animate-pulse opacity-35"></div>
-      </div>
-      
-      <div className="container mx-auto px-4 relative z-10 mb-16">
-        {/* Title section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center"
-        >
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 tracking-tight">
-            <span className="bg-gradient-to-r from-red-500 via-yellow-500 to-red-600 bg-clip-text text-transparent">
-              UNSERE MARKEN
-            </span>
-          </h2>
-          
-          <motion.div
-            initial={{ width: 0 }}
-            whileInView={{ width: "12rem" }}
-            transition={{ duration: 1, delay: 0.3 }}
-            className="h-1 bg-gradient-to-r from-red-500 via-yellow-500 to-red-500 mx-auto mb-6 rounded-full"
-          ></motion.div>
-          
-          <p className="text-gray-300 text-lg md:text-xl max-w-3xl mx-auto">
-            Premium Automobilmarken für anspruchsvolle Kunden
-          </p>
-        </motion.div>
+    <div className="bg-black py-16 md:py-24 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-12">
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          Premium Auto Marke
+        </h2>
+        <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+          Nudimo najkvalitetnije automobile vodećih svjetskih proizvođača
+        </p>
       </div>
 
-      {/* INFINITE CAROUSEL - BEZ MARGINA KOMPLETNO */}
-      <div className="relative w-full overflow-hidden bg-gradient-to-r from-neutral-900/80 via-black/60 to-neutral-900/80 backdrop-blur-xl border-y border-red-500/20">
-        <div 
-          ref={scrollRef}
-          className="flex animate-infinite-scroll gap-8 md:gap-12 py-12 md:py-16 cursor-grab active:cursor-grabbing"
-          style={{ 
-            animationPlayState: isDragging ? 'paused' : 'running'
-          }}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-        >
-          {/* Prvo duplirani set */}
-          {brands.map((brand, index) => (
-            <motion.div
-              key={`first-${index}`}
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              whileHover={{ scale: 1.05, y: -5 }}
-              className="group relative flex-shrink-0 w-36 h-28 md:w-48 md:h-32"
-            >
-              <div className={`absolute -inset-2 bg-gradient-to-r ${brand.gradient} rounded-2xl blur-lg opacity-0 group-hover:opacity-25 transition-all duration-500`}></div>
-              
-              <div className="relative w-full h-full flex items-center justify-center bg-gradient-to-br from-white via-gray-50 to-white rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300 border border-gray-200 group-hover:border-gray-300 select-none">
-                <img
-                  src={brand.logo}
-                  alt={`${brand.name} Logo`}
-                  className="max-w-28 max-h-20 md:max-w-36 md:max-h-24 object-contain filter drop-shadow-lg group-hover:drop-shadow-xl transition-all duration-300 pointer-events-none"
-                  loading="lazy"
-                  draggable="false"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                    e.currentTarget.nextElementSibling.style.display = 'flex';
-                  }}
-                />
-                <div className="hidden items-center justify-center text-gray-700 font-bold text-base md:text-lg select-none">
-                  {brand.name}
-                </div>
-              </div>
-            </motion.div>
-          ))}
-          
-          {/* Drugi duplirani set za seamless loop */}
-          {brands.map((brand, index) => (
+      <div className="relative">
+        {/* Prvi red - kreće se lijevo */}
+        <div className="flex animate-infinite-scroll-left gap-6 md:gap-8 mb-8">
+          {duplicatedBrands.map((brand, index) => (
             <div
-              key={`second-${index}`}
-              className="group relative flex-shrink-0 w-36 h-28 md:w-48 md:h-32"
+              key={`row1-${index}`}
+              className={`bg-gradient-to-br ${brand.gradient} p-6 md:p-8 rounded-2xl shadow-2xl transform hover:scale-105 transition-all duration-300 min-w-[200px] md:min-w-[250px] group`}
             >
-              <div className={`absolute -inset-2 bg-gradient-to-r ${brand.gradient} rounded-2xl blur-lg opacity-0 group-hover:opacity-25 transition-all duration-500`}></div>
-              
-              <div className="relative w-full h-full flex items-center justify-center bg-gradient-to-br from-white via-gray-50 to-white rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300 border border-gray-200 group-hover:border-gray-300 hover:scale-105 hover:-translate-y-1 select-none">
-                <img
-                  src={brand.logo}
-                  alt={`${brand.name} Logo`}
-                  className="max-w-28 max-h-20 md:max-w-36 md:max-h-24 object-contain filter drop-shadow-lg group-hover:drop-shadow-xl transition-all duration-300 pointer-events-none"
-                  loading="lazy"
-                  draggable="false"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                    e.currentTarget.nextElementSibling.style.display = 'flex';
-                  }}
-                />
-                <div className="hidden items-center justify-center text-gray-700 font-bold text-base md:text-lg select-none">
-                  {brand.name}
+              <div className="flex flex-col items-center text-center">
+                <div className="bg-white/10 p-4 md:p-6 rounded-xl mb-4 group-hover:bg-white/20 transition-colors">
+                  <img
+                    src={brand.logo}
+                    alt={brand.name}
+                    className="w-12 h-12 md:w-16 md:h-16 object-contain filter brightness-0 invert"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                    }}
+                  />
                 </div>
+                <h3 className="text-white font-bold text-lg md:text-xl">
+                  {brand.name}
+                </h3>
+                <p className="text-white/80 text-sm mt-2">Premium kvaliteta</p>
               </div>
             </div>
           ))}
         </div>
-        
-        {/* Fade overlays na krajevima */}
+
+        {/* Drugi red - kreće se desno */}
+        <div className="flex animate-infinite-scroll-right gap-6 md:gap-8">
+          {duplicatedBrands.reverse().map((brand, index) => (
+            <div
+              key={`row2-${index}`}
+              className={`bg-gradient-to-br ${brand.gradient} p-6 md:p-8 rounded-2xl shadow-2xl transform hover:scale-105 transition-all duration-300 min-w-[200px] md:min-w-[250px] group`}
+            >
+              <div className="flex flex-col items-center text-center">
+                <div className="bg-white/10 p-4 md:p-6 rounded-xl mb-4 group-hover:bg-white/20 transition-colors">
+                  <img
+                    src={brand.logo}
+                    alt={brand.name}
+                    className="w-12 h-12 md:w-16 md:h-16 object-contain filter brightness-0 invert"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                    }}
+                  />
+                </div>
+                <h3 className="text-white font-bold text-lg md:text-xl">
+                  {brand.name}
+                </h3>
+                <p className="text-white/80 text-sm mt-2">Premium kvaliteta</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Gradient overlay za fade effect */}
         <div className="absolute left-0 top-0 w-16 md:w-32 h-full bg-gradient-to-r from-black via-black/90 to-transparent pointer-events-none z-10"></div>
         <div className="absolute right-0 top-0 w-16 md:w-32 h-full bg-gradient-to-l from-black via-black/90 to-transparent pointer-events-none z-10"></div>
       </div>
-
-      {/* CSS za PRAVI infinite scroll */}
-      <style jsx>{`
-        @keyframes infinite-scroll {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(calc(-50% - 24px)); }
-        }
-        .animate-infinite-scroll {
-          animation: infinite-scroll 25s linear infinite;
-        }
-      `}</style>
-    </section>
+    </div>
   );
 }
