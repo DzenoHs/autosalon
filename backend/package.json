@@ -4,8 +4,8 @@
   "description": "Proxy server za mobile.de Search API s CORS podrškom",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "test": "node test-connection.js"
   },
   "keywords": [
