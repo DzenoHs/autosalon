@@ -199,11 +199,11 @@ class MobileApiService {
       const make = ad.make || 'Nepoznata marka';
       const model = ad.model || ad.modelDescription || 'Nepoznat model';
       const year = ad.firstRegistration ? parseInt(ad.firstRegistration.substring(0, 4)) : new Date().getFullYear();
-      const price = ad.price?.consumerPriceGross ? parseFloat(ad.price.consumerPriceGross) : Math.floor(Math.random() * 50000) + 10000;
-      const mileage = ad.mileage || Math.floor(Math.random() * 200000);
+      const price = this.mapMobilePrice(ad.price);
+      const mileage = ad.mileage || 0;
       const fuel = this.mapFuelType(ad.fuel);
       const transmission = this.mapTransmissionType(ad.gearbox);
-      const power = ad.power || Math.floor(Math.random() * 200) + 100;
+      const power = ad.power || 0;
       const location = ad.seller?.address?.city || 'Deutschland';
       
       console.log(`✅ Mapiran auto: ${make} ${model} (${year}) - €${price}`);
@@ -223,7 +223,7 @@ class MobileApiService {
         color: 'Schwarz',
         location: location,
         description: ad.modelDescription || `${make} ${model} aus ${year}. Kilometerstand: ${mileage.toLocaleString()} km, Kraftstoff: ${fuel}`,
-        images: this.generateCarImages(make, model),
+        images: this.mapMobileImages(ad.images, make, model),
         detailsUrl: ad.detailPageUrl || '#',
         seller: {
           name: 'GM-TOP-CARS',
@@ -273,6 +273,55 @@ class MobileApiService {
     return gearboxMap[gearbox] || gearbox || 'Automatik';
   }
 
+  // Mapiraj Mobile.de slike u format aplikacije
+  mapMobileImages(mobileImages, make, model) {
+    console.log(`🖼️ Mapiram slike za ${make} ${model}:`, mobileImages);
+    
+    if (!mobileImages || !Array.isArray(mobileImages) || mobileImages.length === 0) {
+      console.warn(`⚠️ Nema slika za ${make} ${model}, koristim fallback`);
+      return this.generateCarImages(make, model);
+    }
+
+    // Mobile.de slike imaju različite veličine (xxxl, xxl, xl, l, m, s, icon)
+    const mappedImages = mobileImages.map((img, index) => {
+      // Preferencija za veće slike
+      const imageUrl = img.xxxl || img.xxl || img.xl || img.l || img.m || img.s || img.icon;
+      
+      console.log(`📸 Slika ${index + 1}: ${imageUrl}`);
+      
+      return {
+        id: index + 1,
+        url: imageUrl,
+        alt: `${make} ${model} - Slika ${index + 1}`,
+        thumbnail: img.m || img.s || img.icon || imageUrl,
+        hash: img.hash
+      };
+    });
+
+    console.log(`✅ Mapirano ${mappedImages.length} slika za ${make} ${model}`);
+    return mappedImages;
+  }
+
+  // Mapiraj Mobile.de cijene u format aplikacije  
+  mapMobilePrice(priceObj) {
+    if (!priceObj || typeof priceObj !== 'object') {
+      console.warn('⚠️ Nema cijene, koristim placeholder');
+      return Math.floor(Math.random() * 50000) + 10000;
+    }
+
+    // Mobile.de struktura: { consumerPriceGross: "38999.00", consumerPriceNet: "32772.27", currency: "EUR" }
+    let priceValue = 0;
+    
+    if (priceObj.consumerPriceGross) {
+      priceValue = parseFloat(priceObj.consumerPriceGross);
+    } else if (priceObj.consumerPriceNet) {
+      priceValue = parseFloat(priceObj.consumerPriceNet);
+    }
+    
+    console.log(`💰 Mapirana cijena: €${priceValue}`);
+    return priceValue || Math.floor(Math.random() * 50000) + 10000;
+  }
+
   // Generiraj slike automobila putem proxy-ja (rješava CORS/CORB)
   generateCarImages(make, model) {
     // Koristi naš backend proxy za slike umjesto direktno Unsplash
@@ -303,7 +352,7 @@ class MobileApiService {
     try {
       console.log(`🔍 Dohvaćam detalje automobila ID: ${carId}`);
       
-      const url = `${this.proxyUrl}/api/car-details/${carId}`;
+      const url = `${this.proxyUrl}/api/cars/${carId}`;
       console.log('📡 Car details URL:', url);
       
       const response = await axios.get(url, {
@@ -317,9 +366,12 @@ class MobileApiService {
       console.log('✅ Car details odgovor:', response.data);
       
       if (response.data && response.data.success) {
+        // Backend vraća podatke direktno u response.data.data
+        const carData = response.data.data || response.data;
+        
         return {
           success: true,
-          car: response.data.data,
+          car: carData,
           source: 'api'
         };
       } else {

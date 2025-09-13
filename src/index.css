@@ -43,6 +43,21 @@ body {
   max-width: 100vw;
 }
 
+/* Line clamp utilities */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 /* Fluid container with mobile optimization */
 .container-max { 
   max-width: min(1200px, 100vw); 

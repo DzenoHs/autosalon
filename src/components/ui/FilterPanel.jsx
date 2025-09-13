@@ -76,29 +76,29 @@ const FilterPanel = ({ isOpen, onToggle }) => {
   const hasActiveFilters = Object.values(filters).some(value => value && value !== '');
 
   return (
-    <div className={`fixed left-0 top-0 h-full bg-white shadow-2xl transform transition-transform duration-300 z-50 ${
+    <div className={`fixed left-0 top-0 h-full bg-gray-900 shadow-2xl transform transition-transform duration-300 z-50 ${
       isOpen ? 'translate-x-0' : '-translate-x-full'
     } w-80 overflow-y-auto`}>
       
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-4 sticky top-0 z-10">
+      <div className="bg-gradient-to-r from-gray-800 to-gray-700 text-white p-4 sticky top-0 z-10">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <FaFilter className="text-lg" />
-            <h2 className="text-xl font-bold">Filtri</h2>
+            <h2 className="text-xl font-bold">Filter</h2>
           </div>
           <button 
             onClick={onToggle}
-            className="p-2 hover:bg-blue-700 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-600 rounded-lg transition-colors"
           >
             <FaTimes />
           </button>
         </div>
         
         {/* Rezultati counter */}
-        <div className="mt-2 text-blue-100">
+        <div className="mt-2 text-gray-300">
           <span className="text-sm">
-            Pronađeno: <span className="font-bold text-white">{filteredCars?.length || 0}</span> automobila
+            Gefunden: <span className="font-bold text-white">{filteredCars?.length || 0}</span> Fahrzeuge
           </span>
         </div>
       </div>
@@ -109,25 +109,25 @@ const FilterPanel = ({ isOpen, onToggle }) => {
         {hasActiveFilters && (
           <button 
             onClick={handleResetFilters}
-            className="w-full bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+            className="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
           >
             <FaTimes />
-            Resetiraj filtere
+            Filter zurücksetzen
           </button>
         )}
 
         {/* Marka */}
         <div className="space-y-2">
-          <label className="flex items-center gap-2 text-gray-700 font-medium">
-            <FaCarSide className="text-blue-500" />
-            Marka
+          <label className="flex items-center gap-2 text-gray-300 font-medium">
+            <FaCarSide className="text-blue-400" />
+            Marke
           </label>
           <select 
             value={filters.make} 
             onChange={(e) => handleFilterChange('make', e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full p-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent"
           >
-            <option value="">Sve marke</option>
+            <option value="">Alle Marken</option>
             {filterOptions.makes?.map(make => (
               <option key={make} value={make}>{make}</option>
             ))}
@@ -136,16 +136,16 @@ const FilterPanel = ({ isOpen, onToggle }) => {
 
         {/* Model */}
         <div className="space-y-2">
-          <label className="flex items-center gap-2 text-gray-700 font-medium">
-            <FaCarSide className="text-blue-500" />
-            Model
+          <label className="flex items-center gap-2 text-gray-300 font-medium">
+            <FaCarSide className="text-blue-400" />
+            Modell
           </label>
           <select 
             value={filters.model} 
             onChange={(e) => handleFilterChange('model', e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full p-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent"
           >
-            <option value="">Svi modeli</option>
+            <option value="">Alle Modelle</option>
             {filterOptions.models?.map(model => (
               <option key={model} value={model}>{model}</option>
             ))}
@@ -154,74 +154,74 @@ const FilterPanel = ({ isOpen, onToggle }) => {
 
         {/* Cijena */}
         <div className="space-y-2">
-          <label className="flex items-center gap-2 text-gray-700 font-medium">
-            <FaEuroSign className="text-green-500" />
-            Cijena (€)
+          <label className="flex items-center gap-2 text-gray-300 font-medium">
+            <FaEuroSign className="text-green-400" />
+            Preis (€)
           </label>
           <div className="grid grid-cols-2 gap-2">
             <input 
               type="number" 
-              placeholder="Od"
+              placeholder="Von"
               value={filters.priceFrom}
               onChange={(e) => handleFilterChange('priceFrom', e.target.value)}
-              className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="p-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent placeholder-gray-400"
             />
             <input 
               type="number" 
-              placeholder="Do"
+              placeholder="Bis"
               value={filters.priceTo}
               onChange={(e) => handleFilterChange('priceTo', e.target.value)}
-              className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="p-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent placeholder-gray-400"
             />
           </div>
           {filterOptions.priceRange && (
-            <div className="text-sm text-gray-500">
-              Raspon: {filterOptions.priceRange.min?.toLocaleString()} - {filterOptions.priceRange.max?.toLocaleString()} €
+            <div className="text-sm text-gray-400">
+              Bereich: {filterOptions.priceRange.min?.toLocaleString()} - {filterOptions.priceRange.max?.toLocaleString()} €
             </div>
           )}
         </div>
 
         {/* Godina */}
         <div className="space-y-2">
-          <label className="flex items-center gap-2 text-gray-700 font-medium">
-            <FaCalendarAlt className="text-purple-500" />
-            Godina proizvodnje
+          <label className="flex items-center gap-2 text-gray-300 font-medium">
+            <FaCalendarAlt className="text-purple-400" />
+            Baujahr
           </label>
           <div className="grid grid-cols-2 gap-2">
             <input 
               type="number" 
-              placeholder="Od"
+              placeholder="Von"
               value={filters.yearFrom}
               onChange={(e) => handleFilterChange('yearFrom', e.target.value)}
-              className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="p-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent placeholder-gray-400"
             />
             <input 
               type="number" 
-              placeholder="Do"
+              placeholder="Bis"
               value={filters.yearTo}
               onChange={(e) => handleFilterChange('yearTo', e.target.value)}
-              className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="p-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent placeholder-gray-400"
             />
           </div>
           {filterOptions.yearRange && (
-            <div className="text-sm text-gray-500">
-              Raspon: {filterOptions.yearRange.min} - {filterOptions.yearRange.max}
+            <div className="text-sm text-gray-400">
+              Bereich: {filterOptions.yearRange.min} - {filterOptions.yearRange.max}
             </div>
           )}
         </div>
 
         {/* Gorivo */}
         <div className="space-y-2">
-          <label className="flex items-center gap-2 text-gray-700 font-medium">
-            <FaGasPump className="text-orange-500" />
-            Vrsta goriva
+          <label className="flex items-center gap-2 text-gray-300 font-medium">
+            <FaGasPump className="text-orange-400" />
+            Kraftstoff
           </label>
           <select 
             value={filters.fuel} 
             onChange={(e) => handleFilterChange('fuel', e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full p-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent"
           >
-            <option value="">Sve vrste</option>
+            <option value="">Alle Arten</option>
             {filterOptions.fuelTypes?.map(fuel => (
               <option key={fuel} value={fuel}>{fuel}</option>
             ))}
@@ -230,16 +230,16 @@ const FilterPanel = ({ isOpen, onToggle }) => {
 
         {/* Mjenjač */}
         <div className="space-y-2">
-          <label className="flex items-center gap-2 text-gray-700 font-medium">
-            <FaCog className="text-gray-500" />
-            Mjenjač
+          <label className="flex items-center gap-2 text-gray-300 font-medium">
+            <FaCog className="text-gray-400" />
+            Getriebe
           </label>
           <select 
             value={filters.transmission} 
             onChange={(e) => handleFilterChange('transmission', e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full p-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent"
           >
-            <option value="">Svi mjenjači</option>
+            <option value="">Alle Getriebe</option>
             {filterOptions.transmissions?.map(transmission => (
               <option key={transmission} value={transmission}>{transmission}</option>
             ))}
@@ -248,29 +248,29 @@ const FilterPanel = ({ isOpen, onToggle }) => {
 
         {/* Kilometraža */}
         <div className="space-y-2">
-          <label className="flex items-center gap-2 text-gray-700 font-medium">
-            <FaRoad className="text-indigo-500" />
-            Kilometraža (km)
+          <label className="flex items-center gap-2 text-gray-300 font-medium">
+            <FaRoad className="text-indigo-400" />
+            Kilometerstand (km)
           </label>
           <div className="grid grid-cols-2 gap-2">
             <input 
               type="number" 
-              placeholder="Od"
+              placeholder="Von"
               value={filters.mileageFrom}
               onChange={(e) => handleFilterChange('mileageFrom', e.target.value)}
-              className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="p-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent placeholder-gray-400"
             />
             <input 
               type="number" 
-              placeholder="Do"
+              placeholder="Bis"
               value={filters.mileageTo}
               onChange={(e) => handleFilterChange('mileageTo', e.target.value)}
-              className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="p-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent placeholder-gray-400"
             />
           </div>
           {filterOptions.mileageRange && (
-            <div className="text-sm text-gray-500">
-              Raspon: {filterOptions.mileageRange.min?.toLocaleString()} - {filterOptions.mileageRange.max?.toLocaleString()} km
+            <div className="text-sm text-gray-400">
+              Bereich: {filterOptions.mileageRange.min?.toLocaleString()} - {filterOptions.mileageRange.max?.toLocaleString()} km
             </div>
           )}
         </div>
