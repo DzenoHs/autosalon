@@ -5,63 +5,50 @@ import { ChevronRight, Calendar, Gauge, Fuel, Settings, Eye } from "lucide-react
 const Cars = () => {
   const navigate = useNavigate();
   const [hoveredCar, setHoveredCar] = useState(null);
-  const [cars, setCars] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [topExpensiveCars, setTopExpensiveCars] = useState([]);
+  const [isLoadingExpensive, setIsLoadingExpensive] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch cars from API
+  // Fetch top expensive cars from API
   useEffect(() => {
-    const fetchCars = async () => {
+    const fetchTopExpensiveCars = async () => {
       try {
-        setIsLoading(true);
-        setError(null);
+        setIsLoadingExpensive(true);
         
-        const response = await fetch('http://localhost:5002/api/cars?pageNumber=1&pageSize=6');
+        const response = await fetch('http://localhost:5003/api/cars/top/expensive');
         const data = await response.json();
         
-        if (data.success && data.ads) {
+        if (data.success && data.cars) {
           // Map API data to component format
-          const mappedCars = data.ads.slice(0, 6).map((car, index) => ({
-            id: car.mobileAdId || `car-${index}`,
+          const mappedExpensiveCars = data.cars.map((car, index) => ({
+            id: car.mobileAdId || car.id || `expensive-car-${index}`,
             name: `${car.make} ${car.model}`,
-            year: car.firstRegistration ? new Date(car.firstRegistration).getFullYear() : car.year,
+            year: car.year,
             km: car.mileage || 0,
-            priceNet: car.price?.value || 0,
-            priceGross: car.price?.value ? Math.round(car.price.value * 1.19) : 0,
-            fuel: car.fuel || 'Nepoznato',
-            gearbox: car.gearbox || car.transmission || 'Nepoznato',
-            engine: car.modelDescription || car.engine || `${car.power || 0} kW`,
-            img: car.images && car.images[0] ? car.images[0].url : car.mainImage || 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&q=80',
-            condition: car.condition || 'USED'
+            priceNet: car.price?.value || car.price?.consumerPriceGross || 0,
+            priceGross: car.price?.consumerPriceGross || (car.price?.value ? Math.round(car.price.value * 1.19) : 0),
+            fuel: car.fuel || 'Unbekannt',
+            gearbox: car.gearbox || 'Unbekannt',
+            engine: `${car.power || 0} kW`,
+            img: car.images && car.images[0] ? car.images[0].url : 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&q=80',
+            condition: car.condition || 'USED',
+            category: 'premium'
           }));
           
-          setCars(mappedCars);
+          setTopExpensiveCars(mappedExpensiveCars);
+          console.log('✅ Najskuplji automobili učitani:', mappedExpensiveCars.length);
         } else {
-          throw new Error('Neuspjeh u dohvaćanju automobila');
+          console.log('⚠️ Nema podataka o najskupljim automobilima');
         }
       } catch (err) {
-        console.error('Greška u dohvaćanju automobila:', err);
-        setError(err.message);
-        // Fallback na jedan primjer automobila ako API ne radi
-        setCars([{
-          id: 1,
-          name: "BMW X5 M50d",
-          year: 2023,
-          km: 15000,
-          priceNet: 75000,
-          priceGross: 89250,
-          fuel: "Diesel",
-          gearbox: "Automatik",
-          engine: "3.0L TwinTurbo",
-          img: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&q=80",
-          condition: "USED"
-        }]);
+        console.error('❌ Fehler beim Laden der teuersten Fahrzeuge:', err);
+        // Ne postavljamo grešku jer ovo nije kritično
       } finally {
-        setIsLoading(false);
+        setIsLoadingExpensive(false);
       }
     };
 
-    fetchCars();
+    fetchTopExpensiveCars();
   }, []);
 
   const handleCarClick = (carId) => {
@@ -76,7 +63,7 @@ const Cars = () => {
     return new Intl.NumberFormat('de-DE').format(price);
   };
 
-  if (isLoading) {
+  if (isLoadingExpensive) {
     return (
       <section
         id="cars"
@@ -130,28 +117,37 @@ const Cars = () => {
             Entdecken Sie unsere exklusive Auswahl an Premium-Fahrzeugen. 
             Jedes Auto wird sorgfältig geprüft und wartet darauf, Ihr neuer Begleiter zu werden.
           </p>
-          
-          {error && (
-            <div className="mt-4 text-yellow-500 text-sm">
-              ⚠️ {error} - Prikazuju se rezervni podaci
-            </div>
-          )}
+
+
         </div>
 
         {/* Cars Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {cars.map((car) => (
+        {topExpensiveCars.length === 0 && !isLoadingExpensive ? (
+          <div className="text-center py-20">
+            <div className="text-8xl mb-6 opacity-60">🚗</div>
+            <h3 className="text-3xl font-bold text-white mb-4">
+              Premium-Fahrzeuge werden geladen
+            </h3>
+            <p className="text-neutral-400 text-lg">
+              Bitte haben Sie einen Moment Geduld...
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+            {topExpensiveCars.map((car) => (
             <div
               key={car.id}
-              className="group relative bg-gradient-to-br from-neutral-900 to-black rounded-2xl overflow-hidden 
-                         transform hover:scale-105 transition-all duration-700 cursor-pointer
-                         border border-neutral-800 hover:border-red-500/30"
+              className="group relative bg-gradient-to-br from-neutral-900/95 via-neutral-800/90 to-black/95 
+                         rounded-3xl overflow-hidden backdrop-blur-sm
+                         transform hover:scale-[1.02] hover:-translate-y-2 transition-all duration-500 cursor-pointer
+                         border border-neutral-700/50 hover:border-red-500/40
+                         shadow-2xl hover:shadow-3xl hover:shadow-red-500/20"
               onMouseEnter={() => setHoveredCar(car.id)}
               onMouseLeave={() => setHoveredCar(null)}
               onClick={() => handleCarClick(car.id)}
             >
               {/* Car Image */}
-              <div className="relative h-64 overflow-hidden">
+              <div className="relative h-64 overflow-hidden rounded-t-3xl">
                 <img
                   src={car.img}
                   alt={car.name}
@@ -161,80 +157,106 @@ const Cars = () => {
                   }}
                 />
                 
-                {/* Overlay */}
+                {/* Premium Badge for expensive cars */}
+                <div className="absolute top-4 right-4 bg-gradient-to-r from-yellow-400 via-yellow-500 to-amber-500 
+                              text-black px-3 py-2 rounded-xl text-xs font-bold shadow-xl backdrop-blur-sm
+                              border border-yellow-300/50 flex items-center gap-1 animate-pulse">
+                  <span className="text-sm animate-bounce">💎</span>
+                  <span>PREMIUM</span>
+                </div>
+                
+                {/* Gradient Overlays */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 
-                {/* Hover Button */}
-                <div className={`absolute top-4 right-4 transform transition-all duration-500 ${
-                  hoveredCar === car.id ? 'translate-y-0 opacity-100' : '-translate-y-2 opacity-0'
-                }`}>
-                  <div className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition-colors">
-                    <Eye className="w-5 h-5" />
-                  </div>
-                </div>
+
+
+
               </div>
 
               {/* Car Details */}
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-red-400 transition-colors">
-                  {car.name}
-                </h3>
+              <div className="p-6 pt-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-xl font-bold text-white group-hover:text-red-400 transition-colors truncate">
+                    {car.name}
+                  </h3>
+                  <div className="text-xs text-neutral-400 bg-neutral-800/50 px-2 py-1 rounded-lg">
+                    {car.year}
+                  </div>
+                </div>
                 
-                <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
-                  <div className="flex items-center gap-2 text-neutral-400">
-                    <Calendar className="w-4 h-4 text-red-500" />
-                    <span>{car.year}</span>
+                {/* Simple Info */}
+                <div className="space-y-3 mb-4">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-neutral-400 flex items-center gap-2">
+                      <Gauge className="w-4 h-4 text-red-400" />
+                      {formatPrice(car.km)} km
+                    </span>
+                    <span className="text-neutral-400 flex items-center gap-2">
+                      <Fuel className="w-4 h-4 text-red-400" />
+                      {car.fuel}
+                    </span>
                   </div>
-                  <div className="flex items-center gap-2 text-neutral-400">
-                    <Gauge className="w-4 h-4 text-red-500" />
-                    <span>{formatPrice(car.km)} km</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-neutral-400">
-                    <Fuel className="w-4 h-4 text-red-500" />
-                    <span>{car.fuel}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-neutral-400">
-                    <Settings className="w-4 h-4 text-red-500" />
-                    <span>{car.gearbox}</span>
-                  </div>
-                </div>
-
-                <div className="space-y-1 mb-4">
-                  <div className="text-xs text-neutral-500">Netto</div>
-                  <div className="text-2xl font-bold text-green-400">
-                    €{formatPrice(car.priceNet)}
-                  </div>
-                  <div className="text-xs text-neutral-400">
-                    Brutto: €{formatPrice(car.priceGross)}
+                  <div className="text-center">
+                    <span className="text-neutral-400 text-sm flex items-center justify-center gap-2">
+                      <Settings className="w-4 h-4 text-red-400" />
+                      {car.gearbox}
+                    </span>
                   </div>
                 </div>
 
-                <div className="text-xs text-neutral-500 mb-3">
-                  {car.engine}
+                {/* Price Section */}
+                <div className="bg-gradient-to-r from-neutral-800/50 to-neutral-700/50 rounded-xl p-4 mb-4 border border-neutral-600/30">
+                  <div className="text-xs text-neutral-400 mb-2 text-center">Preise</div>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-neutral-400">Brutto:</span>
+                      <span className="text-lg font-bold text-green-400">
+                        €{formatPrice(car.priceGross)}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-neutral-400">Netto:</span>
+                      <span className="text-2xl font-bold text-green-300 drop-shadow-lg">
+                        €{formatPrice(car.priceNet)}
+                      </span>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Action Button */}
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-neutral-500 uppercase tracking-wider">
-                    {car.condition}
-                  </span>
-                  <ChevronRight className="w-5 h-5 text-red-500 group-hover:translate-x-1 transition-transform" />
+                {/* Action Section */}
+                <div className="flex items-center justify-between pt-4 border-t border-neutral-700/30">
+                  <div className="flex flex-col">
+                    <span className="text-xs text-neutral-400">Zustand</span>
+                    <span className="text-sm font-medium text-white capitalize">
+                      {car.condition?.replace('_', ' ').toLowerCase()}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 text-red-400 font-medium text-sm group-hover:text-red-300 transition-colors">
+                    <span>Details</span>
+                    <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </div>
                 </div>
               </div>
             </div>
           ))}
-        </div>
+          </div>
+        )}
 
         {/* View All Button */}
         <div className="text-center">
           <button
             onClick={handleViewAll}
-            className="group inline-flex items-center gap-3 bg-gradient-to-r from-red-600 to-red-800 
-                       hover:from-red-700 hover:to-red-900 text-white px-8 py-4 rounded-xl 
-                       font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
+            className="group inline-flex items-center gap-4 bg-gradient-to-r from-red-500 via-red-600 to-red-700 
+                       hover:from-red-600 hover:via-red-700 hover:to-red-800 
+                       text-white px-10 py-5 rounded-2xl font-semibold text-lg
+                       transition-all duration-400 transform hover:scale-105 hover:-translate-y-1
+                       shadow-2xl hover:shadow-3xl hover:shadow-red-500/30
+                       border border-red-400/20 backdrop-blur-sm"
           >
             <span>Alle Fahrzeuge anzeigen</span>
-            <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            <div className="bg-white/20 p-2 rounded-full group-hover:bg-white/30 transition-colors">
+              <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+            </div>
           </button>
         </div>
       </div>

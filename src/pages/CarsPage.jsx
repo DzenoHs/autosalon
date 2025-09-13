@@ -5,7 +5,7 @@ import { useCars } from "../context/CarsContext";
 import FilterPanel from "../components/ui/FilterPanel";
 import mobileApiService from "../services/mobileApiService";
 
-const PAGE_SIZE = 100; // Prikaži sve automobile odjednom
+const PAGE_SIZE = 15; // Prikaži 15 automobila po stranici (75 automobila / 5 stranica)
 const FALLBACK_IMG = "https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800&h=600&fit=crop&crop=center";
 
 export default function CarsPage() {
@@ -101,6 +101,11 @@ export default function CarsPage() {
 
   const totalPages = Math.ceil(searchFilteredCars.length / PAGE_SIZE);
 
+  // Reset page to 1 when search or filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, filteredCars]);
+
   // Handle car click
   const handleCarClick = (car) => {
     console.log("car.mobileAdId =======>>>")
@@ -162,7 +167,7 @@ export default function CarsPage() {
               <div>
                 <h1 className="text-3xl font-bold text-white">Fahrzeuge</h1>
                 <p className="text-gray-300 mt-1">
-                  {Math.min(paginatedCars.length, searchFilteredCars.length)} von {totalCars} Fahrzeugen angezeigt
+                  Seite {currentPage} von {totalPages} ({paginatedCars.length} von {searchFilteredCars.length} Fahrzeugen angezeigt)
                 </p>
               </div>
               

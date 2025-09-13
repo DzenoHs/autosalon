@@ -118,7 +118,12 @@ export const getCarById = async (req, res) => {
       seller: carData.seller ? {
         name: carData.seller.name || 'Verkäufer',
         phone: carData.seller.phone,
-        address: carData.seller.address
+        address: carData.seller.address ? (
+          typeof carData.seller.address === 'string' 
+            ? carData.seller.address
+            : `${carData.seller.address.street || ''}, ${carData.seller.address.zipcode || ''} ${carData.seller.address.city || ''}, ${carData.seller.address.country || ''}`.replace(/^,\s*|,\s*,/g, '').trim()
+        ) : null,
+        addressDetails: carData.seller.address // Keep original object for detailed access
       } : null,
       
       // Dodatne specifikacije
@@ -172,7 +177,8 @@ export const getCarById = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      data: processedCar,
+      car: processedCar,
+      data: processedCar, // Keep both for compatibility
       responseTime,
       timestamp: new Date().toISOString()
     });

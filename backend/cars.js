@@ -92,11 +92,16 @@ export const cars = async (req, res) => {
 
     // Build API parameters
     const pageNumber = parseInt(req.query.pageNumber) || 1;
-    const pageSize = Math.min(parseInt(req.query.pageSize) || 100, 100);
+    const requestedPageSize = Math.min(parseInt(req.query.pageSize) || 100, 100);
+    
+    // Mobile.de API obično vraća max 20 automobila po stranici
+    // Da dohvatimo 75-100 različitih automobila, pozvaćemo stranice 1-5
+    const mobileApiPageSize = 20;
+    const maxPagesToFetch = 5; // Dohvatiti prvih 5 stranica za 100 automobila
 
     const apiParams = {
       pageNumber,
-      pageSize,
+      pageSize: mobileApiPageSize,
       damageUnrepaired: false,
       isBartered: false,
       lang: 'de'
@@ -129,72 +134,83 @@ export const cars = async (req, res) => {
       });
     }
 
-    console.log(`🔍 Cache MISS - dohvaćam iz Mobile.de API...`);
+    console.log(`🔍 Cache MISS - dohvaćam ${maxPagesToFetch} stranica iz Mobile.de API...`);
 
-    // Build API URL
-    const queryString = new URLSearchParams(apiParams).toString();
-    const apiUrl = `${MOBILE_API_CONFIG.baseURL}?imageCount.min=1&${queryString}`;
+    // Uvek pozivamo stranice 1-5 da dohvatimo maksimalno različitih automobila
+    let allCars = [];
+    let totalCount = 0;
+    
+    for (let currentPageNum = 1; currentPageNum <= maxPagesToFetch && allCars.length < 100; currentPageNum++) {
+      const currentApiParams = {
+        ...apiParams,
+        pageNumber: currentPageNum
+      };
+      
+      const queryString = new URLSearchParams(currentApiParams).toString();
+      const apiUrl = `${MOBILE_API_CONFIG.baseURL}?imageCount.min=1&${queryString}`;
 
-    // Make API call with retry
-    let response;
-    let attempts = 0;
-    const maxAttempts = 3;
+      console.log(`📡 Pozivam stranicu ${currentPageNum}/${maxPagesToFetch}: ${apiUrl}`);
 
-    while (attempts < maxAttempts) {
-      attempts++;
-      try {
-        response = await axios.get(apiUrl, {
-          headers: MOBILE_API_CONFIG.headers,
-          timeout: MOBILE_API_CONFIG.timeout,
-          validateStatus: (status) => status >= 200 && status < 500
-        });
+      // Make API call with retry
+      let response;
+      let attempts = 0;
+      const maxAttempts = 3;
 
-        if (response.status === 200) break;
-        if (attempts === maxAttempts) throw new Error(`API returned status ${response.status}`);
-      } catch (error) {
-        if (attempts === maxAttempts) throw error;
-        await new Promise(resolve => setTimeout(resolve, 1000 * attempts));
+      while (attempts < maxAttempts) {
+        attempts++;
+        try {
+          response = await axios.get(apiUrl, {
+            headers: MOBILE_API_CONFIG.headers,
+            timeout: MOBILE_API_CONFIG.timeout,
+            validateStatus: (status) => status >= 200 && status < 500
+          });
+
+          if (response.status === 200) break;
+          if (attempts === maxAttempts) throw new Error(`API returned status ${response.status}`);
+        } catch (error) {
+          if (attempts === maxAttempts) throw error;
+          await new Promise(resolve => setTimeout(resolve, 1000 * attempts));
+        }
+      }
+
+      if (!response || response.status !== 200) {
+        console.log(`⚠️ Stranica ${currentPageNum} nije uspešna, preskoće se`);
+        continue;
+      }
+
+      const pageData = response.data;
+      if (pageData.ads && Array.isArray(pageData.ads)) {
+        allCars.push(...pageData.ads);
+        totalCount = pageData.total || pageData.totalCount || totalCount;
+        console.log(`✅ Stranica ${currentPageNum}: ${pageData.ads.length} automobila`);
+      }
+      
+      // Prekini ako nema više rezultata
+      if (!pageData.ads || pageData.ads.length === 0) {
+        console.log(`🛑 Nema više rezultata na stranici ${currentPageNum}`);
+        break;
       }
     }
 
-    if (!response || response.status !== 200) {
-      throw new Error('Failed to fetch data from mobile.de API');
-    }
+    // Ograniči rezultate na maksimalno 100 (ali vrati sve dohvaćene)
+    const cars = allCars.slice(0, Math.min(requestedPageSize, 100));
+    
+    console.log(`🎯 Ukupno dohvaćeno: ${allCars.length} automobila, vraćam: ${cars.length}`);
 
-    const apiData = response.data;
-    console.log("apiData")
-    console.log(apiData.ads[0])
+    console.log("Prvi automobil od dohvaćenih:")
+    console.log(cars[0])
 
-    // Process API response - direct passthrough with minimal structure
-    let cars = [];
-    let total = 0;
+    const total = totalCount || cars.length;
 
-    if (apiData.ads && Array.isArray(apiData.ads)) {
-      cars = apiData.ads;
-      total = apiData.total || apiData.totalCount || cars.length;
-    } else if (apiData.results && Array.isArray(apiData.results)) {
-      cars = apiData.results;
-      total = apiData.totalResults || apiData.count || cars.length;
-    } else if (Array.isArray(apiData)) {
-      cars = apiData;
-      total = cars.length;
-    } else if (apiData.data && Array.isArray(apiData.data)) {
-      cars = apiData.data;
-      total = apiData.total || cars.length;
-    } else {
-      cars = [];
-      total = 0;
-    }
-
-    console.log(`🚗 Šaljem ${cars.length} automobila od ukupno ${total} (pageSize: ${pageSize})`);
+    console.log(`🚗 Šaljem ${cars.length} automobila od ukupno ${total} (requestedPageSize: ${requestedPageSize})`);
 
     // Process response data
     const responseData = {
       success: true,
       total,
       currentPage: pageNumber,
-      pageSize,
-      maxPages: Math.ceil(total / pageSize),
+      pageSize: requestedPageSize,
+      maxPages: Math.ceil(total / requestedPageSize),
       ads: cars,
       cached: false,
       timestamp: new Date().toISOString(),
@@ -274,4 +290,182 @@ export const clearCache = (req, res) => {
     currentSize: apiCache.size,
     timestamp: new Date().toISOString()
   });
+};
+
+// Endpoint za 6 najskupljih automobila
+export const topExpensiveCars = async (req, res) => {
+  const startTime = Date.now();
+  
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Content-Type', 'application/json');
+
+  try {
+    // Očisti expired cache unose
+    clearExpiredCache();
+
+    // Generiraj special cache key za top expensive cars
+    const cacheKey = 'top_expensive_cars_6';
+    
+    // Provjeri cache prvo
+    const cachedResult = getCachedData(cacheKey);
+    if (cachedResult) {
+      const responseTime = Date.now() - startTime;
+      console.log(`⚡ Cache response za najskuplje automobile u ${responseTime}ms`);
+      
+      return res.status(200).json({
+        ...cachedResult,
+        cached: true,
+        responseTime,
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    console.log(`🔍 Cache MISS - dohvaćam najskuplje automobile iz Mobile.de API...`);
+
+    // API parametri za najskuplje automobile - sortiranje po cijeni opadajuće
+    const apiParams = {
+      pageNumber: 1,
+      pageSize: 50, // Dohvaćamo više automobila da možemo sortirati
+      damageUnrepaired: false,
+      isBartered: false,
+      lang: 'de',
+      'sortOption.option': 'PRICE',
+      'sortOption.order': 'DESCENDING'
+    };
+
+    // Build API URL
+    const queryString = new URLSearchParams(apiParams).toString();
+    const apiUrl = `${MOBILE_API_CONFIG.baseURL}?imageCount.min=1&${queryString}`;
+
+    // Make API call with retry
+    let response;
+    let attempts = 0;
+    const maxAttempts = 3;
+
+    while (attempts < maxAttempts) {
+      attempts++;
+      try {
+        console.log(`📡 API Aufruf für najskuplje (Versuch ${attempts}): ${apiUrl}`);
+        
+        response = await axios.get(apiUrl, {
+          headers: MOBILE_API_CONFIG.headers,
+          timeout: MOBILE_API_CONFIG.timeout,
+          validateStatus: (status) => status >= 200 && status < 500
+        });
+
+        if (response.status === 200) {
+          console.log('✅ Mobile.de API response erhalten für najskuplje');
+          break;
+        }
+        
+        if (attempts === maxAttempts) {
+          throw new Error(`API returned status ${response.status}`);
+        }
+        
+      } catch (error) {
+        console.error(`❌ API Fehler (Versuch ${attempts}):`, error.message);
+        
+        if (attempts === maxAttempts) {
+          throw error;
+        }
+        
+        // Exponentieller Backoff
+        await new Promise(resolve => setTimeout(resolve, 1000 * attempts));
+      }
+    }
+
+    if (!response || response.status !== 200) {
+      throw new Error('Failed to fetch data from Mobile.de API');
+    }
+
+    const apiData = response.data;
+    console.log(`📊 Najskuplje automobile - ukupno pronađeno: ${apiData.ads?.length || 0}`);
+
+    // Process and clean the car data first - koristimo istu strukturu kao u glavnom endpointu
+    let processedCars = (apiData.ads || []).map(ad => ({
+      id: ad.mobileAdId || ad.id,
+      mobileAdId: ad.mobileAdId || ad.id,
+      make: ad.make || 'Unbekannt',
+      model: ad.model || 'Unbekannt',
+      year: ad.firstRegistration ? 
+        new Date(ad.firstRegistration.toString().length === 6 ? 
+          `${ad.firstRegistration.substr(0,4)}-${ad.firstRegistration.substr(4,2)}-01` : 
+          ad.firstRegistration).getFullYear() : null,
+      price: ad.price ? {
+        value: parseFloat(ad.price.consumerPriceGross || ad.price.value),
+        consumerPriceGross: parseFloat(ad.price.consumerPriceGross || ad.price.value),
+        currency: ad.price.currency || 'EUR'
+      } : null,
+      mileage: ad.mileage || 0,
+      fuel: ad.fuel || 'Unbekannt',
+      gearbox: ad.gearbox || 'Unbekannt',
+      power: ad.power || 0,
+      condition: ad.condition || 'Unbekannt',
+      images: ad.images ? ad.images.map((img, index) => ({
+        id: index + 1,
+        url: img.xxxl || img.xxl || img.xl || img.l || img.m || img.s || img.icon,
+        alt: `${ad.make || 'Auto'} ${ad.model || 'Modell'} - Bild ${index + 1}`
+      })) : [],
+      description: ad.description || ad.plainTextDescription || '',
+      plainTextDescription: ad.plainTextDescription || '',
+      
+      // Dodatne specifikacije
+      cubicCapacity: ad.cubicCapacity,
+      doors: ad.doors,
+      seats: ad.seats,
+      driveType: ad.driveType,
+      exteriorColor: ad.exteriorColor,
+      interiorColor: ad.interiorColor,
+      
+      // API meta podaci
+      source: 'mobile.de',
+      category: 'top-expensive',
+      lastUpdated: new Date().toISOString()
+    }));
+
+    // Sortiraj po cijeni (opadajuće) i uzmi samo 6 najskupljih
+    processedCars = processedCars
+      .filter(car => car.price && car.price.value > 0) // Filtriraj automobile bez cijene
+      .sort((a, b) => (b.price?.value || 0) - (a.price?.value || 0)) // Sortiraj po cijeni opadajuće
+      .slice(0, 6); // Uzmi samo 6 najskupljih
+
+    console.log(`💎 Top 6 najskupljih automobila (${processedCars.map(car => `${car.make} ${car.model}: ${car.price?.value}€`).join(', ')})`);
+
+    const result = {
+      success: true,
+      cars: processedCars,
+      total: processedCars.length,
+      category: 'najskupljih-6',
+      apiSource: 'mobile.de',
+      lastUpdate: new Date().toISOString()
+    };
+
+    // Cache rezultat
+    setCachedData(cacheKey, result);
+
+    const responseTime = Date.now() - startTime;
+    console.log(`✅ Najskuplje automobile uspješno obrađeni u ${responseTime}ms`);
+
+    res.status(200).json({
+      ...result,
+      cached: false,
+      responseTime,
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    const responseTime = Date.now() - startTime;
+    console.error('❌ Greška pri dohvaćanju najskupljih automobila:', error);
+    
+    // Fallback response
+    res.status(500).json({
+      success: false,
+      cars: [],
+      total: 0,
+      category: 'najskupljih-6',
+      error: error.message || 'Neočekivana greška pri dohvaćanju podataka',
+      responseTime,
+      timestamp: new Date().toISOString()
+    });
+  }
 };
