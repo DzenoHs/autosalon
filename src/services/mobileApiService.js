@@ -3,7 +3,8 @@ import axios from 'axios';
 // Mobile.de API servis za dohvaćanje podataka kroz proxy server
 class MobileApiService {
   constructor() {
-    this.proxyUrl = 'http://localhost:5003'; // Backend radi na portu 5003
+    // Koristi environment variable za production ili localhost za development
+    this.proxyUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5003';
     this.isLoading = false;
     this.lastError = null;
     
@@ -135,7 +136,11 @@ class MobileApiService {
       }
 
       // ✅ JEDNOSTAVAN FETCH BEZ PROBLEMATIČNIH HEADERS
-      const response = await fetch(`${this.proxyUrl}/api/cars?page=${page}&pageSize=${pageSize}`, {
+      const apiUrl = process.env.NODE_ENV === 'production' 
+        ? `/api/cars?pageNumber=${page}&pageSize=${pageSize}`
+        : `${this.proxyUrl}/api/cars?page=${page}&pageSize=${pageSize}`;
+      
+      const response = await fetch(apiUrl, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -352,7 +357,9 @@ class MobileApiService {
     try {
       console.log(`🔍 Dohvaćam detalje automobila ID: ${carId}`);
       
-      const url = `${this.proxyUrl}/api/cars/${carId}`;
+      const url = process.env.NODE_ENV === 'production' 
+        ? `/api/cars/${carId}`
+        : `${this.proxyUrl}/api/cars/${carId}`;
       console.log('📡 Car details URL:', url);
       
       const response = await axios.get(url, {
@@ -425,6 +432,53 @@ class MobileApiService {
     } catch (error) {
       console.error('❌ React API greška:', error);
       return this.getFallbackData(page);
+    }
+  }
+
+  // Dohvati 6 najskupljih automobila
+  async fetchTopExpensiveCars() {
+    try {
+      console.log('🔍 Dohvaćam 6 najskupljih automobila...');
+      
+      const url = `${this.proxyUrl}/api/cars/top/expensive`;
+      console.log('📡 Top expensive cars URL:', url);
+      
+      const response = await axios.get(url, {
+        timeout: 15000,
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      console.log('✅ Top expensive cars odgovor:', response.data);
+      
+      if (response.data && response.data.success) {
+        return {
+          success: true,
+          cars: response.data.cars || [],
+          total: response.data.total || 0,
+          category: 'najskupljih-6',
+          source: 'api',
+          cached: response.data.cached || false
+        };
+      } else {
+        throw new Error(response.data?.error || 'Najskuplji automobili nisu pronađeni');
+      }
+      
+    } catch (error) {
+      console.error('❌ Greška pri dohvaćanju najskupljih automobila:', error);
+      this.lastError = error;
+      
+      // Fallback - prazan rezultat
+      return {
+        success: false,
+        cars: [],
+        total: 0,
+        category: 'najskupljih-6',
+        source: 'fallback',
+        error: error.message
+      };
     }
   }
 

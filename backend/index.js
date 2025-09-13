@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { cars, getCacheStats, clearCache } from './cars.js';
+import { cars, getCacheStats, clearCache, topExpensiveCars } from './cars.js';
 import { checkRateLimit } from './rateLimiter.js';
 import { getCarById } from './getCarById.js';
 
@@ -33,6 +33,7 @@ checkRateLimit()
 // Main API endpoints
 app.get("/api/cars", cars);
 app.get("/api/cars/:id", getCarById);
+app.get("/api/cars/top/expensive", topExpensiveCars);
 
 // Cache management endpoints
 app.get("/api/cache/stats", getCacheStats);
