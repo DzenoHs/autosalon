@@ -5,7 +5,7 @@ import { useCars } from "../context/CarsContext";
 import FilterPanel from "../components/ui/FilterPanel";
 import mobileApiService from "../services/mobileApiService";
 
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 100; // Prikaži sve automobile odjednom
 const FALLBACK_IMG = "https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800&h=600&fit=crop&crop=center";
 
 export default function CarsPage() {
@@ -30,8 +30,8 @@ export default function CarsPage() {
 
   // Breadcrumbs
   const breadcrumbs = [
-    { label: 'Početna', path: '/' },
-    { label: 'Automobili', path: '/cars', active: true }
+    { label: 'Startseite', path: '/' },
+    { label: 'Fahrzeuge', path: '/cars', active: true }
   ];
 
   // Dohvati automobile s API-ja
@@ -40,62 +40,35 @@ export default function CarsPage() {
       try {
         setIsLoading(true);
         setError(null);
-        console.log("🔄 Dohvaćam automobile preko mobileApiService...");
+        console.log("🔄 Lade Fahrzeuge über mobileApiService...");
         
         const result = await mobileApiService.fetchCarsFromMobileApi(1, 100);
         
+        console.log('🔍 API result:', result);
+        
         if (result.cars && result.cars.length > 0) {
-          console.log(`✅ Dohvaćeno ${result.cars.length} automobila iz mobile.de API-ja`);
+          console.log(`✅ ${result.cars.length} Fahrzeuge von mobile.de API geladen`);
           
-console.log("result.cars[0]")
-console.log(result.cars[0])
-          // Normaliziraj podatke iz mobile.de API-ja
-          const normalizedCars = result.cars.map(car => ({
-            id: car.mobileAdId || `car-${Date.now()}-${Math.random()}`,
-            mobileAdId: car.mobileAdId,
-            make: car.make || 'N/A',
-            model: car.model || 'N/A',
-            year: parseInt(car.year?.toString().slice(0, 4)) || new Date().getFullYear(),
-            mileage: car.mileage || 0,
-            price: {
-              consumerPriceGross: car.price?.value || 0,
-              value: car.price?.value || 0,
-              currency: car.price?.currency || 'EUR'
-            },
-            fuel: car.fuel === 'PETROL' ? 'Benzin' : 
-                  car.fuel === 'DIESEL' ? 'Diesel' : 
-                  car.fuel === 'ELECTRIC' ? 'Elektrisch' : 
-                  car.fuel === 'HYBRID' ? 'Hibrid' : 
-                  car.fuel || 'Ostalo',
-            gearbox: car.gearbox === 'MANUAL_GEAR' ? 'Manuell' : 
-                     car.gearbox === 'AUTOMATIC_GEAR' ? 'Automatik' : 
-                     car.gearbox === 'SEMI_AUTOMATIC_GEAR' ? 'Halbautomatik' : 
-                     car.gearbox || 'N/A',
-            power: car.power || 0,
-            condition: car.condition === 'USED' ? 'Rabljen' : 
-                      car.condition === 'NEW' ? 'Novi' : 
-                      car.condition || 'N/A',
-            images: car.images && car.images.length > 0 ? 
-                   car.images : 
-                   [{ url: car.mainImage || FALLBACK_IMG, alt: `${car.make} ${car.model}` }],
-            description: car.description || `${car.make} ${car.model} u odličnom stanju`,
-            address: car.address ? `${car.address.city}, ${car.address.country}` : 'Deutschland',
-            creationDate: car.creationDate,
-            modificationDate: car.modificationDate
-          }));
+          console.log("🔍 Podatci prvog automobila iz API-ja:");
+          console.log(result.cars[0]);
+          console.log("🔍 Slike prvog automobila:", result.cars[0].images);
+          console.log("🔍 Cijena prvog automobila:", result.cars[0].price);
+          // Podaci su već transformirani u mobileApiService.js
+          const normalizedCars = result.cars;
           
+          console.log(`🎯 Setze ${normalizedCars.length} Fahrzeuge in State`);
           setAllCars(normalizedCars);
           setFilteredCars(normalizedCars);
           setTotalCars(result.total || normalizedCars.length);
         } else {
-          throw new Error('API nije vratio automobile');
+          throw new Error('API hat keine Fahrzeuge zurückgegeben');
         }
         
       } catch (error) {
-        console.error("❌ Greška pri dohvaćanju automobila:", error);
-        setError(`Neuspješno učitavanje automobila iz mobile.de API-ja: ${error.message}`);
+        console.error("❌ Fehler beim Laden der Fahrzeuge:", error);
+        setError(`Fehler beim Laden der Fahrzeuge von mobile.de API: ${error.message}`);
         
-        // Ne koristimo hardkodirane podatke - samo prikažemo grešku
+        // Keine hardkodierten Daten - nur Fehler anzeigen
         setAllCars([]);
         setFilteredCars([]);
         setTotalCars(0);
@@ -105,10 +78,9 @@ console.log(result.cars[0])
       }
     };
 
-    if (allCars.length === 0) {
-      fetchCars();
-    }
-  }, [allCars.length, setAllCars, setFilteredCars, setIsLoading, setError, setTotalCars]);
+    // Uvek fetch podatke kad se komponenta učita
+    fetchCars();
+  }, []); // Uklanjam dependency da se izvrši samo jednom pri mount-u
 
   // Search functionality
   const searchFilteredCars = useMemo(() => {
@@ -131,20 +103,26 @@ console.log(result.cars[0])
 
   // Handle car click
   const handleCarClick = (car) => {
+    console.log("car.mobileAdId =======>>>")
+    console.log(car.mobileAdId)
     navigate(`/car/${car.mobileAdId || car.id}`);
   };
 
   // Format price
-  const formatPrice = (priceObj) => {
-    if (!priceObj || (!priceObj.consumerPriceGross && !priceObj.value)) return 'Na upit';
-    const price = priceObj.consumerPriceGross || priceObj.value;
-    if (price === 0) return 'Na upit';
-    return `${price.toLocaleString('de-DE')} €`;
+  const formatPrice = (price) => {
+    if (!price || price === 0) return 'Preis auf Anfrage';
+    
+    // Wenn price ein Objekt ist, Wert extrahieren
+    const priceValue = typeof price === 'object' ? (price.value || price.consumerPriceGross || price) : price;
+    
+    if (priceValue === 0) return 'Preis auf Anfrage';
+    
+    return `${priceValue.toLocaleString('de-DE')} €`;
   };
 
   // Format mileage
   const formatMileage = (mileage) => {
-    if (!mileage) return 'N/A';
+    if (!mileage) return 'k.A.';
     return `${mileage.toLocaleString('de-DE')} km`;
   };
 
@@ -182,9 +160,9 @@ console.log(result.cars[0])
             {/* Title & Controls */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
-                <h1 className="text-3xl font-bold text-white">Automobili</h1>
+                <h1 className="text-3xl font-bold text-white">Fahrzeuge</h1>
                 <p className="text-gray-300 mt-1">
-                  Pronađeno {searchFilteredCars.length} od {totalCars} automobila
+                  {Math.min(paginatedCars.length, searchFilteredCars.length)} von {totalCars} Fahrzeugen angezeigt
                 </p>
               </div>
               
@@ -194,7 +172,7 @@ console.log(result.cars[0])
                   <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                   <input
                     type="text"
-                    placeholder="Pretraži automobile..."
+                    placeholder="Fahrzeuge suchen..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="pl-10 pr-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-64 text-white placeholder-gray-400"
@@ -211,7 +189,7 @@ console.log(result.cars[0])
                   }`}
                 >
                   <FaFilter />
-                  Filtri
+                  Filter
                 </button>
               </div>
             </div>
@@ -231,7 +209,7 @@ console.log(result.cars[0])
             {isLoading && (
               <div className="flex justify-center items-center py-20">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-                <span className="ml-3 text-gray-300">Učitavanje automobila...</span>
+                <span className="ml-3 text-gray-300">Fahrzeuge werden geladen...</span>
               </div>
             )}
 
@@ -251,7 +229,7 @@ console.log(result.cars[0])
                     onClick={() => window.location.reload()}
                     className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors"
                   >
-                    Osvježi stranicu
+                    Seite aktualisieren
                   </button>
                 </div>
               </div>
@@ -273,7 +251,11 @@ console.log(result.cars[0])
                           src={car.images?.[0]?.url || FALLBACK_IMG}
                           alt={`${car.make} ${car.model}`}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          onLoad={(e) => {
+                            console.log(`✅ Slika učitana za ${car.make} ${car.model}:`, e.target.src);
+                          }}
                           onError={(e) => {
+                            console.warn(`❌ Fehler beim Laden des Bildes für ${car.make} ${car.model}:`, e.target.src);
                             e.target.src = FALLBACK_IMG;
                           }}
                         />
@@ -287,38 +269,68 @@ console.log(result.cars[0])
                         </div>
                       </div>
 
-                      {/* Car Info */}
+                      {/* Car Info - Simplified for overview */}
                       <div className="p-4">
-                        <div className="mb-2">
-                          <h3 className="text-lg font-semibold text-white group-hover:text-blue-400 transition-colors">
+                        {/* Car Title */}
+                        <div className="mb-3">
+                          <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors line-clamp-1">
                             {car.make} {car.model}
                           </h3>
-                          <p className="text-sm text-gray-400">{car.year} • {formatMileage(car.mileage)}</p>
+                          <p className="text-sm text-gray-400">
+                            {car.year} • {formatMileage(car.mileage)}
+                          </p>
                         </div>
 
-                        <div className="space-y-2 mb-3">
-                          <div className="flex justify-between text-sm">
-                            <span className="text-gray-400">Gorivo:</span>
-                            <span className="font-medium text-gray-200">{car.fuel || 'N/A'}</span>
-                          </div>
-                          <div className="flex justify-between text-sm">
-                            <span className="text-gray-400">Mjenjač:</span>
-                            <span className="font-medium text-gray-200">{car.gearbox || car.transmission || 'N/A'}</span>
-                          </div>
-                          <div className="flex justify-between text-sm">
-                            <span className="text-gray-400">Snaga:</span>
-                            <span className="font-medium text-gray-200">{car.power || 'N/A'} kW</span>
+                        {/* Essential Info Only */}
+                        <div className="space-y-1.5 mb-4 text-sm">
+                          <div className="flex items-center justify-between">
+                            <span className="text-gray-400">{car.fuel}</span>
+                            <span className="text-gray-400">•</span>
+                            <span className="text-gray-400">{car.gearbox}</span>
+                            <span className="text-gray-400">•</span>
+                            <span className="text-gray-400">{car.power ? `${car.power} kW` : 'k.A.'}</span>
                           </div>
                         </div>
 
+                        {/* Price and CTA */}
                         <div className="flex items-center justify-between">
                           <div className="text-2xl font-bold text-green-400">
                             {formatPrice(car.price)}
                           </div>
-                          <button className="flex items-center gap-1 text-blue-400 hover:text-blue-300 font-medium text-sm transition-colors">
+                          <button 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleCarClick(car);
+                            }}
+                            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg font-medium text-sm transition-colors"
+                          >
                             <FaEye className="w-4 h-4" />
-                            Detalji
+                            Details
                           </button>
+                        </div>
+
+                        {/* Quick Info Tags */}
+                        <div className="flex flex-wrap gap-2 mt-3">
+                          {car.condition === 'Gebraucht' && (
+                            <span className="bg-orange-500/20 text-orange-300 px-2 py-1 rounded text-xs">
+                              Gebraucht
+                            </span>
+                          )}
+                          {car.condition === 'Neu' && (
+                            <span className="bg-green-500/20 text-green-300 px-2 py-1 rounded text-xs">
+                              Neu
+                            </span>
+                          )}
+                          {car.metallic && (
+                            <span className="bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded text-xs">
+                              Metallic
+                            </span>
+                          )}
+                          {car.features?.navigation && (
+                            <span className="bg-blue-500/20 text-blue-300 px-2 py-1 rounded text-xs">
+                              Navigation
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -333,7 +345,7 @@ console.log(result.cars[0])
                       disabled={currentPage === 1}
                       className="px-3 py-2 border border-gray-600 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-700 text-gray-300"
                     >
-                      Prethodna
+                      Vorherige
                     </button>
                     
                     {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
@@ -358,7 +370,7 @@ console.log(result.cars[0])
                       disabled={currentPage === totalPages}
                       className="px-3 py-2 border border-gray-600 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-700 text-gray-300"
                     >
-                      Sljedeća
+                      Nächste
                     </button>
                   </div>
                 )}
@@ -373,8 +385,8 @@ console.log(result.cars[0])
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-medium text-white mb-2">Nema pronađenih automobila</h3>
-                <p className="text-gray-400">Pokušajte promijeniti filtere ili pretragu</p>
+                <h3 className="text-lg font-medium text-white mb-2">Keine Fahrzeuge gefunden</h3>
+                <p className="text-gray-400">Versuchen Sie, die Filter oder Suche zu ändern</p>
               </div>
             )}
           </div>

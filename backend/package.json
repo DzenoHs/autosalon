@@ -30,5 +30,5 @@
     "node": ">=14.0.0",
     "npm": ">=6.0.0"
   },
-  "type": "commonjs"
+  "type": "module"
 }

@@ -3,7 +3,7 @@ const cors = require('cors');
 const axios = require('axios');
 
 const app = express();
-const PORT = process.env.PORT || 5003;
+const PORT = process.env.PORT || 5001;
 
 // CORS setup
 const corsOptions = {
@@ -29,7 +29,7 @@ app.options('*', (req, res) => {
 
 // Mobile.de API config
 const MOBILE_API_CONFIG = {
-  baseURL: 'https://services.sandbox.mobile.de/search-api/search',
+  baseURL: 'https://services.mobile.de/search-api/search',
   headers: {
     'Authorization': 'Basic c2VhcmNoLWdlbmVyaWM6c2VhcmNoLWdlbmVyaWM=',
     'Accept': 'application/vnd.de.mobile.api+json',

@@ -3,15 +3,25 @@ import { motion } from 'framer-motion';
 
 export default function Hero() {
   return (
-        <section id="hero" className="relative h-screen flex items-center justify-center bg-black">
-      {/* Background Image */}
+        <section id="hero" className="relative h-screen flex items-center justify-center bg-black overflow-hidden">
+      {/* Background Video */}
       <div className="absolute inset-0">
-        <img 
-          src="https://images.unsplash.com/photo-1542282088-fe8426682b8f?w=1920&h=1080&fit=crop&crop=center" 
-          alt="Luxusauto Hintergrund" 
+        <video 
+          autoPlay 
+          loop 
+          muted 
+          playsInline
           className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-black/60"></div>
+        >
+          <source src="/herovideo.mp4" type="video/mp4" />
+          {/* Fallback image if video fails to load */}
+          <img 
+            src="https://images.unsplash.com/photo-1542282088-fe8426682b8f?w=1920&h=1080&fit=crop&crop=center" 
+            alt="Luxusauto Hintergrund" 
+            className="w-full h-full object-cover"
+          />
+        </video>
+        <div className="absolute inset-0 bg-black/50"></div>
       </div>
 
       {/* Content */}

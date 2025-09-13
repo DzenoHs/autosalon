@@ -1,8 +1,8 @@
-const express = require('express');
-const cors = require('cors');
-const { cars } = require('./cars');
-const { checkRateLimit } = require('./rateLimiter');
-const { getCarById } = require('./getCarById');
+import express from 'express';
+import cors from 'cors';
+import { cars, getCacheStats, clearCache } from './cars.js';
+import { checkRateLimit } from './rateLimiter.js';
+import { getCarById } from './getCarById.js';
 
 const app = express();
 const PORT = process.env.PORT || 5003;
@@ -30,7 +30,26 @@ app.options('*', (req, res) => {
 //Basic Rate limit
 checkRateLimit()
 
-app.get("/api/cars", cars)
-app.get("/api/cars/:id", getCarById)
+// Main API endpoints
+app.get("/api/cars", cars);
+app.get("/api/cars/:id", getCarById);
 
-app.listen(PORT, () => { console.log(`🚀 AutoSalon API Server pokrenut na http://localhost:${PORT}`) });
+// Cache management endpoints
+app.get("/api/cache/stats", getCacheStats);
+app.delete("/api/cache/clear", clearCache);
+
+// Health check endpoint
+app.get("/api/health", (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    message: "AutoSalon API Server is running with caching enabled"
+  });
+});
+
+app.listen(PORT, () => { 
+  console.log(`🚀 AutoSalon API Server pokrenut na http://localhost:${PORT}`);
+  console.log(`📊 Cache Stats: http://localhost:${PORT}/api/cache/stats`);
+  console.log(`🧹 Cache Clear: DELETE http://localhost:${PORT}/api/cache/clear`);
+});
