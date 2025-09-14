@@ -1,11 +1,16 @@
 import express from 'express';
 import cors from 'cors';
-import { cars, getCacheStats, clearCache, topExpensiveCars } from './cars.js';
-import { checkRateLimit } from './rateLimiter.js';
-import { getCarById } from './getCarById.js';
+import { cars } from './controllers/cars.js';
+// import { checkRateLimit } from './rateLimiter.js';
+import { getCarById } from './controllers/getCarById.js';
+import { topExpensiveCars } from './controllers/topExpensiveCars.js';
+import { clearCache, getCacheStats } from './utils/cache.js';
+import morgan from 'morgan';
 
 const app = express();
 const PORT = process.env.PORT || 5003;
+
+
 
 // CORS setup
 const corsOptions = {
@@ -18,6 +23,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(morgan('dev'))
 
 // OPTIONS handler
 app.options('*', (req, res) => {
@@ -28,7 +34,11 @@ app.options('*', (req, res) => {
 });
 
 //Basic Rate limit
-checkRateLimit()
+// checkRateLimit()
+
+app.get('/', (req, res) => {
+  res.status(200).send('Backend is running!!!');
+});
 
 // Main API endpoints
 app.get("/api/cars", cars);
@@ -49,7 +59,7 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-app.listen(PORT, () => { 
+app.listen(PORT, () => {
   console.log(`🚀 AutoSalon API Server pokrenut na http://localhost:${PORT}`);
   console.log(`📊 Cache Stats: http://localhost:${PORT}/api/cache/stats`);
   console.log(`🧹 Cache Clear: DELETE http://localhost:${PORT}/api/cache/clear`);
