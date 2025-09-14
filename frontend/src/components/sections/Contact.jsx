@@ -144,14 +144,14 @@ export default function Contact() {
             <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 via-purple-500/10 to-blue-500/20 rounded-3xl blur-2xl opacity-30"></div>
             <div className="relative w-full h-[500px] lg:h-[600px] bg-neutral-800 rounded-3xl overflow-hidden border-2 border-neutral-700 shadow-2xl">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d46302.08469805778!2d18.356!3d43.8476!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4758cbb1ed719bd1%3A0x562ecda6de87b33e!2sSarajevo%2C%20Bosnia%20and%20Herzegovina!5e0!3m2!1sen!2sba!4v1635872400000!5m2!1sen!2sba"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2474.776436389574!2d9.568464912229766!3d51.30946727187529!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47bb386bc3336435%3A0x86d894ce7d2736a4!2sNiestetalstra%C3%9Fe%2011%2C%2034266%20Niestetal%2C%20Njema%C4%8Dka!5e0!3m2!1sen!2srs!4v1726320000000!5m2!1sen!2srs"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="Autohaus Miftari Standort"
+                title="Niestetalstraße 11, 34266 Niestetal, Deutschland"
                 className="grayscale hover:grayscale-0 transition-all duration-500"
               />
             </div>
@@ -160,7 +160,7 @@ export default function Contact() {
 
         {/* Email i Telefon info diskretno dole */}
         <div className="max-w-7xl mx-auto text-center mt-2 flex justify-center gap-12 text-white font-bold tracking-wide text-lg select-none">
-          <a href="tel:+38761123456" className="flex items-center gap-2 text-red-500 hover:text-red-400 transition-colors">
+          <a href="tel:+49 172 5604888" className="flex items-center gap-2 text-red-500 hover:text-red-400 transition-colors">
             <Phone size={24} />
             +387 61 123 456
           </a>
