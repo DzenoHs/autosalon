@@ -308,7 +308,9 @@ export default function CarDetails() {
 
                 <div className="text-center p-6 bg-gradient-to-br from-blue-900/20 to-blue-800/20 rounded-2xl border border-blue-500/20">
                   <Gauge className="w-8 h-8 text-blue-400 mx-auto mb-3" />
-                  <div className="text-xl lg:text-2xl font-bold text-white break-words">{formatMileage(car.mileage)}</div>
+                  <div className="text-xl lg:text-2xl font-bold text-white break-words">
+                    {formatMileage(car.mileage)}
+                  </div>
                   <div className="text-sm text-neutral-400">Laufleistung</div>
                 </div>
 
@@ -320,7 +322,9 @@ export default function CarDetails() {
 
                 <div className="text-center p-6 bg-gradient-to-br from-purple-900/20 to-purple-800/20 rounded-2xl border border-purple-500/20">
                   <Settings className="w-8 h-8 text-purple-400 mx-auto mb-3" />
-                  <div className="text-xl lg:text-2xl font-bold text-white break-words hyphens-auto px-1">{car.gearbox || 'N/A'}</div>
+                  <div className="text-xl lg:text-2xl font-bold text-white break-words hyphens-auto px-1">
+                    {car.gearbox || 'N/A'}
+                  </div>
                   <div className="text-sm text-neutral-400">Getriebe</div>
                 </div>
               </div>
@@ -336,7 +340,9 @@ export default function CarDetails() {
                   <div className="space-y-4">
                     <div className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-xl">
                       <span className="text-neutral-400">Leistung:</span>
-                      <span className="text-white font-medium break-words">{car.power ? `${car.power} kW` : 'N/A'}</span>
+                      <span className="text-white font-medium break-words">
+                        {car.power ? `${car.power} kW` : 'N/A'}
+                      </span>
                     </div>
                     <div className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-xl">
                       <span className="text-neutral-400">Hubraum:</span>
@@ -395,19 +401,25 @@ export default function CarDetails() {
                         {car.fuelConsumption.city && (
                           <div className="flex justify-between items-center p-3 bg-neutral-800/50 rounded-lg">
                             <span className="text-neutral-400">Stadt:</span>
-                            <span className="text-white font-medium break-words">{car.fuelConsumption.city} l/100km</span>
+                            <span className="text-white font-medium break-words">
+                              {car.fuelConsumption.city} l/100km
+                            </span>
                           </div>
                         )}
                         {car.fuelConsumption.highway && (
                           <div className="flex justify-between items-center p-3 bg-neutral-800/50 rounded-lg">
                             <span className="text-neutral-400">Landstraße:</span>
-                            <span className="text-white font-medium break-words">{car.fuelConsumption.highway} l/100km</span>
+                            <span className="text-white font-medium break-words">
+                              {car.fuelConsumption.highway} l/100km
+                            </span>
                           </div>
                         )}
                         {car.fuelConsumption.combined && (
                           <div className="flex justify-between items-center p-3 bg-neutral-800/50 rounded-lg">
                             <span className="text-neutral-400">Kombiniert:</span>
-                            <span className="text-white font-medium break-words">{car.fuelConsumption.combined} l/100km</span>
+                            <span className="text-white font-medium break-words">
+                              {car.fuelConsumption.combined} l/100km
+                            </span>
                           </div>
                         )}
                       </div>
@@ -516,7 +528,11 @@ export default function CarDetails() {
             )}
 
             {/* Document & Legal Information */}
-            {(car.vehicleIdentificationNumber || car.firstRegistration || car.nextInspection || car.warranty || car.previousOwners) && (
+            {(car.vehicleIdentificationNumber ||
+              car.firstRegistration ||
+              car.nextInspection ||
+              car.warranty ||
+              car.previousOwners) && (
               <motion.div
                 className="bg-gradient-to-br from-neutral-800 to-neutral-900 rounded-3xl p-8 shadow-2xl border border-neutral-700"
                 initial={{opacity: 0, y: 30}}
@@ -533,7 +549,9 @@ export default function CarDetails() {
                     {car.vehicleIdentificationNumber && (
                       <div className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-xl">
                         <span className="text-neutral-400">Fahrgestellnummer:</span>
-                        <span className="text-white font-medium font-mono break-all">{car.vehicleIdentificationNumber}</span>
+                        <span className="text-white font-medium font-mono break-all">
+                          {car.vehicleIdentificationNumber}
+                        </span>
                       </div>
                     )}
                     {car.firstRegistration && (
@@ -610,7 +628,6 @@ export default function CarDetails() {
                       </div>
                     )}
                   </div>
-
                   <div className="space-y-4">
                     {car.batteryCapacity && (
                       <div className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-xl">
@@ -634,6 +651,23 @@ export default function CarDetails() {
                 </div>
               </motion.div>
             )}
+            <motion.div
+              className="bg-gradient-to-br from-neutral-800 to-neutral-900 rounded-3xl p-8 shadow-2xl border border-neutral-700"
+              initial={{opacity: 0, y: 30}}
+              animate={{opacity: 1, y: 0}}
+              transition={{delay: 0.5}}
+            >
+              <h2 className="text-3xl font-bold text-white mb-8 flex items-center gap-3">
+                <Cog className="text-orange-500" size={32} />
+                Description
+              </h2>
+              {car.description && (
+                <div className="flex justify-between items-center text-center p-4 bg-neutral-800/50 rounded-xl">
+                  {/* <span className="text-neutral-400">Description:</span> */}
+                  <span className="text-white font-medium">{car.description}</span>
+                </div>
+              )}
+            </motion.div>
           </div>
 
           {/* Right Column - Price & Contact */}
@@ -651,9 +685,7 @@ export default function CarDetails() {
                 </div>
                 <p className="text-neutral-400 mb-2">Verkaufspreis (inkl. MwSt.)</p>
                 {formatPriceNet(car.price) && (
-                  <div className="text-lg text-neutral-500">
-                    Nettopreis: {formatPriceNet(car.price)}
-                  </div>
+                  <div className="text-lg text-neutral-500">Nettopreis: {formatPriceNet(car.price)}</div>
                 )}
               </div>
 

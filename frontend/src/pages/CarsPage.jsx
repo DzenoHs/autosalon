@@ -54,14 +54,14 @@ export default function CarsPage() {
         setCars(result.ads)
         setTotal(result.total)
         setMaxPages(result.maxPages)
-        
+
         // Čuvaj sve automobile za filtriranje (samo na prvoj stranici)
         if (currentPage === 1) {
           setAllCars(result.ads)
         } else {
-          setAllCars(prev => [...prev, ...result.ads])
+          setAllCars((prev) => [...prev, ...result.ads])
         }
-        
+
         setDisplayedCars(result.ads)
       } catch (err) {
         console.log(err)
@@ -137,7 +137,7 @@ export default function CarsPage() {
 
   // Handle filter change
   const handleFilterChange = (field, value) => {
-    const newFilters = { ...filters, [field]: value }
+    const newFilters = {...filters, [field]: value}
     setFilters(newFilters)
     applyFilters(newFilters)
   }
@@ -147,28 +147,30 @@ export default function CarsPage() {
     let filtered = cars
 
     if (currentFilters.make) {
-      filtered = filtered.filter(car => car.make?.toLowerCase().includes(currentFilters.make.toLowerCase()))
+      filtered = filtered.filter((car) => car.make?.toLowerCase().includes(currentFilters.make.toLowerCase()))
     }
     if (currentFilters.model) {
-      filtered = filtered.filter(car => car.model?.toLowerCase().includes(currentFilters.model.toLowerCase()))
+      filtered = filtered.filter((car) => car.model?.toLowerCase().includes(currentFilters.model.toLowerCase()))
     }
     if (currentFilters.priceFrom) {
-      filtered = filtered.filter(car => car.price?.consumerPriceGross >= parseInt(currentFilters.priceFrom))
+      filtered = filtered.filter((car) => car.price?.consumerPriceGross >= parseInt(currentFilters.priceFrom))
     }
     if (currentFilters.priceTo) {
-      filtered = filtered.filter(car => car.price?.consumerPriceGross <= parseInt(currentFilters.priceTo))
+      filtered = filtered.filter((car) => car.price?.consumerPriceGross <= parseInt(currentFilters.priceTo))
     }
     if (currentFilters.yearFrom) {
-      filtered = filtered.filter(car => car.year >= parseInt(currentFilters.yearFrom))
+      filtered = filtered.filter((car) => car.year >= parseInt(currentFilters.yearFrom))
     }
     if (currentFilters.yearTo) {
-      filtered = filtered.filter(car => car.year <= parseInt(currentFilters.yearTo))
+      filtered = filtered.filter((car) => car.year <= parseInt(currentFilters.yearTo))
     }
     if (currentFilters.fuel) {
-      filtered = filtered.filter(car => car.fuel?.toLowerCase().includes(currentFilters.fuel.toLowerCase()))
+      filtered = filtered.filter((car) => car.fuel?.toLowerCase().includes(currentFilters.fuel.toLowerCase()))
     }
     if (currentFilters.transmission) {
-      filtered = filtered.filter(car => car.gearbox?.toLowerCase().includes(currentFilters.transmission.toLowerCase()))
+      filtered = filtered.filter((car) =>
+        car.gearbox?.toLowerCase().includes(currentFilters.transmission.toLowerCase())
+      )
     }
 
     setDisplayedCars(filtered)
@@ -192,11 +194,13 @@ export default function CarsPage() {
 
   // Get unique values for filter options
   const getUniqueValues = (field) => {
-    const values = cars.map(car => {
-      if (field === 'make' || field === 'model' || field === 'fuel') return car[field]
-      if (field === 'transmission') return car.gearbox
-      return null
-    }).filter(Boolean)
+    const values = cars
+      .map((car) => {
+        if (field === 'make' || field === 'model' || field === 'fuel') return car[field]
+        if (field === 'transmission') return car.gearbox
+        return null
+      })
+      .filter(Boolean)
     return [...new Set(values)].sort()
   }
 
@@ -255,10 +259,11 @@ export default function CarsPage() {
       </div>
 
       {/* Filter Panel */}
-      <div className={`fixed left-0 top-0 h-full bg-gray-900 shadow-2xl transform transition-transform duration-300 z-50 ${
-        isFilterOpen ? 'translate-x-0' : '-translate-x-full'
-      } w-80 overflow-y-auto`}>
-        
+      <div
+        className={`fixed left-0 top-0 h-full bg-gray-900 shadow-2xl transform transition-transform duration-300 z-50 ${
+          isFilterOpen ? 'translate-x-0' : '-translate-x-full'
+        } w-80 overflow-y-auto`}
+      >
         {/* Header */}
         <div className="bg-gradient-to-r from-gray-800 to-gray-700 text-white p-4 sticky top-0 z-10">
           <div className="flex items-center justify-between">
@@ -266,14 +271,14 @@ export default function CarsPage() {
               <FaFilter className="text-lg" />
               <h2 className="text-xl font-bold">Filter</h2>
             </div>
-            <button 
+            <button
               onClick={() => setIsFilterOpen(false)}
               className="p-2 hover:bg-gray-600 rounded-lg transition-colors"
             >
               <FaTimes />
             </button>
           </div>
-          
+
           {/* Results counter */}
           <div className="mt-2 text-gray-300">
             <span className="text-sm">
@@ -284,7 +289,6 @@ export default function CarsPage() {
 
         {/* Filter Content */}
         <div className="p-4 space-y-4">
-          
           {/* Make Filter */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">Marke</label>
@@ -294,8 +298,10 @@ export default function CarsPage() {
               className="w-full p-2 bg-gray-800 border border-gray-600 rounded-lg text-white"
             >
               <option value="">Alle Marken</option>
-              {getUniqueValues('make').map(make => (
-                <option key={make} value={make}>{make}</option>
+              {getUniqueValues('make').map((make) => (
+                <option key={make} value={make}>
+                  {make}
+                </option>
               ))}
             </select>
           </div>
@@ -309,8 +315,10 @@ export default function CarsPage() {
               className="w-full p-2 bg-gray-800 border border-gray-600 rounded-lg text-white"
             >
               <option value="">Alle Modelle</option>
-              {getUniqueValues('model').map(model => (
-                <option key={model} value={model}>{model}</option>
+              {getUniqueValues('model').map((model) => (
+                <option key={model} value={model}>
+                  {model}
+                </option>
               ))}
             </select>
           </div>
@@ -366,8 +374,10 @@ export default function CarsPage() {
               className="w-full p-2 bg-gray-800 border border-gray-600 rounded-lg text-white"
             >
               <option value="">Alle Kraftstoffe</option>
-              {getUniqueValues('fuel').map(fuel => (
-                <option key={fuel} value={fuel}>{fuel}</option>
+              {getUniqueValues('fuel').map((fuel) => (
+                <option key={fuel} value={fuel}>
+                  {fuel}
+                </option>
               ))}
             </select>
           </div>
@@ -381,8 +391,10 @@ export default function CarsPage() {
               className="w-full p-2 bg-gray-800 border border-gray-600 rounded-lg text-white"
             >
               <option value="">Alle Getriebe</option>
-              {getUniqueValues('transmission').map(transmission => (
-                <option key={transmission} value={transmission}>{transmission}</option>
+              {getUniqueValues('transmission').map((transmission) => (
+                <option key={transmission} value={transmission}>
+                  {transmission}
+                </option>
               ))}
             </select>
           </div>
@@ -434,7 +446,7 @@ export default function CarsPage() {
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                        
+
                         {/* Year Badge */}
                         <div className="absolute top-3 right-3 bg-red-600 text-white px-2 py-1 rounded-lg text-xs font-bold">
                           {car.year}
@@ -446,7 +458,7 @@ export default function CarsPage() {
                         <h3 className="text-xl font-bold text-white group-hover:text-red-400 transition-colors mb-2 truncate">
                           {car.make} {car.model}
                         </h3>
-                        
+
                         {/* Main Details */}
                         <div className="grid grid-cols-2 gap-2 mb-3 text-xs">
                           <div className="flex items-center gap-1 text-gray-400">
@@ -495,7 +507,7 @@ export default function CarsPage() {
                           </div>
                           {car.price.consumerPriceNet && (
                             <div className="text-xs text-gray-500">
-                              Netto: {formatPrice({consumerPriceGross: car.price.consumerPriceNet})}
+                              Netto: {formatPrice(car.price.consumerPriceNet)}
                             </div>
                           )}
                         </div>
@@ -513,7 +525,7 @@ export default function CarsPage() {
                   >
                     Vorherige
                   </button>
-                  
+
                   <div className="flex items-center gap-1">
                     {generatePageNumbers().map((page, index) => (
                       <React.Fragment key={index}>
