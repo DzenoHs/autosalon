@@ -30,10 +30,7 @@ const Cars = () => {
             fuel: car.fuel || 'Unbekannt',
             gearbox: car.gearbox || 'Unbekannt',
             engine: `${car.power || 0} kW`,
-            img:
-              car.images && car.images[0]
-                ? car.images[0].url
-                : 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&q=80',
+            images: car.images,
             condition: car.condition || 'USED',
             category: 'premium'
           }))
@@ -143,12 +140,9 @@ const Cars = () => {
                 {/* Car Image */}
                 <div className="relative h-64 overflow-hidden rounded-t-3xl">
                   <img
-                    src={car.img}
+                    src={car?.images[0].xxl}
                     alt={car.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    onError={(e) => {
-                      e.target.src = 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&q=80'
-                    }}
                   />
 
                   {/* Premium Badge for expensive cars */}
