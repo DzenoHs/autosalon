@@ -7,7 +7,7 @@ class MobileApiService {
     this.proxyUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5003';
     this.isLoading = false;
     this.lastError = null;
-    
+
     // UKLANJAMO axios interceptors koji prave CORS probleme
     console.log('🔧 MobileApiService inicijalizovan - bez interceptors');
   }
@@ -16,13 +16,13 @@ class MobileApiService {
   async fetchCarsWithFilters(params = {}) {
     try {
       console.log('🔍 Dohvaćam automobile s filterima:', params);
-      
+
       const queryParams = new URLSearchParams();
-      
+
       // Dodaj osnovne parametre
       queryParams.append('pageNumber', params.pageNumber || 1);
       queryParams.append('pageSize', params.pageSize || 20);
-      
+
       // Dodaj filtere ako postoje
       if (params.make) queryParams.append('make', params.make);
       if (params.model) queryParams.append('model', params.model);
@@ -34,10 +34,10 @@ class MobileApiService {
       if (params.transmission) queryParams.append('transmission', params.transmission);
       if (params.mileageFrom) queryParams.append('mileageFrom', params.mileageFrom);
       if (params.mileageTo) queryParams.append('mileageTo', params.mileageTo);
-      
+
       const url = `${this.proxyUrl}/api/cars?${queryParams.toString()}`;
       console.log('📡 API URL:', url);
-      
+
       const response = await axios.get(url, {
         timeout: 15000,
         headers: {
@@ -45,9 +45,9 @@ class MobileApiService {
           'Content-Type': 'application/json'
         }
       });
-      
+
       console.log('✅ API odgovor prima:', response.data);
-      
+
       if (response.data && response.data.ads) {
         return {
           success: true,
@@ -65,7 +65,7 @@ class MobileApiService {
           error: 'Nema podataka'
         };
       }
-      
+
     } catch (error) {
       console.error('💥 Greška pri dohvaćanju s filterima:', error);
       return {
@@ -99,7 +99,7 @@ class MobileApiService {
         if (attempt === maxRetries) {
           throw error;
         }
-        
+
         const delay = Math.pow(2, attempt) * 1000; // 2s, 4s, 8s
         console.log(`🔄 Pokušaj ${attempt} neuspješan, čeka se ${delay}ms...`);
         await new Promise(resolve => setTimeout(resolve, delay));
@@ -136,10 +136,10 @@ class MobileApiService {
       }
 
       // ✅ JEDNOSTAVAN FETCH BEZ PROBLEMATIČNIH HEADERS
-      const apiUrl = process.env.NODE_ENV === 'production' 
+      const apiUrl = process.env.NODE_ENV === 'production'
         ? `/api/cars?pageNumber=${page}&pageSize=${pageSize}`
         : `${this.proxyUrl}/api/cars?page=${page}&pageSize=${pageSize}`;
-      
+
       const response = await fetch(apiUrl, {
         method: 'GET',
         headers: {
@@ -159,7 +159,7 @@ class MobileApiService {
 
       // ✅ Uvijek obradi kao JSON, status je uvijek 200
       const data = await response.json();
-      
+
       // Provjeri da li je došlo do greške u JSON odgovoru
       if (data.error) {
         console.warn(`⚠️ API greška: ${data.message}`);
@@ -178,7 +178,7 @@ class MobileApiService {
     } catch (error) {
       this.lastError = error;
       console.error('❌ Fetch greška:', error.message);
-      
+
       // Fallback mehanizam
       return this.getFallbackData(page);
     } finally {
@@ -195,11 +195,11 @@ class MobileApiService {
 
     const ads = mobileData.ads || [];
     console.log(`📊 Broj oglasa: ${ads.length}`);
-    console.log( "mobileData.ads")
-    console.log( mobileData.ads)
+    console.log("mobileData.ads")
+    console.log(mobileData.ads)
     const transformedCars = ads.map((ad, index) => {
       console.log(`🔍 Obrađujem oglas ${index + 1}:`, ad);
-      
+
       // Mobile.de koristi FLAT strukturu - podaci su direktno na root objektu
       const make = ad.make || 'Nepoznata marka';
       const model = ad.model || ad.modelDescription || 'Nepoznat model';
@@ -210,7 +210,7 @@ class MobileApiService {
       const transmission = this.mapTransmissionType(ad.gearbox);
       const power = ad.power || 0;
       const location = ad.seller?.address?.city || 'Deutschland';
-      
+
       console.log(`✅ Mapiran auto: ${make} ${model} (${year}) - €${price}`);
 
       return {
@@ -281,7 +281,7 @@ class MobileApiService {
   // Mapiraj Mobile.de slike u format aplikacije
   mapMobileImages(mobileImages, make, model) {
     console.log(`🖼️ Mapiram slike za ${make} ${model}:`, mobileImages);
-    
+
     if (!mobileImages || !Array.isArray(mobileImages) || mobileImages.length === 0) {
       console.warn(`⚠️ Nema slika za ${make} ${model}, koristim fallback`);
       return this.generateCarImages(make, model);
@@ -291,9 +291,9 @@ class MobileApiService {
     const mappedImages = mobileImages.map((img, index) => {
       // Preferencija za veće slike
       const imageUrl = img.xxxl || img.xxl || img.xl || img.l || img.m || img.s || img.icon;
-      
+
       console.log(`📸 Slika ${index + 1}: ${imageUrl}`);
-      
+
       return {
         id: index + 1,
         url: imageUrl,
@@ -316,13 +316,13 @@ class MobileApiService {
 
     // Mobile.de struktura: { consumerPriceGross: "38999.00", consumerPriceNet: "32772.27", currency: "EUR" }
     let priceValue = 0;
-    
+
     if (priceObj.consumerPriceGross) {
       priceValue = parseFloat(priceObj.consumerPriceGross);
     } else if (priceObj.consumerPriceNet) {
       priceValue = parseFloat(priceObj.consumerPriceNet);
     }
-    
+
     console.log(`💰 Mapirana cijena: €${priceValue}`);
     return priceValue || Math.floor(Math.random() * 50000) + 10000;
   }
@@ -338,11 +338,11 @@ class MobileApiService {
       `${model}+vehicle`,
       `premium+automobile`
     ];
-    
+
     return Array.from({ length: 5 }, (_, i) => {
       const searchTerm = searchTerms[i] || `car+automobile`;
       const unsplashUrl = `https://source.unsplash.com/800x600/?${searchTerm}&sig=${Date.now()}-${i}`;
-      
+
       return {
         id: i + 1,
         url: `${proxyUrl}?url=${encodeURIComponent(unsplashUrl)}`,
@@ -356,12 +356,12 @@ class MobileApiService {
   async fetchCarDetails(carId) {
     try {
       console.log(`🔍 Dohvaćam detalje automobila ID: ${carId}`);
-      
-      const url = process.env.NODE_ENV === 'production' 
+
+      const url = process.env.NODE_ENV === 'production'
         ? `/api/cars/${carId}`
         : `${this.proxyUrl}/api/cars/${carId}`;
       console.log('📡 Car details URL:', url);
-      
+
       const response = await axios.get(url, {
         timeout: 15000,
         headers: {
@@ -369,13 +369,13 @@ class MobileApiService {
           'Content-Type': 'application/json'
         }
       });
-      
+
       console.log('✅ Car details odgovor:', response.data);
-      
+
       if (response.data && response.data.success) {
         // Backend vraća podatke direktno u response.data.data
         const carData = response.data.data || response.data;
-        
+
         return {
           success: true,
           car: carData,
@@ -384,11 +384,11 @@ class MobileApiService {
       } else {
         throw new Error(response.data?.error || 'Automobil nije pronađen');
       }
-      
+
     } catch (error) {
       console.error('❌ Greška pri dohvaćanju car details:', error);
       this.lastError = error;
-      
+
       // Vratiti fallback ili re-throw error
       throw new Error(`Neuspješno dohvaćanje detalja automobila: ${error.message}`);
     }
@@ -397,7 +397,7 @@ class MobileApiService {
   // Fallback podatci u slučaju greške
   getFallbackData(page) {
     console.log('🔄 Koristim fallback podatke...');
-    
+
     return {
       cars: [],
       totalCount: 0,
@@ -414,9 +414,9 @@ class MobileApiService {
   async fetchCarsForReact(page = 1) {
     try {
       console.log(`📱 React poziva dohvaćanje automobila - stranica ${page}`);
-      
+
       const result = await this.fetchCarsFromMobileApi(page, 20);
-      
+
       // Dodaj njemačke labele
       result.germanLabels = {
         page: 'Seite',
@@ -439,10 +439,10 @@ class MobileApiService {
   async fetchTopExpensiveCars() {
     try {
       console.log('🔍 Dohvaćam 6 najskupljih automobila...');
-      
+
       const url = `${this.proxyUrl}/api/cars/top/expensive`;
       console.log('📡 Top expensive cars URL:', url);
-      
+
       const response = await axios.get(url, {
         timeout: 15000,
         headers: {
@@ -450,9 +450,9 @@ class MobileApiService {
           'Content-Type': 'application/json'
         }
       });
-      
+
       console.log('✅ Top expensive cars odgovor:', response.data);
-      
+
       if (response.data && response.data.success) {
         return {
           success: true,
@@ -465,11 +465,11 @@ class MobileApiService {
       } else {
         throw new Error(response.data?.error || 'Najskuplji automobili nisu pronađeni');
       }
-      
+
     } catch (error) {
       console.error('❌ Greška pri dohvaćanju najskupljih automobila:', error);
       this.lastError = error;
-      
+
       // Fallback - prazan rezultat
       return {
         success: false,
