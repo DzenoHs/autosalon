@@ -125,60 +125,43 @@ class MobileApiService {
   }
 
   // Glavni API poziv za dohvaćanje automobila
-  async fetchCarsFromMobileApi(page = 1, pageSize = 20) {
+  async fetchCarsFromMobileApi(pageNumber = 1, pageSize = 20) {
     this.isLoading = true;
     this.lastError = null;
 
     try {
-      // Samo logiramo za prvu stranicu
-      if (page === 1) {
-        console.log(`🚗 Dohvaćam GM-TOP-CARS automobile (stranica ${page})...`);
-      }
+      console.log(`🚗 Fetching cars from Mobile API (page ${pageNumber}, pageSize ${pageSize})...`);
 
-      // ✅ JEDNOSTAVAN FETCH BEZ PROBLEMATIČNIH HEADERS
-      const apiUrl = `${this.proxyUrl}/api/cars?page=${page}&pageSize=${pageSize}`;
+      // Construct the API URL
+      const apiUrl = `${this.proxyUrl}/api/cars?pageNumber=${pageNumber}&pageSize=${pageSize}`;
 
-      const response = await fetch(apiUrl, {
-        method: 'GET',
+      // Make the API call using axios
+      const response = await axios.get(apiUrl, {
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json'
-          // Uklonjen Cache-Control koji je izazvao CORS grešku
+          'Content-Type': 'application/json',
         },
-        mode: 'cors',
-        credentials: 'omit'
+        timeout: 15000, // Set a timeout of 15 seconds
       });
 
-      // ✅ Provjeri da li je response JSON
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        throw new Error(`Server vratio ${contentType} umjesto JSON`);
+      console.log('✅ API response received:', response.data);
+
+      // Check if the response contains valid data
+      if (response.data && response.data.ads) {
+        // Transform the data for the React app
+        // const transformedData = this.transformMobileData(response.data, pageNumber);
+        // console.log(`✅ Page ${pageNumber}: ${transformedData.cars.length} cars fetched`);
+        return response.data;
+      } else {
+        console.warn('⚠️ No ads found in the API response');
+        return this.getFallbackData(pageNumber);
       }
-
-      // ✅ Uvijek obradi kao JSON, status je uvijek 200
-      const data = await response.json();
-
-      // Provjeri da li je došlo do greške u JSON odgovoru
-      if (data.error) {
-        console.warn(`⚠️ API greška: ${data.message}`);
-        return this.getFallbackData(page);
-      }
-
-      // Transformiraj podatke za React aplikaciju
-      const transformedData = this.transformMobileData(data, page);
-
-      // Samo logiramo značajne informacije
-      if (page === 1 || transformedData.cars.length === 0) {
-        console.log(`✅ Stranica ${page}: ${transformedData.cars.length} automobila`);
-      }
-      return transformedData;
-
     } catch (error) {
+      console.error('❌ Error fetching cars from Mobile API:', error.message);
       this.lastError = error;
-      console.error('❌ Fetch greška:', error.message);
 
-      // Fallback mehanizam
-      return this.getFallbackData(page);
+      // Return fallback data in case of an error
+      return this.getFallbackData(pageNumber);
     } finally {
       this.isLoading = false;
     }

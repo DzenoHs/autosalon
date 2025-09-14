@@ -27,7 +27,7 @@ export const fetchCarsFromMobileAPI = async (apiParams, maxPagesToFetch = 5) => 
   let totalCount = 0;
 
   for (let currentPageNum = 1; currentPageNum <= maxPagesToFetch && allCars.length < 100; currentPageNum++) {
-    const currentApiParams = { ...apiParams, pageNumber: currentPageNum };
+    const currentApiParams = { ...apiParams };
     const queryString = new URLSearchParams(currentApiParams).toString();
     const apiUrl = `${MOBILE_API_CONFIG.baseURL}/search?imageCount.min=1&${queryString}`;
 
