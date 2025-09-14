@@ -374,13 +374,9 @@ class MobileApiService {
 
       if (response.data && response.data.success) {
         // Backend vraća podatke direktno u response.data.data
-        const carData = response.data.data || response.data;
+        const carData = response.data;
 
-        return {
-          success: true,
-          car: carData,
-          source: 'api'
-        };
+        return carData
       } else {
         throw new Error(response.data?.error || 'Automobil nije pronađen');
       }
