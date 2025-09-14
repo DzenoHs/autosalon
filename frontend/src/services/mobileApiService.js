@@ -136,9 +136,7 @@ class MobileApiService {
       }
 
       // ✅ JEDNOSTAVAN FETCH BEZ PROBLEMATIČNIH HEADERS
-      const apiUrl = process.env.NODE_ENV === 'production'
-        ? `/api/cars?pageNumber=${page}&pageSize=${pageSize}`
-        : `${this.proxyUrl}/api/cars?page=${page}&pageSize=${pageSize}`;
+      const apiUrl = `${this.proxyUrl}/api/cars?page=${page}&pageSize=${pageSize}`;
 
       const response = await fetch(apiUrl, {
         method: 'GET',
@@ -357,9 +355,7 @@ class MobileApiService {
     try {
       console.log(`🔍 Dohvaćam detalje automobila ID: ${carId}`);
 
-      const url = process.env.NODE_ENV === 'production'
-        ? `/api/cars/${carId}`
-        : `${this.proxyUrl}/api/cars/${carId}`;
+      const url = `${this.proxyUrl}/api/cars/${carId}`;
       console.log('📡 Car details URL:', url);
 
       const response = await axios.get(url, {
