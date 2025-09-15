@@ -457,6 +457,35 @@ class MobileApiService {
     }
   }
 
+  // Fetch unique car makes
+  async fetchUniqueCarMakes() {
+    try {
+      console.log('🔍 Fetching unique car makes from API...');
+
+      const url = `${this.proxyUrl}/api/cars/make`; // API endpoint for unique car makes
+      console.log('📡 Unique car makes URL:', url);
+
+      const response = await axios.get(url, {
+        timeout: 15000,
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log('✅ Unique car makes response:', response.data);
+
+      if (response.data && response.data.data) {
+        return response.data.data; // Return the array of unique car makes
+      } else {
+        throw new Error('No data found for car makes');
+      }
+    } catch (error) {
+      console.error('❌ Error fetching unique car makes:', error.message);
+      throw new Error(`Failed to fetch car makes: ${error.message}`);
+    }
+  }
+
   // Status provjera
   getStatus() {
     return {

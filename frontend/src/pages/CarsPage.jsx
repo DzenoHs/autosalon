@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {FaFilter, FaSearch, FaEye, FaHeart, FaShare, FaHome, FaTimes} from 'react-icons/fa'
+import {FaFilter, FaSearch, FaHome, FaTimes} from 'react-icons/fa'
 import mobileApiService from '../services/mobileApiService'
 
 const FALLBACK_IMG = 'https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800&h=600&fit=crop&crop=center'
@@ -39,6 +39,24 @@ export default function CarsPage() {
   const [allCars, setAllCars] = useState([])
   const [displayedCars, setDisplayedCars] = useState([])
 
+  // State for unique car makes
+  const [uniqueMakes, setUniqueMakes] = useState([])
+
+  // Fetch unique car makes from API
+  useEffect(() => {
+    const fetchUniqueMakes = async () => {
+      try {
+        const makes = await mobileApiService.fetchUniqueCarMakes() // Use the new method
+        setUniqueMakes(makes)
+      } catch (err) {
+        console.error('❌ Error fetching car makes:', err)
+        setError('Failed to load car makes. Please try again later.')
+      }
+    }
+
+    fetchUniqueMakes()
+  }, [])
+
   // Fetch cars from API
   useEffect(() => {
     const fetchCars = async () => {
@@ -48,8 +66,7 @@ export default function CarsPage() {
 
         console.log('🔄 Fetching cars from API...')
         const result = await mobileApiService.fetchCarsFromMobileApi(currentPage, pageSize)
-        console.log('result in fetchCars')
-        console.log(result)
+
         console.log('✅ Cars fetched successfully:', result)
         setCars(result.ads)
         setTotal(result.total)
@@ -64,7 +81,6 @@ export default function CarsPage() {
 
         setDisplayedCars(result.ads)
       } catch (err) {
-        console.log(err)
         console.error('❌ Error fetching cars:', err)
         setError('Failed to load cars. Please try again later.')
       } finally {
@@ -298,7 +314,7 @@ export default function CarsPage() {
               className="w-full p-2 bg-gray-800 border border-gray-600 rounded-lg text-white"
             >
               <option value="">Alle Marken</option>
-              {getUniqueValues('make').map((make) => (
+              {uniqueMakes.map((make) => (
                 <option key={make} value={make}>
                   {make}
                 </option>

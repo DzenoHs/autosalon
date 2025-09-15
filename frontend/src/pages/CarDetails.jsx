@@ -89,17 +89,38 @@ export default function CarDetails() {
   const formatPrice = (priceObj) => {
     if (!priceObj) return 'Preis auf Anfrage'
     const price = priceObj.consumerPriceGross || priceObj.value || priceObj
-    return `${price.toLocaleString('de-DE')} €`
+    return `${Number(price).toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2})} €`
   }
 
   const formatPriceNet = (priceObj) => {
     if (!priceObj || !priceObj.consumerPriceNet) return null
-    return `${priceObj.consumerPriceNet.toLocaleString('de-DE')} €`
+    return `${Number(priceObj.consumerPriceNet).toLocaleString('de-DE', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })} €`
   }
 
   const formatMileage = (mileage) => {
     if (!mileage) return 'k.A.'
-    return `${mileage.toLocaleString('de-DE')} km`
+    return `${Number(mileage).toLocaleString('de-DE')} km`
+  }
+
+  // Format description text
+  const formatDescription = (description) => {
+    if (!description) return null
+
+    // Split by \* and \\ markers and clean up
+    const items = description
+      .split(/\\?\*/)
+      .map((item) => item.trim())
+      .filter((item) => item.length > 0 && item !== '\\')
+      .map((item) => {
+        // Clean up extra backslashes and formatting
+        return item.replace(/\\+/g, '').trim()
+      })
+      .filter((item) => item.length > 0)
+
+    return items
   }
 
   // Loading state
@@ -141,9 +162,9 @@ export default function CarDetails() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-neutral-900 to-black">
+    <div className="min-h-screen bg-black">
       {/* Header */}
-      <div className="bg-gradient-to-r from-black via-neutral-800 to-black border-b border-neutral-700">
+      <div className="bg-neutral-900 border-b border-red-600">
         <div className="container mx-auto px-6 py-6">
           <motion.button
             onClick={() => navigate('/cars')}
@@ -186,8 +207,8 @@ export default function CarDetails() {
       </div>
 
       {/* Main Content */}
-      <div className="w-full px-6 py-12 max-w-none">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 max-w-7xl mx-auto xl:max-w-none xl:px-12">
+      <div className="w-full px-2 sm:px-6 py-6 sm:py-12 max-w-none">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-12 w-full px-2 sm:px-12">
           {/* Left Column - Images & Specs */}
           <div className="lg:col-span-2 space-y-8">
             {/* Image Gallery */}
@@ -286,176 +307,6 @@ export default function CarDetails() {
               )}
             </motion.div>
 
-            {/* Vehicle Specifications */}
-            <motion.div
-              className="bg-gradient-to-br from-neutral-800 to-neutral-900 rounded-3xl p-8 shadow-2xl border border-neutral-700"
-              initial={{opacity: 0, y: 30}}
-              animate={{opacity: 1, y: 0}}
-              transition={{delay: 0.1}}
-            >
-              <h2 className="text-3xl font-bold text-white mb-8 flex items-center gap-3">
-                <Car className="text-red-500" size={32} />
-                Fahrzeugdetails
-              </h2>
-
-              {/* Quick Stats */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                <div className="text-center p-6 bg-gradient-to-br from-red-900/20 to-red-800/20 rounded-2xl border border-red-500/20">
-                  <Calendar className="w-8 h-8 text-red-400 mx-auto mb-3" />
-                  <div className="text-xl lg:text-2xl font-bold text-white break-words">{car.year || 'N/A'}</div>
-                  <div className="text-sm text-neutral-400">Baujahr</div>
-                </div>
-
-                <div className="text-center p-6 bg-gradient-to-br from-blue-900/20 to-blue-800/20 rounded-2xl border border-blue-500/20">
-                  <Gauge className="w-8 h-8 text-blue-400 mx-auto mb-3" />
-                  <div className="text-xl lg:text-2xl font-bold text-white break-words">
-                    {formatMileage(car.mileage)}
-                  </div>
-                  <div className="text-sm text-neutral-400">Laufleistung</div>
-                </div>
-
-                <div className="text-center p-6 bg-gradient-to-br from-green-900/20 to-green-800/20 rounded-2xl border border-green-500/20">
-                  <Fuel className="w-8 h-8 text-green-400 mx-auto mb-3" />
-                  <div className="text-xl lg:text-2xl font-bold text-white break-words px-1">{car.fuel || 'N/A'}</div>
-                  <div className="text-sm text-neutral-400">Kraftstoff</div>
-                </div>
-
-                <div className="text-center p-6 bg-gradient-to-br from-purple-900/20 to-purple-800/20 rounded-2xl border border-purple-500/20">
-                  <Settings className="w-8 h-8 text-purple-400 mx-auto mb-3" />
-                  <div className="text-xl lg:text-2xl font-bold text-white break-words hyphens-auto px-1">
-                    {car.gearbox || 'N/A'}
-                  </div>
-                  <div className="text-sm text-neutral-400">Getriebe</div>
-                </div>
-              </div>
-
-              {/* Detailed Specs */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Technical Data */}
-                <div>
-                  <h3 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                    <Cog className="text-red-400" size={20} />
-                    Technische Daten
-                  </h3>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-xl">
-                      <span className="text-neutral-400">Leistung:</span>
-                      <span className="text-white font-medium break-words">
-                        {car.power ? `${car.power} kW` : 'N/A'}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-xl">
-                      <span className="text-neutral-400">Hubraum:</span>
-                      <span className="text-white font-medium break-words">
-                        {car.cubicCapacity ? `${car.cubicCapacity} cm³` : 'N/A'}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Exterior & Interior */}
-                <div>
-                  <h3 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                    <Palette className="text-red-400" size={20} />
-                    Ausstattung
-                  </h3>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-xl">
-                      <span className="text-neutral-400">Außenfarbe:</span>
-                      <span className="text-white font-medium break-words">{car.exteriorColor || 'N/A'}</span>
-                    </div>
-                    <div className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-xl">
-                      <span className="text-neutral-400">Innenausstattung:</span>
-                      <span className="text-white font-medium break-words">{car.interiorColor || 'N/A'}</span>
-                    </div>
-                    <div className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-xl">
-                      <span className="text-neutral-400">Zustand:</span>
-                      <span className="text-white font-medium break-words">{car.condition || 'N/A'}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Additional Vehicle Information */}
-            {(car.consumption || car.emissionClass || car.co2Emission || car.fuelConsumption) && (
-              <motion.div
-                className="bg-gradient-to-br from-neutral-800 to-neutral-900 rounded-3xl p-8 shadow-2xl border border-neutral-700"
-                initial={{opacity: 0, y: 30}}
-                animate={{opacity: 1, y: 0}}
-                transition={{delay: 0.2}}
-              >
-                <h2 className="text-3xl font-bold text-white mb-8 flex items-center gap-3">
-                  <Zap className="text-green-500" size={32} />
-                  Verbrauch & Umwelt
-                </h2>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {car.fuelConsumption && (
-                    <div className="space-y-3">
-                      <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                        <Fuel className="text-green-400" size={18} />
-                        Kraftstoffverbrauch
-                      </h3>
-                      <div className="space-y-2">
-                        {car.fuelConsumption.city && (
-                          <div className="flex justify-between items-center p-3 bg-neutral-800/50 rounded-lg">
-                            <span className="text-neutral-400">Stadt:</span>
-                            <span className="text-white font-medium break-words">
-                              {car.fuelConsumption.city} l/100km
-                            </span>
-                          </div>
-                        )}
-                        {car.fuelConsumption.highway && (
-                          <div className="flex justify-between items-center p-3 bg-neutral-800/50 rounded-lg">
-                            <span className="text-neutral-400">Landstraße:</span>
-                            <span className="text-white font-medium break-words">
-                              {car.fuelConsumption.highway} l/100km
-                            </span>
-                          </div>
-                        )}
-                        {car.fuelConsumption.combined && (
-                          <div className="flex justify-between items-center p-3 bg-neutral-800/50 rounded-lg">
-                            <span className="text-neutral-400">Kombiniert:</span>
-                            <span className="text-white font-medium break-words">
-                              {car.fuelConsumption.combined} l/100km
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="space-y-3">
-                    <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                      <Shield className="text-green-400" size={18} />
-                      Umweltdaten
-                    </h3>
-                    <div className="space-y-2">
-                      {car.co2Emission && (
-                        <div className="flex justify-between items-center p-3 bg-neutral-800/50 rounded-lg">
-                          <span className="text-neutral-400">CO₂-Emission:</span>
-                          <span className="text-white font-medium break-words">{car.co2Emission} g/km</span>
-                        </div>
-                      )}
-                      {car.emissionClass && (
-                        <div className="flex justify-between items-center p-3 bg-neutral-800/50 rounded-lg">
-                          <span className="text-neutral-400">Schadstoffklasse:</span>
-                          <span className="text-white font-medium break-words">{car.emissionClass}</span>
-                        </div>
-                      )}
-                      {car.environmentalBadge && (
-                        <div className="flex justify-between items-center p-3 bg-neutral-800/50 rounded-lg">
-                          <span className="text-neutral-400">Umweltplakette:</span>
-                          <span className="text-white font-medium break-words">{car.environmentalBadge}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-
             {/* Equipment & Features */}
             {(car.features || car.equipment || car.safetyFeatures || car.comfortFeatures) && (
               <motion.div
@@ -469,7 +320,7 @@ export default function CarDetails() {
                   Ausstattung & Features
                 </h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8">
                   {/* Safety Features */}
                   {(car.safetyFeatures || car.features?.safety) && (
                     <div>
@@ -526,148 +377,6 @@ export default function CarDetails() {
                 )}
               </motion.div>
             )}
-
-            {/* Document & Legal Information */}
-            {(car.vehicleIdentificationNumber ||
-              car.firstRegistration ||
-              car.nextInspection ||
-              car.warranty ||
-              car.previousOwners) && (
-              <motion.div
-                className="bg-gradient-to-br from-neutral-800 to-neutral-900 rounded-3xl p-8 shadow-2xl border border-neutral-700"
-                initial={{opacity: 0, y: 30}}
-                animate={{opacity: 1, y: 0}}
-                transition={{delay: 0.4}}
-              >
-                <h2 className="text-3xl font-bold text-white mb-8 flex items-center gap-3">
-                  <FileText className="text-yellow-500" size={32} />
-                  Fahrzeugdokumente & Historie
-                </h2>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="space-y-4">
-                    {car.vehicleIdentificationNumber && (
-                      <div className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-xl">
-                        <span className="text-neutral-400">Fahrgestellnummer:</span>
-                        <span className="text-white font-medium font-mono break-all">
-                          {car.vehicleIdentificationNumber}
-                        </span>
-                      </div>
-                    )}
-                    {car.firstRegistration && (
-                      <div className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-xl">
-                        <span className="text-neutral-400">Erstzulassung:</span>
-                        <span className="text-white font-medium break-words">{car.firstRegistration}</span>
-                      </div>
-                    )}
-                    {car.previousOwners !== undefined && (
-                      <div className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-xl">
-                        <span className="text-neutral-400">Vorbesitzer:</span>
-                        <span className="text-white font-medium break-words">{car.previousOwners}</span>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="space-y-4">
-                    {car.nextInspection && (
-                      <div className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-xl">
-                        <span className="text-neutral-400">Nächste HU:</span>
-                        <span className="text-white font-medium break-words">{car.nextInspection}</span>
-                      </div>
-                    )}
-                    {car.warranty && (
-                      <div className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-xl">
-                        <span className="text-neutral-400">Garantie:</span>
-                        <span className="text-white font-medium break-words">{car.warranty}</span>
-                      </div>
-                    )}
-                    {car.accidentFree !== undefined && (
-                      <div className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-xl">
-                        <span className="text-neutral-400">Unfallfrei:</span>
-                        <span className={`font-medium ${car.accidentFree ? 'text-green-400' : 'text-red-400'}`}>
-                          {car.accidentFree ? 'Ja' : 'Nein'}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            )}
-
-            {/* Additional Technical Details */}
-            {(car.weight || car.maxWeight || car.engineCode || car.batteryCapacity || car.range) && (
-              <motion.div
-                className="bg-gradient-to-br from-neutral-800 to-neutral-900 rounded-3xl p-8 shadow-2xl border border-neutral-700"
-                initial={{opacity: 0, y: 30}}
-                animate={{opacity: 1, y: 0}}
-                transition={{delay: 0.5}}
-              >
-                <h2 className="text-3xl font-bold text-white mb-8 flex items-center gap-3">
-                  <Cog className="text-orange-500" size={32} />
-                  Weitere technische Daten
-                </h2>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="space-y-4">
-                    {car.weight && (
-                      <div className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-xl">
-                        <span className="text-neutral-400">Leergewicht:</span>
-                        <span className="text-white font-medium break-words">{car.weight} kg</span>
-                      </div>
-                    )}
-                    {car.maxWeight && (
-                      <div className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-xl">
-                        <span className="text-neutral-400">Gesamtgewicht:</span>
-                        <span className="text-white font-medium break-words">{car.maxWeight} kg</span>
-                      </div>
-                    )}
-                    {car.engineCode && (
-                      <div className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-xl">
-                        <span className="text-neutral-400">Motorcode:</span>
-                        <span className="text-white font-medium font-mono break-all">{car.engineCode}</span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="space-y-4">
-                    {car.batteryCapacity && (
-                      <div className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-xl">
-                        <span className="text-neutral-400">Batteriekapazität:</span>
-                        <span className="text-white font-medium">{car.batteryCapacity} kWh</span>
-                      </div>
-                    )}
-                    {car.range && (
-                      <div className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-xl">
-                        <span className="text-neutral-400">Reichweite:</span>
-                        <span className="text-white font-medium">{car.range} km</span>
-                      </div>
-                    )}
-                    {car.chargingTime && (
-                      <div className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-xl">
-                        <span className="text-neutral-400">Ladezeit:</span>
-                        <span className="text-white font-medium">{car.chargingTime}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            )}
-            <motion.div
-              className="bg-gradient-to-br from-neutral-800 to-neutral-900 rounded-3xl p-8 shadow-2xl border border-neutral-700"
-              initial={{opacity: 0, y: 30}}
-              animate={{opacity: 1, y: 0}}
-              transition={{delay: 0.5}}
-            >
-              <h2 className="text-3xl font-bold text-white mb-8 flex items-center gap-3">
-                <Cog className="text-orange-500" size={32} />
-                Description
-              </h2>
-              {car.description && (
-                <div className="flex justify-between items-center text-center p-4 bg-neutral-800/50 rounded-xl">
-                  {/* <span className="text-neutral-400">Description:</span> */}
-                  <span className="text-white font-medium">{car.description}</span>
-                </div>
-              )}
-            </motion.div>
           </div>
 
           {/* Right Column - Price & Contact */}
@@ -681,11 +390,10 @@ export default function CarDetails() {
             >
               <div className="text-center mb-8">
                 <div className="text-4xl font-bold text-transparent bg-gradient-to-r from-green-400 to-green-600 bg-clip-text mb-2">
-                  {formatPrice(car.price)}
+                  {formatPriceNet(car.price) || formatPrice(car.price)}
                 </div>
-                <p className="text-neutral-400 mb-2">Verkaufspreis (inkl. MwSt.)</p>
-                {formatPriceNet(car.price) && (
-                  <div className="text-lg text-neutral-500">Nettopreis: {formatPriceNet(car.price)}</div>
+                {formatPrice(car.price) && (
+                  <div className="text-lg text-neutral-500">Bruttopreis: {formatPrice(car.price)}</div>
                 )}
               </div>
 
@@ -710,18 +418,34 @@ export default function CarDetails() {
 
                   <div className="space-y-3">
                     <motion.button
-                      className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white py-4 px-6 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-3 shadow-xl"
+                      className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-3 shadow-xl text-sm sm:text-base"
                       whileHover={{scale: 1.02}}
                       whileTap={{scale: 0.98}}
+                      onClick={() => {
+                        if (car.seller.phone) {
+                          window.location.href = `tel:${car.seller.phone}`
+                        }
+                      }}
                     >
                       <Phone size={20} />
                       {car.seller.phone || 'Anrufen'}
                     </motion.button>
 
                     <motion.button
-                      className="w-full bg-gradient-to-r from-neutral-700 to-neutral-800 hover:from-neutral-600 hover:to-neutral-700 text-white py-4 px-6 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-3"
+                      className="w-full bg-gradient-to-r from-neutral-700 to-neutral-800 hover:from-neutral-600 hover:to-neutral-700 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-3 text-sm sm:text-base"
                       whileHover={{scale: 1.02}}
                       whileTap={{scale: 0.98}}
+                      onClick={() => {
+                        if (car.seller.email) {
+                          const subject = encodeURIComponent(`Anfrage zu ${car.make} ${car.model}`)
+                          const body = encodeURIComponent(
+                            `Hallo,\n\nich interessiere mich für Ihr Fahrzeug:\n${car.make} ${car.model}\nPreis: ${
+                              formatPriceNet(car.price) || formatPrice(car.price)
+                            }\n\nBitte kontaktieren Sie mich für weitere Informationen.\n\nMit freundlichen Grüßen`
+                          )
+                          window.location.href = `mailto:${car.seller.email}?subject=${subject}&body=${body}`
+                        }
+                      }}
                     >
                       <Mail size={20} />
                       Nachricht senden
@@ -732,6 +456,355 @@ export default function CarDetails() {
             </motion.div>
           </div>
         </div>
+
+        {/* Full Width Fahrzeugdetails Section */}
+        <motion.div
+          className="w-full px-4 md:px-8 lg:px-12 mt-8"
+          initial={{opacity: 0, y: 20}}
+          animate={{opacity: 1, y: 0}}
+          transition={{delay: 0.1}}
+        >
+          <div className="bg-neutral-900 rounded-xl p-4 md:p-6 border border-red-600/30">
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-4 flex items-center gap-2">
+              <span className="w-1 h-6 bg-red-600 rounded"></span>
+              Fahrzeugdetails
+            </h2>
+
+            {/* Quick Stats */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-2">
+              <div className="text-center p-2 sm:p-3 bg-black/40 rounded-lg border border-red-600/20">
+                <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 mx-auto mb-1 sm:mb-2" />
+                <div className="text-sm sm:text-lg font-bold text-white">{car.year || 'N/A'}</div>
+                <div className="text-xs text-neutral-400">Baujahr</div>
+              </div>
+
+              <div className="text-center p-2 sm:p-3 bg-black/40 rounded-lg border border-red-600/20">
+                <Gauge className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 mx-auto mb-1 sm:mb-2" />
+                <div className="text-sm sm:text-lg font-bold text-white">{formatMileage(car.mileage)}</div>
+                <div className="text-xs text-neutral-400">Laufleistung</div>
+              </div>
+
+              <div className="text-center p-2 sm:p-3 bg-black/40 rounded-lg border border-red-600/20">
+                <Fuel className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 mx-auto mb-1 sm:mb-2" />
+                <div className="text-sm sm:text-lg font-bold text-white">{car.fuel || 'N/A'}</div>
+                <div className="text-xs text-neutral-400">Kraftstoff</div>
+              </div>
+
+              <div className="text-center p-2 sm:p-3 bg-black/40 rounded-lg border border-red-600/20">
+                <Settings className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 mx-auto mb-1 sm:mb-2" />
+                <div className="text-sm sm:text-lg font-bold text-white">{car.gearbox || 'N/A'}</div>
+                <div className="text-xs text-neutral-400">Getriebe</div>
+              </div>
+
+              <div className="text-center p-2 sm:p-3 bg-black/40 rounded-lg border border-red-600/20">
+                <Cog className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 mx-auto mb-1 sm:mb-2" />
+                <div className="text-sm sm:text-lg font-bold text-white">{car.power ? `${car.power} kW` : 'N/A'}</div>
+                <div className="text-xs text-neutral-400">Leistung</div>
+              </div>
+
+              <div className="text-center p-2 sm:p-3 bg-black/40 rounded-lg border border-red-600/20">
+                <Settings className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 mx-auto mb-1 sm:mb-2" />
+                <div className="text-sm sm:text-lg font-bold text-white">
+                  {car.cubicCapacity ? `${car.cubicCapacity} cm³` : 'N/A'}
+                </div>
+                <div className="text-xs text-neutral-400">Hubraum</div>
+              </div>
+            </div>
+
+            {/* Detailed Specs */}
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Technical Data */}
+              <div className="bg-black/30 rounded-lg p-4">
+                <h3 className="text-sm font-semibold text-red-500 mb-3 flex items-center gap-2">
+                  <span className="w-1 h-4 bg-red-600 rounded"></span>
+                  Technische Daten
+                </h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-neutral-400">Leistung:</span>
+                    <span className="text-white">{car.power ? `${car.power} kW` : 'N/A'}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-neutral-400">Hubraum:</span>
+                    <span className="text-white">{car.cubicCapacity ? `${car.cubicCapacity} cm³` : 'N/A'}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Ausstattung */}
+              <div className="bg-black/30 rounded-lg p-4">
+                <h3 className="text-sm font-semibold text-red-500 mb-3 flex items-center gap-2">
+                  <span className="w-1 h-4 bg-red-600 rounded"></span>
+                  Ausstattung
+                </h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-neutral-400">Außenfarbe:</span>
+                    <span className="text-white">{car.exteriorColor || 'N/A'}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-neutral-400">Innenausstattung:</span>
+                    <span className="text-white">{car.interiorColor || 'N/A'}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-neutral-400">Zustand:</span>
+                    <span className="text-white">{car.condition || 'N/A'}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Additional Info */}
+              <div className="bg-black/30 rounded-lg p-4">
+                <h3 className="text-sm font-semibold text-red-500 mb-3 flex items-center gap-2">
+                  <span className="w-1 h-4 bg-red-600 rounded"></span>
+                  Zusätzliche Info
+                </h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-neutral-400">Getriebe:</span>
+                    <span className="text-white">{car.gearbox || 'N/A'}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-neutral-400">Kraftstoff:</span>
+                    <span className="text-white">{car.fuel || 'N/A'}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-neutral-400">Laufleistung:</span>
+                    <span className="text-white">{formatMileage(car.mileage)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Full Width Description Section */}
+        {car.description && (
+          <motion.div
+            className="w-full px-4 md:px-8 lg:px-12 mt-8"
+            initial={{opacity: 0, y: 20}}
+            animate={{opacity: 1, y: 0}}
+            transition={{delay: 0.3}}
+          >
+            <div className="bg-neutral-900 rounded-xl p-4 md:p-6 border border-red-600/30">
+              <h2 className="text-xl md:text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                <span className="w-1 h-6 bg-red-600 rounded"></span>
+                Ausstattung
+              </h2>
+              <div className="bg-black/30 rounded-lg p-4">
+                {formatDescription(car.description) ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+                    {formatDescription(car.description).map((item, index) => (
+                      <div key={index} className="flex items-start gap-2 text-sm">
+                        <span className="text-red-500 mt-1 flex-shrink-0 text-xs">•</span>
+                        <span className="text-neutral-300 leading-snug break-words">{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <span className="text-neutral-300 text-sm">{car.description}</span>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Full Width Verbrauch & Umwelt Section */}
+        {(car.consumption || car.emissionClass || car.co2Emission || car.fuelConsumption) && (
+          <motion.div
+            className="w-full px-4 md:px-8 lg:px-12 mt-8"
+            initial={{opacity: 0, y: 20}}
+            animate={{opacity: 1, y: 0}}
+            transition={{delay: 0.4}}
+          >
+            <div className="bg-neutral-900 rounded-xl p-4 md:p-6 border border-red-600/30">
+              <h2 className="text-xl md:text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                <span className="w-1 h-6 bg-red-600 rounded"></span>
+                Verbrauch & Umwelt
+              </h2>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                {car.fuelConsumption && (
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                      <Fuel className="text-green-400" size={18} />
+                      Kraftstoffverbrauch
+                    </h3>
+                    <div className="space-y-3">
+                      {car.fuelConsumption.city && (
+                        <div className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-xl">
+                          <span className="text-neutral-400">Stadt:</span>
+                          <span className="text-white font-medium break-words">{car.fuelConsumption.city} l/100km</span>
+                        </div>
+                      )}
+                      {car.fuelConsumption.highway && (
+                        <div className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-xl">
+                          <span className="text-neutral-400">Landstraße:</span>
+                          <span className="text-white font-medium break-words">
+                            {car.fuelConsumption.highway} l/100km
+                          </span>
+                        </div>
+                      )}
+                      {car.fuelConsumption.combined && (
+                        <div className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-xl">
+                          <span className="text-neutral-400">Kombiniert:</span>
+                          <span className="text-white font-medium break-words">
+                            {car.fuelConsumption.combined} l/100km
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                    <Shield className="text-green-400" size={18} />
+                    Umweltdaten
+                  </h3>
+                  <div className="space-y-3">
+                    {car.co2Emission && (
+                      <div className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-xl">
+                        <span className="text-neutral-400">CO₂-Emission:</span>
+                        <span className="text-white font-medium break-words">{car.co2Emission} g/km</span>
+                      </div>
+                    )}
+                    {car.emissionClass && (
+                      <div className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-xl">
+                        <span className="text-neutral-400">Schadstoffklasse:</span>
+                        <span className="text-white font-medium break-words">{car.emissionClass}</span>
+                      </div>
+                    )}
+                    {car.environmentalBadge && (
+                      <div className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-xl">
+                        <span className="text-neutral-400">Umweltplakette:</span>
+                        <span className="text-white font-medium break-words">{car.environmentalBadge}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Full Width Fahrzeugdokumente & Historie Section */}
+        {(car.vehicleIdentificationNumber ||
+          car.firstRegistration ||
+          car.nextInspection ||
+          car.warranty ||
+          car.previousOwners) && (
+          <motion.div
+            className="w-full px-4 md:px-8 lg:px-12 mt-8"
+            initial={{opacity: 0, y: 20}}
+            animate={{opacity: 1, y: 0}}
+            transition={{delay: 0.5}}
+          >
+            <div className="bg-neutral-900 rounded-xl p-4 md:p-6 border border-red-600/30">
+              <h2 className="text-xl md:text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                <span className="w-1 h-6 bg-red-600 rounded"></span>
+                Fahrzeugdokumente & Historie
+              </h2>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                {car.vehicleIdentificationNumber && (
+                  <div className="p-3 bg-black/40 rounded-lg border border-red-600/20">
+                    <div className="text-xs text-neutral-400 mb-1">Fahrgestellnummer</div>
+                    <div className="text-sm text-white font-mono break-all">{car.vehicleIdentificationNumber}</div>
+                  </div>
+                )}
+                {car.firstRegistration && (
+                  <div className="flex flex-col p-4 bg-neutral-800/50 rounded-xl">
+                    <span className="text-neutral-400 mb-2">Erstzulassung:</span>
+                    <span className="text-white font-medium break-words">{car.firstRegistration}</span>
+                  </div>
+                )}
+                {car.previousOwners !== undefined && (
+                  <div className="flex flex-col p-4 bg-neutral-800/50 rounded-xl">
+                    <span className="text-neutral-400 mb-2">Vorbesitzer:</span>
+                    <span className="text-white font-medium break-words">{car.previousOwners}</span>
+                  </div>
+                )}
+                {car.nextInspection && (
+                  <div className="flex flex-col p-4 bg-neutral-800/50 rounded-xl">
+                    <span className="text-neutral-400 mb-2">Nächste HU:</span>
+                    <span className="text-white font-medium break-words">{car.nextInspection}</span>
+                  </div>
+                )}
+                {car.warranty && (
+                  <div className="flex flex-col p-4 bg-neutral-800/50 rounded-xl">
+                    <span className="text-neutral-400 mb-2">Garantie:</span>
+                    <span className="text-white font-medium break-words">{car.warranty}</span>
+                  </div>
+                )}
+                {car.accidentFree !== undefined && (
+                  <div className="flex flex-col p-4 bg-neutral-800/50 rounded-xl">
+                    <span className="text-neutral-400 mb-2">Unfallfrei:</span>
+                    <span className={`font-medium ${car.accidentFree ? 'text-green-400' : 'text-red-400'}`}>
+                      {car.accidentFree ? 'Ja' : 'Nein'}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Full Width Weitere technische Daten Section */}
+        {(car.weight || car.maxWeight || car.engineCode || car.batteryCapacity || car.range || car.chargingTime) && (
+          <motion.div
+            className="w-full px-4 md:px-8 lg:px-12 mt-8"
+            initial={{opacity: 0, y: 20}}
+            animate={{opacity: 1, y: 0}}
+            transition={{delay: 0.6}}
+          >
+            <div className="bg-neutral-900 rounded-xl p-4 md:p-6 border border-red-600/30">
+              <h2 className="text-xl md:text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                <span className="w-1 h-6 bg-red-600 rounded"></span>
+                Weitere technische Daten
+              </h2>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                {car.weight && (
+                  <div className="flex flex-col p-4 bg-neutral-800/50 rounded-xl">
+                    <span className="text-neutral-400 mb-2">Leergewicht:</span>
+                    <span className="text-white font-medium break-words">{car.weight} kg</span>
+                  </div>
+                )}
+                {car.maxWeight && (
+                  <div className="flex flex-col p-4 bg-neutral-800/50 rounded-xl">
+                    <span className="text-neutral-400 mb-2">Gesamtgewicht:</span>
+                    <span className="text-white font-medium break-words">{car.maxWeight} kg</span>
+                  </div>
+                )}
+                {car.engineCode && (
+                  <div className="flex flex-col p-4 bg-neutral-800/50 rounded-xl">
+                    <span className="text-neutral-400 mb-2">Motorcode:</span>
+                    <span className="text-white font-medium font-mono break-all">{car.engineCode}</span>
+                  </div>
+                )}
+                {car.batteryCapacity && (
+                  <div className="flex flex-col p-4 bg-neutral-800/50 rounded-xl">
+                    <span className="text-neutral-400 mb-2">Batteriekapazität:</span>
+                    <span className="text-white font-medium">{car.batteryCapacity} kWh</span>
+                  </div>
+                )}
+                {car.range && (
+                  <div className="flex flex-col p-4 bg-neutral-800/50 rounded-xl">
+                    <span className="text-neutral-400 mb-2">Reichweite:</span>
+                    <span className="text-white font-medium">{car.range} km</span>
+                  </div>
+                )}
+                {car.chargingTime && (
+                  <div className="flex flex-col p-4 bg-neutral-800/50 rounded-xl">
+                    <span className="text-neutral-400 mb-2">Ladezeit:</span>
+                    <span className="text-white font-medium">{car.chargingTime}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
       </div>
 
       {/* Image Modal */}
