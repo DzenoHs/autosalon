@@ -8,6 +8,8 @@ Dodaj sledeće environment variables u Vercel dashboard:
 ```
 MOBILE_DE_USERNAME=REMOVED
 MOBILE_DE_PASSWORD=REMOVED
+MOBILE_DE_USERNAME=REMOVED
+MOBILE_DE_PASSWORD=REMOVED
 ```
 
 ### 2. Deployment Steps

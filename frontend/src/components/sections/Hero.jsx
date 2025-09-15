@@ -55,19 +55,21 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 1.5 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center px-4"
+          className="flex flex-col sm:flex-row gap-6 justify-center px-4"
         >
           <button 
             onClick={() => document.getElementById('cars')?.scrollIntoView({ behavior: 'smooth' })}
-            className="bg-gradient-to-r from-red-600 to-yellow-500 px-6 sm:px-8 py-3 sm:py-4 rounded-full font-bold text-base sm:text-lg hover:scale-105 transition-transform shadow-xl w-full sm:w-auto"
+            className="group relative bg-gradient-to-r from-red-500 to-red-600 px-8 sm:px-10 py-4 sm:py-5 rounded-xl font-bold text-lg sm:text-xl text-white hover:from-red-600 hover:to-red-700 transition-all duration-300 shadow-2xl hover:shadow-red-500/25 w-full sm:w-auto overflow-hidden"
           >
-            Fahrzeuge ansehen
+            <span className="relative z-10">Fahrzeuge ansehen</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </button>
           <button 
             onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-            className="border-2 border-white px-6 sm:px-8 py-3 sm:py-4 rounded-full font-bold text-base sm:text-lg hover:bg-white hover:text-black transition-all w-full sm:w-auto"
+            className="group relative border-2 border-red-500 bg-transparent px-8 sm:px-10 py-4 sm:py-5 rounded-xl font-bold text-lg sm:text-xl text-white hover:bg-red-500 hover:border-red-500 transition-all duration-300 shadow-2xl hover:shadow-red-500/25 w-full sm:w-auto overflow-hidden"
           >
-            Kontaktieren Sie uns
+            <span className="relative z-10 group-hover:text-white transition-colors duration-300">Kontaktieren Sie uns</span>
+            <div className="absolute inset-0 bg-red-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
           </button>
         </motion.div>
       </div>

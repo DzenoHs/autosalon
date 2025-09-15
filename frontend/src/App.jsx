@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { CarsProvider } from './context/CarsContext';
 import Header from './components/Header';
 import Hero from './components/sections/Hero';
 import Brands from './components/sections/Brands';
@@ -17,27 +16,28 @@ import WhyChooseUs from './components/sections/WhyChooseUs';
 
 function App() {
   return (
-    <CarsProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={
-            <div className="min-h-screen bg-neutral-900 text-white">
-              <Header />
-              <Hero />
-              <Cars />
-              <Brands />
-              <BuyingProcess />
-              <WhyChooseUs />
-              <Contact />
-              <Footer />
-            </div>
-          } />
-          <Route path="/cars" element={<CarsPage />} />
-          <Route path="/car/:id" element={<CarDetails />} />
-          <Route path="/kako-kupiti" element={<BuyCarPage />} />
-        </Routes>
-      </Router>
-    </CarsProvider>
+    
+ 
+    <Router>
+      <Routes>
+        <Route path="/" element={
+          <div className="min-h-screen bg-neutral-900 text-white">
+            <Header />
+            <Hero />
+            <Cars />
+            <Brands />
+            <BuyingProcess />
+            <WhyChooseUs />
+
+            <Contact />
+            <Footer />
+          </div>
+        } />
+        <Route path="/cars" element={<CarsPage />} />
+        <Route path="/car/:id" element={<CarDetails />} />
+        <Route path="/kako-kupiti" element={<BuyCarPage />} />
+      </Routes>
+    </Router>
   );
 }
 

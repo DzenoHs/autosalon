@@ -25,7 +25,7 @@ const Cars = () => {
             name: `${car.make} ${car.model}`,
             year: car.year,
             km: car.mileage || 0,
-            priceNet: car.price?.value || car.price?.consumerPriceGross || 0,
+            priceNet: car.price?.value || car.price?.consumerPriceNet || 0,
             priceGross: car.price?.consumerPriceGross || (car.price?.value ? Math.round(car.price.value * 1.19) : 0),
             fuel: car.fuel || 'Unbekannt',
             gearbox: car.gearbox || 'Unbekannt',

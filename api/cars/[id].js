@@ -1,7 +1,12 @@
 import axios from 'axios';
 
+<<<<<<< HEAD
 const username = process.env.MOBILE_DE_USERNAME || 'REMOVED';
 const password = process.env.MOBILE_DE_PASSWORD || 'REMOVED';
+=======
+const username = process.env.MOBILE_DE_USERNAME || 'REMOVED';
+const password = process.env.MOBILE_DE_PASSWORD || 'REMOVED';
+>>>>>>> 8c4185e6223f6dd99adf9e21c02582ff4895fd92
 const credentials = `${username}:${password}`;
 const encoded = Buffer.from(credentials).toString('base64');
 
