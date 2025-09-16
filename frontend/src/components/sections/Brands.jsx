@@ -3,22 +3,20 @@ import React from "react";
 const brands = [
   { name: "Audi", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/audi.png" },
   { name: "BMW", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/bmw.png" },
-  { name: "Mercedes", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/mercedes.png" },
+  { name: "Mercedes", src: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Mercedes-Logo.svg/2048px-Mercedes-Logo.svg.png" },
   { name: "Porsche", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/porsche.png" },
   { name: "Tesla", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/tesla.png" },
   { name: "Lexus", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/lexus.png" },
   { name: "Jaguar", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/jaguar.png" },
-  { name: "Range Rover", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/range_rover.png" },
 
   // doubling set for smooth scrolling
   { name: "Audi", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/audi.png" },
   { name: "BMW", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/bmw.png" },
-  { name: "Mercedes", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/mercedes.png" },
+  { name: "Mercedes", src: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Mercedes-Logo.svg/2048px-Mercedes-Logo.svg.png" },
   { name: "Porsche", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/porsche.png" },
   { name: "Tesla", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/tesla.png" },
   { name: "Lexus", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/lexus.png" },
   { name: "Jaguar", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/jaguar.png" },
-  { name: "Range Rover", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/range_rover.png" },
 ];
 
 export default function BrandShowcase() {

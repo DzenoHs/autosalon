@@ -2,25 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Infinite scroll animations za Brands komponentu */
-@keyframes infinite-scroll-left {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(calc(-50% - 24px)); }
-}
-
-@keyframes infinite-scroll-right {
-  0% { transform: translateX(calc(-50% - 24px)); }
-  100% { transform: translateX(0); }
-}
-
-.animate-infinite-scroll-left {
-  animation: infinite-scroll-left 30s linear infinite;
-}
-
-.animate-infinite-scroll-right {
-  animation: infinite-scroll-right 30s linear infinite;
-}
-
 /* Enhanced smooth scrolling */
 html { 
   scroll-behavior: smooth; 

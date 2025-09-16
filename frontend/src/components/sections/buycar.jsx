@@ -135,7 +135,7 @@ export default function BuyingProcessStrip() {
           isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
         }`}>
           <button
-            onClick={() => navigate('/kako-kupiti')}
+            onClick={() => window.open('/kako-kupiti', '_blank')}
             className="group relative inline-flex items-center px-8 py-4 md:px-10 md:py-5 rounded-2xl bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 text-white font-bold text-lg md:text-xl shadow-2xl hover:shadow-amber-500/25 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1"
           >
             <span className="relative z-10">Detaillierte Prozesserklärung</span>

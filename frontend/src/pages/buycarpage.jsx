@@ -68,11 +68,11 @@ export default function KakoKupitiAuto() {
       {/* Nazad dugme i naslov */}
       <div className="w-full max-w-4xl px-4">
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => window.close()}
           className="mb-8 flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 focus:outline-none focus:ring-2 focus:ring-red-500 rounded transition"
         >
           <ArrowLeft size={20} />
-          Zurück
+          Schließen
         </button>
         
         {/* Uvodni tekst */}
