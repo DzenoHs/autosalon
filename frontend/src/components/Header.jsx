@@ -56,6 +56,14 @@ export default function Header() {
           </li>
           <li>
             <button
+              onClick={() => scrollToSection("buycar")}
+              className="hover:text-red-500 transition duration-300"
+            >
+              Kaufprozess
+            </button>
+          </li>
+          <li>
+            <button
               onClick={() => scrollToSection("about")}
               className="hover:text-red-500 transition duration-300"
             >
@@ -84,11 +92,11 @@ export default function Header() {
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-black/95 backdrop-blur-lg border-t border-neutral-800">
-          <ul className="flex flex-col gap-4 p-6 text-white">
+          <ul className="flex flex-col gap-4 p-6 text-white text-center">
             <li>
               <button
                 onClick={() => scrollToSection("hero")}
-                className="hover:text-red-500 transition"
+                className="hover:text-red-500 transition w-full"
               >
                 Startseite
               </button>
@@ -96,20 +104,28 @@ export default function Header() {
             <li>
               <button
                 onClick={() => scrollToSection("cars")}
-                className="hover:text-red-500 transition"
+                className="hover:text-red-500 transition w-full"
               >
                 Fahrzeuge
               </button>
             </li>
             <li>
               <button
+                onClick={() => scrollToSection("buycar")}
+                className="hover:text-red-500 transition w-full"
+              >
+                Kaufprozess
+              </button>
+            </li>
+            <li>
+              <button
                 onClick={() => scrollToSection("about")}
-                className="hover:text-red-500 transition"
+                className="hover:text-red-500 transition w-full"
               >
                 Über uns
               </button>
             </li>
-            <li>
+            <li className="flex justify-center">
               <button 
                 onClick={() => scrollToSection("contact")}
                 className="bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-2 rounded-full font-bold mt-4"

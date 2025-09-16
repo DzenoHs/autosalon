@@ -47,7 +47,7 @@ export default function BuyingProcessStrip() {
   ];
 
   return (
-    <section className="relative py-12 sm:py-16 md:py-20 lg:py-28 bg-gradient-to-b from-black via-gray-900 to-black overflow-hidden">
+    <section id="buycar" className="relative py-12 sm:py-16 md:py-20 lg:py-28 bg-gradient-to-b from-black via-gray-900 to-black overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500 rounded-full blur-3xl"></div>

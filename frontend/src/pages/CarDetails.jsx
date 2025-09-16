@@ -390,10 +390,10 @@ export default function CarDetails() {
             >
               <div className="text-center mb-8">
                 <div className="text-4xl font-bold text-transparent bg-gradient-to-r from-green-400 to-green-600 bg-clip-text mb-2">
-                  {formatPriceNet(car.price) || formatPrice(car.price)}
+                  {formatPrice(car.price)}
                 </div>
-                {formatPrice(car.price) && (
-                  <div className="text-lg text-neutral-500">Bruttopreis: {formatPrice(car.price)}</div>
+                {formatPriceNet(car.price) && (
+                  <div className="text-lg text-neutral-500">Nettopreis: {formatPriceNet(car.price)}</div>
                 )}
               </div>
 
@@ -491,13 +491,13 @@ export default function CarDetails() {
               </div>
 
               <div className="text-center p-2 sm:p-3 bg-black/40 rounded-lg border border-red-600/20">
-                <Settings className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 mx-auto mb-1 sm:mb-2" />
+                <Cog className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 mx-auto mb-1 sm:mb-2" />
                 <div className="text-sm sm:text-lg font-bold text-white">{car.gearbox || 'N/A'}</div>
                 <div className="text-xs text-neutral-400">Getriebe</div>
               </div>
 
               <div className="text-center p-2 sm:p-3 bg-black/40 rounded-lg border border-red-600/20">
-                <Cog className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 mx-auto mb-1 sm:mb-2" />
+                <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 mx-auto mb-1 sm:mb-2" />
                 <div className="text-sm sm:text-lg font-bold text-white">{car.power ? `${car.power} kW` : 'N/A'}</div>
                 <div className="text-xs text-neutral-400">Leistung</div>
               </div>

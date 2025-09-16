@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {ChevronRight, Gauge, Fuel, Settings} from 'lucide-react'
+import {ChevronRight, Gauge, Fuel, Settings, Crown, Star, Award, Calendar, Zap, Car} from 'lucide-react'
 
 const Cars = () => {
   const navigate = useNavigate()
@@ -82,7 +82,7 @@ const Cars = () => {
   return (
     <section
       id="cars"
-      className="relative py-32 bg-gradient-to-b from-black via-neutral-900 to-black overflow-hidden"
+      className="relative py-16 bg-gradient-to-b from-black via-neutral-900 to-black overflow-hidden"
       style={{overflowX: 'hidden'}}
     >
       {/* Background effects */}
@@ -95,25 +95,27 @@ const Cars = () => {
 
       <div className="container mx-auto px-6 lg:px-8 relative z-10">
         {/* Header */}
-        <div className="text-center mb-20">
-          <div className="inline-flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-gradient-to-r from-red-600 to-red-800 rounded-xl flex items-center justify-center">
-              <Settings className="w-6 h-6 text-white" />
+        <div className="text-center mb-12">
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="w-14 h-14 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-amber-500/30">
+              <Crown className="w-7 h-7 text-white" />
             </div>
-            <span className="text-red-500 font-medium tracking-wider uppercase text-sm">Premium Auswahl</span>
           </div>
 
-          <h2 className="text-5xl lg:text-6xl font-bold text-white mb-6">
-            Unsere
-            <span className="block bg-gradient-to-r from-red-500 to-red-700 bg-clip-text text-transparent">
+          <h2 className="text-5xl lg:text-6xl font-bold text-white mb-2">
+            <span className="bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600 bg-clip-text text-transparent">
+              Premium
+            </span>
+            <span className="bg-gradient-to-r from-red-500 to-red-700 bg-clip-text text-transparent ml-4">
               Fahrzeuge
             </span>
           </h2>
-
-          <p className="text-xl text-neutral-400 max-w-3xl mx-auto leading-relaxed">
-            Entdecken Sie unsere exklusive Auswahl an Premium-Fahrzeugen. Jedes Auto wird sorgfältig geprüft und wartet
-            darauf, Ihr neuer Begleiter zu werden.
-          </p>
+          
+          <div className="flex items-center justify-center gap-2 mt-4">
+            <div className="h-1 w-12 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-full"></div>
+            <div className="w-3 h-3 bg-gradient-to-r from-red-500 to-red-700 rounded-full"></div>
+            <div className="h-1 w-12 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-full"></div>
+          </div>
         </div>
 
         {/* Cars Grid */}
@@ -124,98 +126,101 @@ const Cars = () => {
             <p className="text-neutral-400 text-lg">Bitte haben Sie einen Moment Geduld...</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-            {topExpensiveCars.map((car) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16 max-w-6xl mx-auto">
+            {topExpensiveCars.slice(0, 6).map((car) => (
               <div
                 key={car.id}
-                className="group relative bg-gradient-to-br from-neutral-900/95 via-neutral-800/90 to-black/95 
-                         rounded-3xl overflow-hidden backdrop-blur-sm
-                         transform hover:scale-[1.02] hover:-translate-y-2 transition-all duration-500 cursor-pointer
-                         border border-neutral-700/50 hover:border-red-500/40
-                         shadow-2xl hover:shadow-3xl hover:shadow-red-500/20"
+                className="group relative bg-gradient-to-br from-neutral-900/98 via-neutral-800/95 to-black/98 
+                         rounded-3xl overflow-hidden backdrop-blur-xl
+                         transform hover:scale-[1.05] hover:-translate-y-4 transition-all duration-700 cursor-pointer
+                         border border-neutral-600/60 hover:border-gradient-to-r hover:from-amber-400/60 hover:to-red-500/60
+                         shadow-2xl hover:shadow-4xl hover:shadow-amber-500/30
+                         before:absolute before:inset-0 before:bg-gradient-to-br before:from-amber-400/5 before:via-transparent before:to-red-500/5 before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-500"
                 onMouseEnter={() => setHoveredCar(car.id)}
                 onMouseLeave={() => setHoveredCar(null)}
                 onClick={() => handleCarClick(car.id)}
               >
                 {/* Car Image */}
-                <div className="relative h-64 overflow-hidden rounded-t-3xl">
+                <div className="relative h-40 overflow-hidden rounded-t-3xl">
                   <img
                     src={car?.images[0].xxl}
                     alt={car.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    className="w-full h-full object-cover object-center group-hover:scale-115 transition-transform duration-1000"
                   />
 
                   {/* Premium Badge for expensive cars */}
                   <div
-                    className="absolute top-4 right-4 bg-gradient-to-r from-yellow-400 via-yellow-500 to-amber-500 
-                              text-black px-3 py-2 rounded-xl text-xs font-bold shadow-xl backdrop-blur-sm
-                              border border-yellow-300/50 flex items-center gap-1 animate-pulse"
+                    className="absolute top-6 right-6 bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600 
+                              text-black px-4 py-3 rounded-2xl text-sm font-bold shadow-2xl backdrop-blur-sm
+                              border border-amber-300/80 flex items-center gap-2 animate-pulse
+                              hover:animate-bounce transition-all duration-300"
                   >
-                    <span className="text-sm animate-bounce">💎</span>
+                    <Crown className="w-4 h-4 text-black" />
                     <span>PREMIUM</span>
                   </div>
 
+                  {/* Luxury corner decoration */}
+                  <div className="absolute top-6 left-6">
+                    <div className="flex items-center gap-1">
+                      <Star className="w-4 h-4 text-amber-400 animate-pulse" />
+                      <Star className="w-3 h-3 text-amber-300 animate-pulse delay-75" />
+                      <Star className="w-2 h-2 text-amber-200 animate-pulse delay-150" />
+                    </div>
+                  </div>
+
                   {/* Gradient Overlays */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-700" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-amber-400/10 via-transparent to-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                 </div>
 
                 {/* Car Details */}
-                <div className="p-6 pt-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-xl font-bold text-white group-hover:text-red-400 transition-colors truncate">
+                <div className="p-2 pt-2 relative z-10">
+                  <div className="flex items-center justify-between mb-1">
+                    <h3 className="text-xl font-bold text-white group-hover:text-amber-400 transition-colors truncate flex items-center gap-2">
+                      <Award className="w-5 h-5 text-amber-500" />
                       {car.name}
                     </h3>
-                    <div className="text-xs text-neutral-400 bg-neutral-800/50 px-2 py-1 rounded-lg">{car.year}</div>
-                  </div>
-
-                  {/* Simple Info */}
-                  <div className="space-y-3 mb-4">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-neutral-400 flex items-center gap-2">
-                        <Gauge className="w-4 h-4 text-red-400" />
-                        {formatPrice(car.km)} km
-                      </span>
-                      <span className="text-neutral-400 flex items-center gap-2">
-                        <Fuel className="w-4 h-4 text-red-400" />
-                        {car.fuel}
-                      </span>
-                    </div>
-                    <div className="text-center">
-                      <span className="text-neutral-400 text-sm flex items-center justify-center gap-2">
-                        <Settings className="w-4 h-4 text-red-400" />
-                        {car.gearbox}
-                      </span>
+                    <div className="text-sm text-amber-400 bg-gradient-to-r from-amber-900/60 to-yellow-900/60 px-3 py-2 rounded-xl font-semibold border border-amber-500/30">
+                      {car.year}
                     </div>
                   </div>
 
-                  {/* Price Section */}
-                  <div className="bg-gradient-to-r from-neutral-800/50 to-neutral-700/50 rounded-xl p-4 mb-4 border border-neutral-600/30">
-                    <div className="text-xs text-neutral-400 mb-2 text-center">Preise</div>
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-neutral-400">Brutto:</span>
-                        <span className="text-lg font-bold text-green-400">€{formatPrice(car.priceGross)}</span>
+                  {/* Compact Specifications */}
+                  <div className="mb-2">
+                    {/* Basic Info Row */}
+                    <div className="grid grid-cols-3 gap-1">
+                      <div className="text-center bg-neutral-800/60 rounded p-1 border border-neutral-600/30">
+                        <Gauge className="w-3 h-3 text-amber-400 mx-auto mb-0.5" />
+                        <div className="text-xs text-neutral-300 font-medium">{formatPrice(car.km)}</div>
+                        <div className="text-xs text-neutral-500">km</div>
                       </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-neutral-400">Netto:</span>
-                        <span className="text-2xl font-bold text-green-300 drop-shadow-lg">
-                          €{formatPrice(car.priceNet)}
-                        </span>
+                      <div className="text-center bg-neutral-800/60 rounded p-1 border border-neutral-600/30">
+                        <Fuel className="w-3 h-3 text-red-400 mx-auto mb-0.5" />
+                        <div className="text-xs text-neutral-300 font-medium">{car.fuel}</div>
+                        <div className="text-xs text-neutral-500">Kraftstoff</div>
+                      </div>
+                      <div className="text-center bg-neutral-800/60 rounded p-1 border border-neutral-600/30">
+                        <Settings className="w-3 h-3 text-blue-400 mx-auto mb-0.5" />
+                        <div className="text-xs text-neutral-300 font-medium">{car.gearbox?.replace('_GEAR', '') || 'AUTOMATIC'}</div>
+                        <div className="text-xs text-neutral-500">Getriebe</div>
                       </div>
                     </div>
+
+
                   </div>
 
-                  {/* Action Section */}
-                  <div className="flex items-center justify-between pt-4 border-t border-neutral-700/30">
-                    <div className="flex flex-col">
-                      <span className="text-xs text-neutral-400">Zustand</span>
-                      <span className="text-sm font-medium text-white capitalize">
-                        {car.condition?.replace('_', ' ').toLowerCase()}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 text-red-400 font-medium text-sm group-hover:text-red-300 transition-colors">
+
+
+                  {/* Compact Footer */}
+                  <div className="flex items-center justify-between pt-2 border-t border-neutral-600/30">
+                    <div className="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 px-3 py-2 rounded-lg flex items-center gap-1 text-white font-medium text-xs transition-all duration-300 hover:scale-105 shadow-md">
+                      <Award className="w-3 h-3" />
                       <span>Details</span>
-                      <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                    <div className="text-right">
+                      <div className="text-xs text-emerald-400 font-bold">€{formatPrice(car.priceGross)}</div>
+                      <div className="text-xs text-neutral-400">Netto: €{formatPrice(car.priceNet)}</div>
                     </div>
                   </div>
                 </div>

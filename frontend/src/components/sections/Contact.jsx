@@ -43,7 +43,7 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      className="relative py-32 bg-gradient-to-b from-black via-neutral-900 to-black overflow-hidden"
+      className="relative py-26 bg-gradient-to-b from-black via-neutral-900 to-black overflow-hidden"
       style={{ overflowX: "hidden" }}
     >
       {/* Background effects */}
@@ -56,27 +56,27 @@ export default function Contact() {
 
       <div className="container mx-auto px-4 relative z-10 max-w-7xl">
         {/* Title */}
-        <div className="text-center mb-20">
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-black mb-8 tracking-tight leading-none">
+        <div className="text-center mb-14">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black mb-4 tracking-tight leading-none">
             <span className="bg-gradient-to-r from-red-500 via-yellow-500 to-red-600 bg-clip-text text-transparent drop-shadow-2xl">
               KONTAKT
             </span>
           </h2>
-          <div className="h-1.5 bg-gradient-to-r from-red-500 via-yellow-500 to-red-500 mx-auto mb-8 rounded-full shadow-lg w-40" />
-          <p className="text-gray-300 text-xl md:text-2xl max-w-4xl mx-auto font-medium">
+          <div className="h-1 bg-gradient-to-r from-red-500 via-yellow-500 to-red-500 mx-auto mb-4 rounded-full shadow-lg w-28" />
+          <p className="text-gray-300 text-base md:text-lg max-w-2xl mx-auto font-medium">
             <span className="text-transparent bg-gradient-to-r from-gray-200 to-gray-400 bg-clip-text">
               Ihr Traumauto wartet auf Sie - Kontaktieren Sie uns jetzt!
             </span>
           </p>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-16 mb-20">
+        <div className="flex flex-col lg:flex-row gap-10 mb-14">
           {/* Contact Form */}
           <div className="flex-1">
             <div className="relative">
               <div className="absolute -inset-4 bg-gradient-to-r from-red-500/20 via-yellow-500/10 to-red-500/20 rounded-3xl blur-2xl opacity-30"></div>
-              <div className="relative bg-gradient-to-br from-neutral-900 via-black to-neutral-800 p-10 rounded-3xl border-2 border-neutral-700 shadow-2xl backdrop-blur-sm">
-                <form onSubmit={handleSubmit} className="space-y-8">
+              <div className="relative bg-gradient-to-br from-neutral-900 via-black to-neutral-800 p-8 rounded-3xl border-2 border-neutral-700 shadow-2xl backdrop-blur-sm">
+                <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Name Input */}
                   <div className="group relative">
                     <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-red-500 transition-colors duration-200" size={20} />
@@ -86,7 +86,7 @@ export default function Contact() {
                       placeholder="Ihr Name"
                       value={form.name}
                       onChange={handleChange}
-                      className={`w-full pl-12 pr-4 py-5 rounded-xl bg-neutral-800/80 backdrop-blur-sm text-white text-lg border-2 ${
+                      className={`w-full pl-10 pr-4 py-4 rounded-xl bg-neutral-800/80 backdrop-blur-sm text-white text-base border-2 ${
                         errors.name ? "border-red-500" : "border-neutral-600 focus:border-red-500"
                       } focus:outline-none transition-all duration-300 group-hover:bg-neutral-700/80`}
                     />
@@ -102,7 +102,7 @@ export default function Contact() {
                       placeholder="Ihre E-Mail"
                       value={form.email}
                       onChange={handleChange}
-                      className={`w-full pl-12 pr-4 py-5 rounded-xl bg-neutral-800/80 backdrop-blur-sm text-white text-lg border-2 ${
+                      className={`w-full pl-10 pr-4 py-4 rounded-xl bg-neutral-800/80 backdrop-blur-sm text-white text-base border-2 ${
                         errors.email ? "border-red-500" : "border-neutral-600 focus:border-red-500"
                       } focus:outline-none transition-all duration-300 group-hover:bg-neutral-700/80`}
                     />
@@ -117,8 +117,8 @@ export default function Contact() {
                       placeholder="Ihre Nachricht"
                       value={form.message}
                       onChange={handleChange}
-                      rows={6}
-                      className={`w-full pl-12 pr-4 py-5 rounded-xl bg-neutral-800/80 backdrop-blur-sm text-white text-lg border-2 ${
+                      rows={5}
+                      className={`w-full pl-10 pr-4 py-4 rounded-xl bg-neutral-800/80 backdrop-blur-sm text-white text-base border-2 ${
                         errors.message ? "border-red-500" : "border-neutral-600 focus:border-red-500"
                       } focus:outline-none transition-all duration-300 resize-none group-hover:bg-neutral-700/80`}
                     />
@@ -129,9 +129,9 @@ export default function Contact() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-gradient-to-r from-red-500 via-red-600 to-yellow-500 text-white px-8 py-6 rounded-xl font-black text-xl shadow-2xl hover:shadow-red-500/25 transition-all duration-200 flex items-center justify-center gap-3 group relative overflow-hidden hover:scale-105 active:scale-95"
+                    className="w-full bg-gradient-to-r from-red-500 via-red-600 to-yellow-500 text-white px-6 py-5 rounded-xl font-black text-lg shadow-2xl hover:shadow-red-500/25 transition-all duration-200 flex items-center justify-center gap-2 group relative overflow-hidden hover:scale-105 active:scale-95"
                   >
-                    <Send size={24} className="relative z-10" />
+                    <Send size={20} className="relative z-10" />
                     <span className="relative z-10">{isSubmitting ? "SENDEN..." : "NACHRICHT SENDEN"}</span>
                   </button>
                 </form>
@@ -142,7 +142,7 @@ export default function Contact() {
           {/* Map Section */}
           <div className="flex-1 relative">
             <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 via-purple-500/10 to-blue-500/20 rounded-3xl blur-2xl opacity-30"></div>
-            <div className="relative w-full h-[500px] lg:h-[600px] bg-neutral-800 rounded-3xl overflow-hidden border-2 border-neutral-700 shadow-2xl">
+            <div className="relative w-full h-[400px] lg:h-[480px] bg-neutral-800 rounded-3xl overflow-hidden border-2 border-neutral-700 shadow-2xl">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2474.776436389574!2d9.568464912229766!3d51.30946727187529!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47bb386bc3336435%3A0x86d894ce7d2736a4!2sNiestetalstra%C3%9Fe%2011%2C%2034266%20Niestetal%2C%20Njema%C4%8Dka!5e0!3m2!1sen!2srs!4v1726320000000!5m2!1sen!2srs"
                 width="100%"
@@ -155,19 +155,19 @@ export default function Contact() {
                 className="grayscale hover:grayscale-0 transition-all duration-500"
               />
             </div>
+            
+            {/* Contact Info ispod mape */}
+            <div className="text-center mt-6 flex flex-col sm:flex-row justify-center gap-6 text-white font-bold tracking-wide text-lg select-none">
+              <a href="tel:+49 174 7692697" className="flex items-center justify-center gap-2 text-red-500 hover:text-red-400 transition-colors">
+                <Phone size={24} />
+                +49 174 7692697
+              </a>
+              <a href="mailto:info@autohausmiftari.com" className="flex items-center justify-center gap-2 text-blue-500 hover:text-blue-400 transition-colors break-all">
+                <Mail size={24} />
+                info@autohausmiftari.com
+              </a>
+            </div>
           </div>
-        </div>
-
-        {/* Email i Telefon info diskretno dole */}
-        <div className="max-w-7xl mx-auto text-center mt-2 flex justify-center gap-12 text-white font-bold tracking-wide text-lg select-none">
-          <a href="tel:+49 172 5604888" className="flex items-center gap-2 text-red-500 hover:text-red-400 transition-colors">
-            <Phone size={24} />
-            +387 61 123 456
-          </a>
-          <a href="mailto:info@autohausmiftari.com" className="flex items-center gap-2 text-blue-500 hover:text-blue-400 transition-colors break-all">
-            <Mail size={24} />
-            info@autohausmiftari.com
-          </a>
         </div>
 
       </div>
