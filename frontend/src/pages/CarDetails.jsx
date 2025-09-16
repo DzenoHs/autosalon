@@ -89,12 +89,15 @@ export default function CarDetails() {
   const formatPrice = (priceObj) => {
     if (!priceObj) return 'Preis auf Anfrage'
     const price = priceObj.consumerPriceGross || priceObj.value || priceObj
-    return `${Number(price).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`
+    return `${Number(price).toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2})} €`
   }
 
   const formatPriceNet = (priceObj) => {
     if (!priceObj || !priceObj.consumerPriceNet) return null
-    return `${Number(priceObj.consumerPriceNet).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`
+    return `${Number(priceObj.consumerPriceNet).toLocaleString('de-DE', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })} €`
   }
 
   const formatMileage = (mileage) => {
@@ -105,17 +108,17 @@ export default function CarDetails() {
   // Format description text
   const formatDescription = (description) => {
     if (!description) return null
-    
+
     // Split by \* and \\ markers and clean up
     const items = description
       .split(/\\?\*/)
-      .map(item => item.trim())
-      .filter(item => item.length > 0 && item !== '\\')
-      .map(item => {
+      .map((item) => item.trim())
+      .filter((item) => item.length > 0 && item !== '\\')
+      .map((item) => {
         // Clean up extra backslashes and formatting
         return item.replace(/\\+/g, '').trim()
       })
-      .filter(item => item.length > 0)
+      .filter((item) => item.length > 0)
 
     return items
   }
@@ -304,8 +307,6 @@ export default function CarDetails() {
               )}
             </motion.div>
 
-
-
             {/* Equipment & Features */}
             {(car.features || car.equipment || car.safetyFeatures || car.comfortFeatures) && (
               <motion.div
@@ -376,10 +377,6 @@ export default function CarDetails() {
                 )}
               </motion.div>
             )}
-
-
-
-
           </div>
 
           {/* Right Column - Price & Contact */}
@@ -441,7 +438,11 @@ export default function CarDetails() {
                       onClick={() => {
                         if (car.seller.email) {
                           const subject = encodeURIComponent(`Anfrage zu ${car.make} ${car.model}`)
-                          const body = encodeURIComponent(`Hallo,\n\nich interessiere mich für Ihr Fahrzeug:\n${car.make} ${car.model}\nPreis: ${formatPriceNet(car.price) || formatPrice(car.price)}\n\nBitte kontaktieren Sie mich für weitere Informationen.\n\nMit freundlichen Grüßen`)
+                          const body = encodeURIComponent(
+                            `Hallo,\n\nich interessiere mich für Ihr Fahrzeug:\n${car.make} ${car.model}\nPreis: ${
+                              formatPriceNet(car.price) || formatPrice(car.price)
+                            }\n\nBitte kontaktieren Sie mich für weitere Informationen.\n\nMit freundlichen Grüßen`
+                          )
                           window.location.href = `mailto:${car.seller.email}?subject=${subject}&body=${body}`
                         }
                       }}
@@ -479,9 +480,7 @@ export default function CarDetails() {
 
               <div className="text-center p-2 sm:p-3 bg-black/40 rounded-lg border border-red-600/20">
                 <Gauge className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 mx-auto mb-1 sm:mb-2" />
-                <div className="text-sm sm:text-lg font-bold text-white">
-                  {formatMileage(car.mileage)}
-                </div>
+                <div className="text-sm sm:text-lg font-bold text-white">{formatMileage(car.mileage)}</div>
                 <div className="text-xs text-neutral-400">Laufleistung</div>
               </div>
 
@@ -493,17 +492,13 @@ export default function CarDetails() {
 
               <div className="text-center p-2 sm:p-3 bg-black/40 rounded-lg border border-red-600/20">
                 <Settings className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 mx-auto mb-1 sm:mb-2" />
-                <div className="text-sm sm:text-lg font-bold text-white">
-                  {car.gearbox || 'N/A'}
-                </div>
+                <div className="text-sm sm:text-lg font-bold text-white">{car.gearbox || 'N/A'}</div>
                 <div className="text-xs text-neutral-400">Getriebe</div>
               </div>
 
               <div className="text-center p-2 sm:p-3 bg-black/40 rounded-lg border border-red-600/20">
                 <Cog className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 mx-auto mb-1 sm:mb-2" />
-                <div className="text-sm sm:text-lg font-bold text-white">
-                  {car.power ? `${car.power} kW` : 'N/A'}
-                </div>
+                <div className="text-sm sm:text-lg font-bold text-white">{car.power ? `${car.power} kW` : 'N/A'}</div>
                 <div className="text-xs text-neutral-400">Leistung</div>
               </div>
 
@@ -527,15 +522,11 @@ export default function CarDetails() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-neutral-400">Leistung:</span>
-                    <span className="text-white">
-                      {car.power ? `${car.power} kW` : 'N/A'}
-                    </span>
+                    <span className="text-white">{car.power ? `${car.power} kW` : 'N/A'}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-neutral-400">Hubraum:</span>
-                    <span className="text-white">
-                      {car.cubicCapacity ? `${car.cubicCapacity} cm³` : 'N/A'}
-                    </span>
+                    <span className="text-white">{car.cubicCapacity ? `${car.cubicCapacity} cm³` : 'N/A'}</span>
                   </div>
                 </div>
               </div>
@@ -606,9 +597,7 @@ export default function CarDetails() {
                     {formatDescription(car.description).map((item, index) => (
                       <div key={index} className="flex items-start gap-2 text-sm">
                         <span className="text-red-500 mt-1 flex-shrink-0 text-xs">•</span>
-                        <span className="text-neutral-300 leading-snug break-words">
-                          {item}
-                        </span>
+                        <span className="text-neutral-300 leading-snug break-words">{item}</span>
                       </div>
                     ))}
                   </div>
@@ -645,9 +634,7 @@ export default function CarDetails() {
                       {car.fuelConsumption.city && (
                         <div className="flex justify-between items-center p-4 bg-neutral-800/50 rounded-xl">
                           <span className="text-neutral-400">Stadt:</span>
-                          <span className="text-white font-medium break-words">
-                            {car.fuelConsumption.city} l/100km
-                          </span>
+                          <span className="text-white font-medium break-words">{car.fuelConsumption.city} l/100km</span>
                         </div>
                       )}
                       {car.fuelConsumption.highway && (
@@ -702,7 +689,11 @@ export default function CarDetails() {
         )}
 
         {/* Full Width Fahrzeugdokumente & Historie Section */}
-        {(car.vehicleIdentificationNumber || car.firstRegistration || car.nextInspection || car.warranty || car.previousOwners) && (
+        {(car.vehicleIdentificationNumber ||
+          car.firstRegistration ||
+          car.nextInspection ||
+          car.warranty ||
+          car.previousOwners) && (
           <motion.div
             className="w-full px-4 md:px-8 lg:px-12 mt-8"
             initial={{opacity: 0, y: 20}}
@@ -719,9 +710,7 @@ export default function CarDetails() {
                 {car.vehicleIdentificationNumber && (
                   <div className="p-3 bg-black/40 rounded-lg border border-red-600/20">
                     <div className="text-xs text-neutral-400 mb-1">Fahrgestellnummer</div>
-                    <div className="text-sm text-white font-mono break-all">
-                      {car.vehicleIdentificationNumber}
-                    </div>
+                    <div className="text-sm text-white font-mono break-all">{car.vehicleIdentificationNumber}</div>
                   </div>
                 )}
                 {car.firstRegistration && (

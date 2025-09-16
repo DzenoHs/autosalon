@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {ChevronRight, Calendar, Gauge, Fuel, Settings, Eye} from 'lucide-react'
+import {ChevronRight, Gauge, Fuel, Settings} from 'lucide-react'
 
 const Cars = () => {
   const navigate = useNavigate()

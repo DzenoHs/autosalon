@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {FaFilter, FaSearch, FaEye, FaHeart, FaShare, FaHome, FaTimes} from 'react-icons/fa'
+import {FaFilter, FaSearch, FaHome, FaTimes} from 'react-icons/fa'
 import mobileApiService from '../services/mobileApiService'
-import FilterPanel from '../components/ui/FilterPanel'
 
 const FALLBACK_IMG = 'https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800&h=600&fit=crop&crop=center'
 
@@ -26,40 +25,57 @@ export default function CarsPage() {
 
   // Filter state (compat with FilterPanel)
   const [filters, setFilters] = useState({
-      vehicleType: '',
-      make: '',
-      model: '',
-      yearFrom: '',
-      yearTo: '',
-      priceFrom: '',
-      priceTo: '',
-      mileageMax: '',
-      condition: '',
-      location: '',
-      seats: '',
-      fuel: '',
-      powerMin: '',
-      powerMax: '',
-      co2Max: '',
-      emissionStandard: '',
-      consumptionMax: '',
-      transmission: '',
-      drive: '',
-      exteriorColor: '',
-      interiorColor: '',
-      airConditioning: false,
-      navigation: false,
-      parkingSensors: false,
-      registrationType: '',
-      doors: '',
-      ownershipTransfer: '',
-      buyNow: false
-    })
+    vehicleType: '',
+    make: '',
+    model: '',
+    yearFrom: '',
+    yearTo: '',
+    priceFrom: '',
+    priceTo: '',
+    mileageMax: '',
+    condition: '',
+    location: '',
+    seats: '',
+    fuel: '',
+    powerMin: '',
+    powerMax: '',
+    co2Max: '',
+    emissionStandard: '',
+    consumptionMax: '',
+    transmission: '',
+    drive: '',
+    exteriorColor: '',
+    interiorColor: '',
+    airConditioning: false,
+    navigation: false,
+    parkingSensors: false,
+    registrationType: '',
+    doors: '',
+    ownershipTransfer: '',
+    buyNow: false
+  })
 
   // All cars (za generiranje filter opcija)
   const [allCars, setAllCars] = useState([])
   const [displayedCars, setDisplayedCars] = useState([])
 
+  // State for unique car makes
+  const [uniqueMakes, setUniqueMakes] = useState([])
+
+  // Fetch unique car makes from API
+  useEffect(() => {
+    const fetchUniqueMakes = async () => {
+      try {
+        const makes = await mobileApiService.fetchUniqueCarMakes() // Use the new method
+        setUniqueMakes(makes)
+      } catch (err) {
+        console.error('❌ Error fetching car makes:', err)
+        setError('Failed to load car makes. Please try again later.')
+      }
+    }
+
+    fetchUniqueMakes()
+  }, [])
   // Reset filters function
   const resetFilters = () => {
     const emptyFilters = {
@@ -96,8 +112,6 @@ export default function CarsPage() {
     setDisplayedCars(cars)
   }
 
-
-
   // Fetch cars from API
   useEffect(() => {
     const fetchCars = async () => {
@@ -106,9 +120,8 @@ export default function CarsPage() {
         setError(null)
 
         console.log('🔄 Fetching cars from API...')
-        const result = await mobileApiService.fetchCarsFromMobileApi(currentPage, pageSize)
-        console.log('result in fetchCars')
-        console.log(result)
+        const result = await mobileApiService.fetchCarsFromMobileApi(currentPage, pageSize, filters.make)
+
         console.log('✅ Cars fetched successfully:', result)
         setCars(result.ads)
         setTotal(result.total)
@@ -122,7 +135,6 @@ export default function CarsPage() {
 
         setDisplayedCars(result.ads)
       } catch (err) {
-        console.log(err)
         console.error('❌ Error fetching cars:', err)
         setError('Failed to load cars. Please try again later.')
       } finally {
@@ -131,7 +143,7 @@ export default function CarsPage() {
     }
 
     fetchCars()
-  }, [currentPage, pageSize]) // Refetch cars when currentPage or pageSize changes
+  }, [currentPage, pageSize, filters.make]) // Refetch cars when currentPage or pageSize changes
 
   // Handle car click
   const handleCarClick = (car) => {
@@ -216,108 +228,124 @@ export default function CarsPage() {
     }
     let filtered = cars
 
-    // Osnovni filteri
-    if (currentFilters.vehicleType) {
-      filtered = filtered.filter(car => car.category?.toLowerCase().includes(currentFilters.vehicleType.toLowerCase()))
-    }
-    if (currentFilters.make) {
-      filtered = filtered.filter(car => car.make?.toLowerCase().includes(currentFilters.make.toLowerCase()))
-    }
+    // if (currentFilters.make) {
+    //   filtered = filtered.filter((car) => car.make?.toLowerCase().includes(currentFilters.make.toLowerCase()))
+    // }
     if (currentFilters.model) {
-      filtered = filtered.filter(car => car.model?.toLowerCase().includes(currentFilters.model.toLowerCase()))
+      filtered = filtered.filter((car) => car.model?.toLowerCase().includes(currentFilters.model.toLowerCase()))
     }
     if (currentFilters.yearFrom) {
-      filtered = filtered.filter(car => car.year >= parseInt(currentFilters.yearFrom))
+      filtered = filtered.filter((car) => car.year >= parseInt(currentFilters.yearFrom))
     }
     if (currentFilters.yearTo) {
-      filtered = filtered.filter(car => car.year <= parseInt(currentFilters.yearTo))
+      filtered = filtered.filter((car) => car.year <= parseInt(currentFilters.yearTo))
     }
     if (currentFilters.priceFrom) {
-      filtered = filtered.filter(car => {
+      filtered = filtered.filter((car) => {
         const price = car.price?.consumerPriceGross || car.price?.consumerPriceNet || car.price?.value
         return price >= parseInt(currentFilters.priceFrom)
       })
     }
     if (currentFilters.priceTo) {
-      filtered = filtered.filter(car => {
+      filtered = filtered.filter((car) => {
         const price = car.price?.consumerPriceGross || car.price?.consumerPriceNet || car.price?.value
         return price <= parseInt(currentFilters.priceTo)
       })
     }
     if (currentFilters.mileageMax) {
-      filtered = filtered.filter(car => car.mileage <= parseInt(currentFilters.mileageMax))
+      filtered = filtered.filter((car) => car.mileage <= parseInt(currentFilters.mileageMax))
     }
     if (currentFilters.condition) {
-      filtered = filtered.filter(car => car.condition?.toLowerCase().includes(currentFilters.condition.toLowerCase()))
+      filtered = filtered.filter((car) => car.condition?.toLowerCase().includes(currentFilters.condition.toLowerCase()))
     }
     if (currentFilters.location) {
-      filtered = filtered.filter(car => car.location?.toLowerCase().includes(currentFilters.location.toLowerCase()))
+      filtered = filtered.filter((car) => car.location?.toLowerCase().includes(currentFilters.location.toLowerCase()))
     }
     if (currentFilters.seats) {
-      filtered = filtered.filter(car => car.seats?.toString() === currentFilters.seats)
+      filtered = filtered.filter((car) => car.seats?.toString() === currentFilters.seats)
     }
 
     // Tehnički filteri
     if (currentFilters.fuel) {
-      filtered = filtered.filter(car => car.fuel?.toLowerCase().includes(currentFilters.fuel.toLowerCase()))
+      filtered = filtered.filter((car) => car.fuel?.toLowerCase().includes(currentFilters.fuel.toLowerCase()))
     }
     if (currentFilters.powerMin) {
-      filtered = filtered.filter(car => car.power >= parseInt(currentFilters.powerMin))
+      filtered = filtered.filter((car) => car.power >= parseInt(currentFilters.powerMin))
     }
     if (currentFilters.powerMax) {
-      filtered = filtered.filter(car => car.power <= parseInt(currentFilters.powerMax))
+      filtered = filtered.filter((car) => car.power <= parseInt(currentFilters.powerMax))
     }
     if (currentFilters.co2Max) {
-      filtered = filtered.filter(car => car.co2 <= parseFloat(currentFilters.co2Max))
+      filtered = filtered.filter((car) => car.co2 <= parseFloat(currentFilters.co2Max))
     }
     if (currentFilters.emissionStandard) {
-      filtered = filtered.filter(car => car.emissionStandard?.toLowerCase().includes(currentFilters.emissionStandard.toLowerCase()))
+      filtered = filtered.filter((car) =>
+        car.emissionStandard?.toLowerCase().includes(currentFilters.emissionStandard.toLowerCase())
+      )
     }
     if (currentFilters.consumptionMax) {
-      filtered = filtered.filter(car => car.consumption <= parseFloat(currentFilters.consumptionMax))
+      filtered = filtered.filter((car) => car.consumption <= parseFloat(currentFilters.consumptionMax))
     }
     if (currentFilters.transmission) {
-      filtered = filtered.filter(car => car.gearbox?.toLowerCase().includes(currentFilters.transmission.toLowerCase()))
+      filtered = filtered.filter((car) =>
+        car.gearbox?.toLowerCase().includes(currentFilters.transmission.toLowerCase())
+      )
     }
     if (currentFilters.drive) {
-      filtered = filtered.filter(car => car.drive?.toLowerCase().includes(currentFilters.drive.toLowerCase()))
+      filtered = filtered.filter((car) => car.drive?.toLowerCase().includes(currentFilters.drive.toLowerCase()))
     }
 
     // Dodatni filteri
     if (currentFilters.exteriorColor) {
-      filtered = filtered.filter(car => car.color?.toLowerCase().includes(currentFilters.exteriorColor.toLowerCase()))
+      filtered = filtered.filter((car) => car.color?.toLowerCase().includes(currentFilters.exteriorColor.toLowerCase()))
     }
     if (currentFilters.interiorColor) {
-      filtered = filtered.filter(car => car.interiorColor?.toLowerCase().includes(currentFilters.interiorColor.toLowerCase()))
+      filtered = filtered.filter((car) =>
+        car.interiorColor?.toLowerCase().includes(currentFilters.interiorColor.toLowerCase())
+      )
     }
     if (currentFilters.doors) {
-      filtered = filtered.filter(car => car.doors?.toString().includes(currentFilters.doors))
+      filtered = filtered.filter((car) => car.doors?.toString().includes(currentFilters.doors))
     }
     if (currentFilters.registrationType) {
-      filtered = filtered.filter(car => car.registrationType?.toLowerCase().includes(currentFilters.registrationType.toLowerCase()))
+      filtered = filtered.filter((car) =>
+        car.registrationType?.toLowerCase().includes(currentFilters.registrationType.toLowerCase())
+      )
     }
     if (currentFilters.ownershipTransfer) {
-      filtered = filtered.filter(car => car.previousOwners?.toLowerCase().includes(currentFilters.ownershipTransfer.toLowerCase()))
+      filtered = filtered.filter((car) =>
+        car.previousOwners?.toLowerCase().includes(currentFilters.ownershipTransfer.toLowerCase())
+      )
     }
 
     // Boolean filteri
     if (currentFilters.airConditioning) {
-      filtered = filtered.filter(car => car.features?.airConditioning || car.equipment?.includes('Klimaanlage'))
+      filtered = filtered.filter((car) => car.features?.airConditioning || car.equipment?.includes('Klimaanlage'))
     }
     if (currentFilters.navigation) {
-      filtered = filtered.filter(car => car.features?.navigation || car.equipment?.includes('Navigation'))
+      filtered = filtered.filter((car) => car.features?.navigation || car.equipment?.includes('Navigation'))
     }
     if (currentFilters.parkingSensors) {
-      filtered = filtered.filter(car => car.features?.parkingSensors || car.equipment?.includes('Parksensoren'))
+      filtered = filtered.filter((car) => car.features?.parkingSensors || car.equipment?.includes('Parksensoren'))
     }
     if (currentFilters.buyNow) {
-      filtered = filtered.filter(car => car.buyNow === true)
+      filtered = filtered.filter((car) => car.buyNow === true)
     }
 
     setDisplayedCars(filtered)
   }
 
-
+  // Get unique values for filter options
+  const getUniqueValues = (field) => {
+    const values = cars
+      .map((car) => {
+        if (field === 'make' || field === 'model' || field === 'fuel') return car[field]
+        if (field === 'transmission') return car.gearbox
+        return null
+      })
+      .filter(Boolean)
+    return [...new Set(values)].sort()
+  }
 
   return (
     <div className="min-h-screen bg-gray-900">
@@ -373,16 +401,156 @@ export default function CarsPage() {
         </div>
       </div>
 
-      {/* FilterPanel Component */}
-      <FilterPanel 
-        isOpen={isFilterOpen} 
-        onToggle={() => setIsFilterOpen(!isFilterOpen)}
-        allCars={allCars}
-        filteredCars={displayedCars}
-        applyFilters={applyFilters}
-        resetFilters={resetFilters}
-        filters={filters}
-      />
+      {/* Filter Panel */}
+      <div
+        className={`fixed left-0 top-0 h-full bg-gray-900 shadow-2xl transform transition-transform duration-300 z-50 ${
+          isFilterOpen ? 'translate-x-0' : '-translate-x-full'
+        } w-80 overflow-y-auto`}
+      >
+        {/* Header */}
+        <div className="bg-gradient-to-r from-gray-800 to-gray-700 text-white p-4 sticky top-0 z-10">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <FaFilter className="text-lg" />
+              <h2 className="text-xl font-bold">Filter</h2>
+            </div>
+            <button
+              onClick={() => setIsFilterOpen(false)}
+              className="p-2 hover:bg-gray-600 rounded-lg transition-colors"
+            >
+              <FaTimes />
+            </button>
+          </div>
+
+          {/* Results counter */}
+          <div className="mt-2 text-gray-300">
+            <span className="text-sm">
+              {displayedCars.length} von {cars.length} Fahrzeugen
+            </span>
+          </div>
+        </div>
+
+        {/* Filter Content */}
+        <div className="p-4 space-y-4">
+          {/* Make Filter */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Marke</label>
+            <select
+              value={filters.make}
+              onChange={(e) => handleFilterChange('make', e.target.value)}
+              className="w-full p-2 bg-gray-800 border border-gray-600 rounded-lg text-white"
+            >
+              <option value="">Alle Marken</option>
+              {uniqueMakes.map((make) => (
+                <option key={make} value={make}>
+                  {make}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Model Filter */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Modell</label>
+            <select
+              value={filters.model}
+              onChange={(e) => handleFilterChange('model', e.target.value)}
+              className="w-full p-2 bg-gray-800 border border-gray-600 rounded-lg text-white"
+            >
+              <option value="">Alle Modelle</option>
+              {getUniqueValues('model').map((model) => (
+                <option key={model} value={model}>
+                  {model}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Price Range */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Preis (€)</label>
+            <div className="grid grid-cols-2 gap-2">
+              <input
+                type="number"
+                placeholder="Von"
+                value={filters.priceFrom}
+                onChange={(e) => handleFilterChange('priceFrom', e.target.value)}
+                className="p-2 bg-gray-800 border border-gray-600 rounded-lg text-white"
+              />
+              <input
+                type="number"
+                placeholder="Bis"
+                value={filters.priceTo}
+                onChange={(e) => handleFilterChange('priceTo', e.target.value)}
+                className="p-2 bg-gray-800 border border-gray-600 rounded-lg text-white"
+              />
+            </div>
+          </div>
+
+          {/* Year Range */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Baujahr</label>
+            <div className="grid grid-cols-2 gap-2">
+              <input
+                type="number"
+                placeholder="Von"
+                value={filters.yearFrom}
+                onChange={(e) => handleFilterChange('yearFrom', e.target.value)}
+                className="p-2 bg-gray-800 border border-gray-600 rounded-lg text-white"
+              />
+              <input
+                type="number"
+                placeholder="Bis"
+                value={filters.yearTo}
+                onChange={(e) => handleFilterChange('yearTo', e.target.value)}
+                className="p-2 bg-gray-800 border border-gray-600 rounded-lg text-white"
+              />
+            </div>
+          </div>
+
+          {/* Fuel Filter */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Kraftstoff</label>
+            <select
+              value={filters.fuel}
+              onChange={(e) => handleFilterChange('fuel', e.target.value)}
+              className="w-full p-2 bg-gray-800 border border-gray-600 rounded-lg text-white"
+            >
+              <option value="">Alle Kraftstoffe</option>
+              {getUniqueValues('fuel').map((fuel) => (
+                <option key={fuel} value={fuel}>
+                  {fuel}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Transmission Filter */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Getriebe</label>
+            <select
+              value={filters.transmission}
+              onChange={(e) => handleFilterChange('transmission', e.target.value)}
+              className="w-full p-2 bg-gray-800 border border-gray-600 rounded-lg text-white"
+            >
+              <option value="">Alle Getriebe</option>
+              {getUniqueValues('transmission').map((transmission) => (
+                <option key={transmission} value={transmission}>
+                  {transmission}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Reset Button */}
+          <button
+            onClick={resetFilters}
+            className="w-full py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+          >
+            Filter zurücksetzen
+          </button>
+        </div>
+      </div>
 
       <div className="flex">
         {/* Main Content */}
