@@ -25,9 +25,10 @@ const MOBILE_API_CONFIG = {
 export const fetchCarsFromMobileAPI = async (apiParams, maxPagesToFetch = 5) => {
   let allCars = [];
   let totalCount = 0;
+  const uniqueCarIds = new Set(); // Track unique car IDs to avoid duplicates
 
   for (let currentPageNum = 1; currentPageNum <= maxPagesToFetch && allCars.length < 100; currentPageNum++) {
-    const currentApiParams = { ...apiParams };
+    const currentApiParams = { ...apiParams, 'page.number': currentPageNum };
     const queryString = new URLSearchParams(currentApiParams).toString();
     const apiUrl = `${MOBILE_API_CONFIG.baseURL}/search?imageCount.min=1&${queryString}`;
 
@@ -43,14 +44,14 @@ export const fetchCarsFromMobileAPI = async (apiParams, maxPagesToFetch = 5) => 
         response = await axios.get(apiUrl, {
           headers: MOBILE_API_CONFIG.headers,
           timeout: MOBILE_API_CONFIG.timeout,
-          validateStatus: (status) => status >= 200 && status < 500
+          validateStatus: (status) => status >= 200 && status < 500,
         });
 
         if (response.status === 200) break;
         if (attempts === maxAttempts) throw new Error(`API returned status ${response.status}`);
       } catch (error) {
         if (attempts === maxAttempts) throw error;
-        await new Promise(resolve => setTimeout(resolve, 1000 * attempts));
+        await new Promise((resolve) => setTimeout(resolve, 1000 * attempts));
       }
     }
 
@@ -60,10 +61,15 @@ export const fetchCarsFromMobileAPI = async (apiParams, maxPagesToFetch = 5) => 
     }
 
     const pageData = response.data;
+
     if (pageData.ads && Array.isArray(pageData.ads)) {
-      allCars.push(...pageData.ads);
+      pageData.ads.forEach((ad) => {
+        if (!uniqueCarIds.has(ad.id)) // Skip if the car ID already exists
+          allCars.push(ad); // Add the car to the result array
+      });
+
       totalCount = pageData.total || pageData.totalCount || totalCount;
-      console.log(`✅ Page ${currentPageNum}: ${pageData.ads.length} cars`);
+      console.log(`✅ Page ${currentPageNum}: ${pageData.ads.length} cars (Unique: ${allCars.length})`);
     }
 
     if (!pageData.ads || pageData.ads.length === 0) {

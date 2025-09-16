@@ -16,10 +16,10 @@ export const cars = async (req, res) => {
     const apiParams = {
       'page.number': pageNumber,
       'page.size': requestedPageSize, // Mobile.de API returns max 20 cars per page
-      damageUnrepaired: false,
-      isBartered: false,
+      // damageUnrepaired: false,
+      // isBartered: false,
       lang: 'de',
-      ...(req.query.make && { make: req.query.make }),
+      ...(req.query.make && { "classification": `refdata/classes/Car/makes/${req.query.make}` }),
       ...(req.query.model && { model: req.query.model }),
       ...(req.query.priceFrom && { priceFrom: req.query.priceFrom }),
       ...(req.query.priceTo && { priceTo: req.query.priceTo }),
