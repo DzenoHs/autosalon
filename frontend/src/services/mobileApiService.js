@@ -125,7 +125,7 @@ class MobileApiService {
   }
 
   // Glavni API poziv za dohvaćanje automobila
-  async fetchCarsFromMobileApi(pageNumber = 1, pageSize = 20) {
+  async fetchCarsFromMobileApi(pageNumber = 1, pageSize = 20, make = '') {
     this.isLoading = true;
     this.lastError = null;
 
@@ -133,7 +133,7 @@ class MobileApiService {
       console.log(`🚗 Fetching cars from Mobile API (page ${pageNumber}, pageSize ${pageSize})...`);
 
       // Construct the API URL
-      const apiUrl = `${this.proxyUrl}/api/cars?pageNumber=${pageNumber}&pageSize=${pageSize}`;
+      const apiUrl = `${this.proxyUrl}/api/cars?pageNumber=${pageNumber}&pageSize=${pageSize}&make=${make}`;
 
       // Make the API call using axios
       const response = await axios.get(apiUrl, {

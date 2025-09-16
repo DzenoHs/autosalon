@@ -65,7 +65,7 @@ export default function CarsPage() {
         setError(null)
 
         console.log('🔄 Fetching cars from API...')
-        const result = await mobileApiService.fetchCarsFromMobileApi(currentPage, pageSize)
+        const result = await mobileApiService.fetchCarsFromMobileApi(currentPage, pageSize, filters.make)
 
         console.log('✅ Cars fetched successfully:', result)
         setCars(result.ads)
@@ -89,7 +89,7 @@ export default function CarsPage() {
     }
 
     fetchCars()
-  }, [currentPage, pageSize]) // Refetch cars when currentPage or pageSize changes
+  }, [currentPage, pageSize, filters.make]) // Refetch cars when currentPage or pageSize changes
 
   // Handle car click
   const handleCarClick = (car) => {
@@ -162,9 +162,9 @@ export default function CarsPage() {
   const applyFilters = (currentFilters) => {
     let filtered = cars
 
-    if (currentFilters.make) {
-      filtered = filtered.filter((car) => car.make?.toLowerCase().includes(currentFilters.make.toLowerCase()))
-    }
+    // if (currentFilters.make) {
+    //   filtered = filtered.filter((car) => car.make?.toLowerCase().includes(currentFilters.make.toLowerCase()))
+    // }
     if (currentFilters.model) {
       filtered = filtered.filter((car) => car.model?.toLowerCase().includes(currentFilters.model.toLowerCase()))
     }
