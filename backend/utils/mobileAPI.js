@@ -11,7 +11,7 @@ if (!username || !password) {
 }
 
 const MOBILE_API_CONFIG = {
-  baseURL: 'https://services.mobile.de/search-api',
+  baseURL: 'https://services.mobile.de/',
   headers: {
     'Authorization': `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`,
     'Accept': 'application/vnd.de.mobile.api+json',
@@ -30,7 +30,7 @@ export const fetchCarsFromMobileAPI = async (apiParams, maxPagesToFetch = 5) => 
   for (let currentPageNum = 1; currentPageNum <= maxPagesToFetch && allCars.length < 100; currentPageNum++) {
     const currentApiParams = { ...apiParams, 'page.number': currentPageNum };
     const queryString = new URLSearchParams(currentApiParams).toString();
-    const apiUrl = `${MOBILE_API_CONFIG.baseURL}/search?imageCount.min=1&${queryString}`;
+    const apiUrl = `${MOBILE_API_CONFIG.baseURL}search-api/search?imageCount.min=1&${queryString}`;
 
     console.log(`📡 Fetching page ${currentPageNum}/${maxPagesToFetch}: ${apiUrl}`);
 
@@ -92,7 +92,7 @@ export const fetchTopExpensiveCars = async () => {
   };
 
   const queryString = new URLSearchParams(apiParams).toString();
-  const apiUrl = `${MOBILE_API_CONFIG.baseURL}/search?imageCount.min=1&${queryString}`;
+  const apiUrl = `${MOBILE_API_CONFIG.baseURL}search-api/search?imageCount.min=1&${queryString}`;
 
   let response;
   let attempts = 0;
@@ -125,7 +125,7 @@ export const fetchTopExpensiveCars = async () => {
 
 // Fetch car details by ID
 export const fetchCarById = async (carId) => {
-  const apiUrl = `${MOBILE_API_CONFIG.baseURL}/ad/${carId}`;
+  const apiUrl = `${MOBILE_API_CONFIG.baseURL}search-api/ad/${carId}`;
   const response = await axios.get(apiUrl, {
     headers: MOBILE_API_CONFIG.headers,
     timeout: MOBILE_API_CONFIG.timeout,
@@ -136,4 +136,32 @@ export const fetchCarById = async (carId) => {
   }
 
   return response.data;
+};
+
+
+export const fetchCarModels = async (make) => {
+  if (!make) {
+    throw new Error('Car make is required to fetch models');
+  }
+
+  const apiParams = {
+    'page.number': 1,
+    'page.size': 100, // Fetch up to 100 cars per page
+    lang: 'de',
+    classification: `refdata/classes/Car/makes/${make}`, // Filter by make
+  };
+
+  try {
+    console.log(`📡 Fetching cars for make "${make}" to extract models`);
+    const { allCars } = await fetchCarsFromMobileAPI(apiParams, 5); // Fetch up to 5 pages
+
+    // Extract distinct models from the fetched cars
+    const distinctModels = [...new Set(allCars.map((car) => car.model).filter(Boolean))];
+
+    console.log(`✅ Found ${distinctModels.length} distinct models for make "${make}"`);
+    return distinctModels;
+  } catch (error) {
+    console.error(`❌ Error fetching car models for make "${make}":`, error.message);
+    throw new Error(`Failed to fetch car models for make "${make}": ${error.message}`);
+  }
 };

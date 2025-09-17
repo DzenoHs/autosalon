@@ -62,6 +62,9 @@ export default function CarsPage() {
   // State for unique car makes
   const [uniqueMakes, setUniqueMakes] = useState([])
 
+  // Add state for car models
+  const [carModels, setCarModels] = useState([])
+
   // Fetch unique car makes from API
   useEffect(() => {
     const fetchUniqueMakes = async () => {
@@ -76,6 +79,29 @@ export default function CarsPage() {
 
     fetchUniqueMakes()
   }, [])
+
+  // Fetch car models when the make filter changes
+  useEffect(() => {
+    const fetchModels = async () => {
+      if (!filters.make) {
+        setCarModels([]) // Reset models if no make is selected
+        return
+      }
+
+      try {
+        console.log(`🔄 Fetching car models for make: ${filters.make}`)
+        const models = await mobileApiService.fetchCarModels(filters.make)
+        setCarModels(models)
+        console.log(`✅ Fetched ${models.length} models for make: ${filters.make}`)
+      } catch (error) {
+        console.error('❌ Error fetching car models:', error)
+        setCarModels([]) // Reset models on error
+      }
+    }
+
+    fetchModels()
+  }, [filters.make])
+
   // Reset filters function
   const resetFilters = () => {
     const emptyFilters = {
@@ -120,7 +146,7 @@ export default function CarsPage() {
         setError(null)
 
         console.log('🔄 Fetching cars from API...')
-        const result = await mobileApiService.fetchCarsFromMobileApi(currentPage, pageSize, filters.make)
+        const result = await mobileApiService.fetchCarsFromMobileApi(currentPage, pageSize, filters.make, filters.model)
 
         console.log('✅ Cars fetched successfully:', result)
         setCars(result.ads)
@@ -143,7 +169,7 @@ export default function CarsPage() {
     }
 
     fetchCars()
-  }, [currentPage, pageSize, filters.make]) // Refetch cars when currentPage or pageSize changes
+  }, [currentPage, pageSize, filters.make, filters.model]) // Refetch cars when currentPage or pageSize changes
 
   // Handle car click
   const handleCarClick = (car) => {
@@ -212,10 +238,17 @@ export default function CarsPage() {
 
   // Handle filter change
   const handleFilterChange = (field, value) => {
-    const newFilters = {
+    let newFilters = {
       ...filters,
       [field]: value
     }
+    if (field === 'make') {
+      newFilters = {
+        ...newFilters,
+        model: '' // Reset the model filter
+      }
+    }
+
     setFilters(newFilters)
     applyFilters(newFilters)
   }
@@ -231,9 +264,9 @@ export default function CarsPage() {
     // if (currentFilters.make) {
     //   filtered = filtered.filter((car) => car.make?.toLowerCase().includes(currentFilters.make.toLowerCase()))
     // }
-    if (currentFilters.model) {
-      filtered = filtered.filter((car) => car.model?.toLowerCase().includes(currentFilters.model.toLowerCase()))
-    }
+    // if (currentFilters.model) {
+    //   filtered = filtered.filter((car) => car.model?.toLowerCase().includes(currentFilters.model.toLowerCase()))
+    // }
     if (currentFilters.yearFrom) {
       filtered = filtered.filter((car) => car.year >= parseInt(currentFilters.yearFrom))
     }
@@ -453,12 +486,13 @@ export default function CarsPage() {
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">Modell</label>
             <select
+              disabled={filters.make == ''}
               value={filters.model}
               onChange={(e) => handleFilterChange('model', e.target.value)}
               className="w-full p-2 bg-gray-800 border border-gray-600 rounded-lg text-white"
             >
               <option value="">Alle Modelle</option>
-              {getUniqueValues('model').map((model) => (
+              {carModels.map((model) => (
                 <option key={model} value={model}>
                   {model}
                 </option>

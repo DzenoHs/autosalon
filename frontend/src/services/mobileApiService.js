@@ -125,7 +125,7 @@ class MobileApiService {
   }
 
   // Glavni API poziv za dohvaćanje automobila
-  async fetchCarsFromMobileApi(pageNumber = 1, pageSize = 20, make = '') {
+  async fetchCarsFromMobileApi(pageNumber = 1, pageSize = 20, make = '', model = '') {
     this.isLoading = true;
     this.lastError = null;
 
@@ -133,7 +133,7 @@ class MobileApiService {
       console.log(`🚗 Fetching cars from Mobile API (page ${pageNumber}, pageSize ${pageSize})...`);
 
       // Construct the API URL
-      const apiUrl = `${this.proxyUrl}/api/cars?pageNumber=${pageNumber}&pageSize=${pageSize}&make=${make}`;
+      const apiUrl = `${this.proxyUrl}/api/cars?pageNumber=${pageNumber}&pageSize=${pageSize}&make=${make}&model=${model}`;
 
       // Make the API call using axios
       const response = await axios.get(apiUrl, {
@@ -483,6 +483,38 @@ class MobileApiService {
     } catch (error) {
       console.error('❌ Error fetching unique car makes:', error.message);
       throw new Error(`Failed to fetch car makes: ${error.message}`);
+    }
+  }
+
+  async fetchCarModels(make) {
+    if (!make) {
+      throw new Error('Car make is required to fetch models');
+    }
+
+    try {
+      console.log(`🔍 Fetching car models for make: ${make}`);
+
+      const url = `${this.proxyUrl}/api/cars/models?make=${encodeURIComponent(make)}`;
+      console.log('📡 Car models URL:', url);
+
+      const response = await axios.get(url, {
+        timeout: 15000,
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log('✅ Car models response:', response.data);
+
+      if (response.data && response.data.data) {
+        return response.data.data; // Return the array of car models
+      } else {
+        throw new Error('No data found for car models');
+      }
+    } catch (error) {
+      console.error('❌ Error fetching car models:', error.message);
+      throw new Error(`Failed to fetch car models: ${error.message}`);
     }
   }
 
