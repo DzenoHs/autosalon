@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {FaFilter, FaSearch, FaHome, FaTimes} from 'react-icons/fa'
+import {FaFilter, FaSearch, FaHome, FaTimes, FaTachometerAlt, FaGasPump, FaCogs, FaBolt} from 'react-icons/fa'
 import mobileApiService from '../services/mobileApiService'
 
 const FALLBACK_IMG = 'https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800&h=600&fit=crop&crop=center'
@@ -388,8 +388,8 @@ export default function CarsPage() {
                   onClick={() => setIsFilterOpen(!isFilterOpen)}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
                     isFilterOpen
-                      ? 'bg-blue-600 text-white border-blue-600'
-                      : 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600'
+                      ? 'bg-red-600 text-white border-red-600 shadow-lg shadow-red-600/30'
+                      : 'bg-black text-red-300 border-red-600 hover:bg-red-900/20 hover:text-white'
                   }`}
                 >
                   <FaFilter />
@@ -403,27 +403,27 @@ export default function CarsPage() {
 
       {/* Filter Panel */}
       <div
-        className={`fixed left-0 top-0 h-full bg-gray-900 shadow-2xl transform transition-transform duration-300 z-50 ${
+        className={`fixed left-0 top-0 h-full bg-black border-r-2 border-red-600 shadow-2xl transform transition-transform duration-300 z-50 ${
           isFilterOpen ? 'translate-x-0' : '-translate-x-full'
         } w-80 overflow-y-auto`}
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-gray-800 to-gray-700 text-white p-4 sticky top-0 z-10">
+        <div className="bg-gradient-to-r from-black to-red-900 text-white p-4 sticky top-0 z-10 border-b border-red-600">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <FaFilter className="text-lg" />
+              <FaFilter className="text-lg text-red-400" />
               <h2 className="text-xl font-bold">Filter</h2>
             </div>
             <button
               onClick={() => setIsFilterOpen(false)}
-              className="p-2 hover:bg-gray-600 rounded-lg transition-colors"
+              className="p-2 hover:bg-red-800 rounded-lg transition-colors"
             >
               <FaTimes />
             </button>
           </div>
 
           {/* Results counter */}
-          <div className="mt-2 text-gray-300">
+          <div className="mt-2 text-red-300">
             <span className="text-sm">
               {displayedCars.length} von {cars.length} Fahrzeugen
             </span>
@@ -431,14 +431,14 @@ export default function CarsPage() {
         </div>
 
         {/* Filter Content */}
-        <div className="p-4 space-y-4">
+        <div className="p-4 space-y-6 bg-gradient-to-b from-gray-900 to-black">
           {/* Make Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">Marke</label>
+            <label className="block text-sm font-medium text-red-300 mb-2">Marke</label>
             <select
               value={filters.make}
               onChange={(e) => handleFilterChange('make', e.target.value)}
-              className="w-full p-2 bg-gray-800 border border-gray-600 rounded-lg text-white"
+              className="w-full p-3 bg-black border-2 border-red-600 rounded-lg text-white focus:border-red-400 focus:ring-2 focus:ring-red-600/30 transition-all"
             >
               <option value="">Alle Marken</option>
               {uniqueMakes.map((make) => (
@@ -451,11 +451,11 @@ export default function CarsPage() {
 
           {/* Model Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">Modell</label>
+            <label className="block text-sm font-medium text-red-300 mb-2">Modell</label>
             <select
               value={filters.model}
               onChange={(e) => handleFilterChange('model', e.target.value)}
-              className="w-full p-2 bg-gray-800 border border-gray-600 rounded-lg text-white"
+              className="w-full p-3 bg-black border-2 border-red-600 rounded-lg text-white focus:border-red-400 focus:ring-2 focus:ring-red-600/30 transition-all"
             >
               <option value="">Alle Modelle</option>
               {getUniqueValues('model').map((model) => (
@@ -468,53 +468,53 @@ export default function CarsPage() {
 
           {/* Price Range */}
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">Preis (€)</label>
-            <div className="grid grid-cols-2 gap-2">
+            <label className="block text-sm font-medium text-red-300 mb-2">Preis (€)</label>
+            <div className="grid grid-cols-2 gap-3">
               <input
                 type="number"
                 placeholder="Von"
                 value={filters.priceFrom}
                 onChange={(e) => handleFilterChange('priceFrom', e.target.value)}
-                className="p-2 bg-gray-800 border border-gray-600 rounded-lg text-white"
+                className="p-3 bg-black border-2 border-red-600 rounded-lg text-white placeholder-red-400/60 focus:border-red-400 focus:ring-2 focus:ring-red-600/30 transition-all"
               />
               <input
                 type="number"
                 placeholder="Bis"
                 value={filters.priceTo}
                 onChange={(e) => handleFilterChange('priceTo', e.target.value)}
-                className="p-2 bg-gray-800 border border-gray-600 rounded-lg text-white"
+                className="p-3 bg-black border-2 border-red-600 rounded-lg text-white placeholder-red-400/60 focus:border-red-400 focus:ring-2 focus:ring-red-600/30 transition-all"
               />
             </div>
           </div>
 
           {/* Year Range */}
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">Baujahr</label>
-            <div className="grid grid-cols-2 gap-2">
+            <label className="block text-sm font-medium text-red-300 mb-2">Baujahr</label>
+            <div className="grid grid-cols-2 gap-3">
               <input
                 type="number"
                 placeholder="Von"
                 value={filters.yearFrom}
                 onChange={(e) => handleFilterChange('yearFrom', e.target.value)}
-                className="p-2 bg-gray-800 border border-gray-600 rounded-lg text-white"
+                className="p-3 bg-black border-2 border-red-600 rounded-lg text-white placeholder-red-400/60 focus:border-red-400 focus:ring-2 focus:ring-red-600/30 transition-all"
               />
               <input
                 type="number"
                 placeholder="Bis"
                 value={filters.yearTo}
                 onChange={(e) => handleFilterChange('yearTo', e.target.value)}
-                className="p-2 bg-gray-800 border border-gray-600 rounded-lg text-white"
+                className="p-3 bg-black border-2 border-red-600 rounded-lg text-white placeholder-red-400/60 focus:border-red-400 focus:ring-2 focus:ring-red-600/30 transition-all"
               />
             </div>
           </div>
 
           {/* Fuel Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">Kraftstoff</label>
+            <label className="block text-sm font-medium text-red-300 mb-2">Kraftstoff</label>
             <select
               value={filters.fuel}
               onChange={(e) => handleFilterChange('fuel', e.target.value)}
-              className="w-full p-2 bg-gray-800 border border-gray-600 rounded-lg text-white"
+              className="w-full p-3 bg-black border-2 border-red-600 rounded-lg text-white focus:border-red-400 focus:ring-2 focus:ring-red-600/30 transition-all"
             >
               <option value="">Alle Kraftstoffe</option>
               {getUniqueValues('fuel').map((fuel) => (
@@ -527,11 +527,11 @@ export default function CarsPage() {
 
           {/* Transmission Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">Getriebe</label>
+            <label className="block text-sm font-medium text-red-300 mb-2">Getriebe</label>
             <select
               value={filters.transmission}
               onChange={(e) => handleFilterChange('transmission', e.target.value)}
-              className="w-full p-2 bg-gray-800 border border-gray-600 rounded-lg text-white"
+              className="w-full p-3 bg-black border-2 border-red-600 rounded-lg text-white focus:border-red-400 focus:ring-2 focus:ring-red-600/30 transition-all"
             >
               <option value="">Alle Getriebe</option>
               {getUniqueValues('transmission').map((transmission) => (
@@ -545,7 +545,7 @@ export default function CarsPage() {
           {/* Reset Button */}
           <button
             onClick={resetFilters}
-            className="w-full py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            className="w-full py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:from-red-700 hover:to-red-800 transition-all transform hover:scale-105 shadow-lg shadow-red-600/30 font-medium"
           >
             Filter zurücksetzen
           </button>
@@ -602,20 +602,20 @@ export default function CarsPage() {
                         </h3>
                         {/* Main Details */}
                         <div className="grid grid-cols-2 gap-2 mb-3 text-xs">
-                          <div className="flex items-center gap-1 text-gray-400">
-                            <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                          <div className="flex items-center gap-2 text-gray-400">
+                            <FaTachometerAlt className="text-red-500 text-sm" />
                             {formatMileage(car.mileage)}
                           </div>
-                          <div className="flex items-center gap-1 text-gray-400">
-                            <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                          <div className="flex items-center gap-2 text-gray-400">
+                            <FaGasPump className="text-red-500 text-sm" />
                             {car.fuel || 'N/A'}
                           </div>
-                          <div className="flex items-center gap-1 text-gray-400">
-                            <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                          <div className="flex items-center gap-2 text-gray-400">
+                            <FaCogs className="text-red-500 text-sm" />
                             {car.gearbox || 'N/A'}
                           </div>
-                          <div className="flex items-center gap-1 text-gray-400">
-                            <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                          <div className="flex items-center gap-2 text-gray-400">
+                            <FaBolt className="text-red-500 text-sm" />
                             {car.power ? `${car.power} kW` : 'N/A'}
                           </div>
                         </div>
