@@ -585,7 +585,7 @@ export default function CarsPage() {
                       <div className="relative h-48 bg-black">
                         <img
                           src={car.images?.[0]?.xxl || FALLBACK_IMG}
-                          alt={`${car.make} ${car.model}`}
+                          alt={`${car.make} ${car.modelDescription.replace(/&amp;/g, "&")}`}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -598,7 +598,7 @@ export default function CarsPage() {
                       {/* Car Info */}
                       <div className="p-5 bg-gradient-to-b from-gray-900 to-black">
                         <h3 className="text-xl font-bold text-white group-hover:text-red-400 transition-colors mb-2 truncate">
-                          {car.make} {car.model}
+                          {car.make} {car.modelDescription.replace(/&amp;/g, "&")}
                         </h3>
                         {/* Main Details */}
                         <div className="grid grid-cols-2 gap-2 mb-3 text-xs">

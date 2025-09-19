@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {ChevronRight, Gauge, Fuel, Settings, Crown, Star, Award, Calendar, Zap, Car} from 'lucide-react'
+import mobileApiService from '../../services/mobileApiService'
 
 const Cars = () => {
   const navigate = useNavigate()
@@ -11,13 +12,11 @@ const Cars = () => {
 
   // Fetch top expensive cars from API
   useEffect(() => {
-    const fetchTopExpensiveCars = async () => {
+    const fetchExpensiveCars = async () => {
       try {
         setIsLoadingExpensive(true)
 
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/cars/top/expensive`)
-        const data = await response.json()
-
+        const data = await mobileApiService.fetchTopExpensiveCars()
         if (data.success && data.cars) {
           // Map API data to component format
           const mappedExpensiveCars = data.cars.map((car, index) => ({
@@ -48,7 +47,7 @@ const Cars = () => {
       }
     }
 
-    fetchTopExpensiveCars()
+    fetchExpensiveCars()
   }, [])
 
   const handleCarClick = (carId) => {
@@ -82,51 +81,39 @@ const Cars = () => {
   return (
     <section
       id="cars"
-      className="relative py-16 bg-gradient-to-b from-black via-neutral-900 to-black overflow-hidden"
-      style={{overflowX: 'hidden'}}
+      className="relative w-full h-full bg-gradient-to-b from-black via-neutral-900 to-black overflow-hidden flex items-center justify-center"
+      style={{overflowX: 'hidden', minHeight: '100vh'}}
     >
       {/* Background effects */}
       <div className="absolute inset-0">
-        <div className="absolute top-20 left-10 w-3 h-3 bg-red-500 rounded-full animate-pulse opacity-60"></div>
-        <div className="absolute top-40 right-20 w-2 h-2 bg-yellow-500 rounded-full opacity-40"></div>
-        <div className="absolute bottom-32 left-1/4 w-4 h-4 bg-red-600 rounded-full animate-pulse opacity-30"></div>
-        <div className="absolute top-1/2 right-10 w-1 h-1 bg-white rounded-full opacity-20"></div>
+        <div className="absolute top-20 left-10 w-3 h-3 bg-white rounded-full opacity-10"></div>
+        <div className="absolute top-40 right-20 w-2 h-2 bg-white rounded-full opacity-15"></div>
+        <div className="absolute bottom-32 left-1/4 w-4 h-4 bg-white rounded-full opacity-20"></div>
+        <div className="absolute top-1/2 right-10 w-1 h-1 bg-white rounded-full opacity-30"></div>
       </div>
 
-      <div className="container mx-auto px-6 lg:px-8 relative z-10">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-14 h-14 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-amber-500/30">
-              <Crown className="w-7 h-7 text-white" />
-            </div>
-          </div>
-
-          <h2 className="text-5xl lg:text-6xl font-bold text-white mb-2">
-            <span className="bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600 bg-clip-text text-transparent">
+      <div className="container mx-auto px-6 lg:px-8 relative z-10 py-8">
+        {/* Simple Header */}
+        <div className="text-center mb-8">
+          <h2 className="text-3xl lg:text-4xl font-bold text-white">
+            <span className="text-white">
               Premium
             </span>
-            <span className="bg-gradient-to-r from-red-500 to-red-700 bg-clip-text text-transparent ml-4">
+            <span className="text-gray-300 ml-3">
               Fahrzeuge
             </span>
           </h2>
-          
-          <div className="flex items-center justify-center gap-2 mt-4">
-            <div className="h-1 w-12 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-full"></div>
-            <div className="w-3 h-3 bg-gradient-to-r from-red-500 to-red-700 rounded-full"></div>
-            <div className="h-1 w-12 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-full"></div>
-          </div>
         </div>
 
         {/* Cars Grid */}
         {topExpensiveCars.length === 0 && !isLoadingExpensive ? (
-          <div className="text-center py-20">
-            <div className="text-8xl mb-6 opacity-60">🚗</div>
-            <h3 className="text-3xl font-bold text-white mb-4">Premium-Fahrzeuge werden geladen</h3>
-            <p className="text-neutral-400 text-lg">Bitte haben Sie einen Moment Geduld...</p>
+          <div className="text-center py-6">
+            <div className="text-4xl mb-3 opacity-60">🚗</div>
+            <h3 className="text-xl font-bold text-white mb-2">Premium-Fahrzeuge werden geladen</h3>
+            <p className="text-neutral-400 text-sm">Bitte haben Sie einen Moment Geduld...</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 max-w-6xl mx-auto">
             {topExpensiveCars.slice(0, 6).map((car) => (
               <div
                 key={car.id}
@@ -141,30 +128,28 @@ const Cars = () => {
                 onClick={() => handleCarClick(car.id)}
               >
                 {/* Car Image */}
-                <div className="relative h-40 overflow-hidden rounded-t-3xl">
+                <div className="relative h-40 overflow-hidden rounded-t-2xl">
                   <img
                     src={car?.images[0].xxl}
                     alt={car.name}
-                    className="w-full h-full object-cover object-center group-hover:scale-115 transition-transform duration-1000"
+                    className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700"
                   />
 
                   {/* Premium Badge for expensive cars */}
                   <div
-                    className="absolute top-6 right-6 bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600 
-                              text-black px-4 py-3 rounded-2xl text-sm font-bold shadow-2xl backdrop-blur-sm
-                              border border-amber-300/80 flex items-center gap-2 animate-pulse
-                              hover:animate-bounce transition-all duration-300"
+                    className="absolute top-3 right-3 bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600 
+                              text-black px-2 py-1 rounded-xl text-xs font-bold shadow-lg backdrop-blur-sm
+                              border border-amber-300/80 flex items-center gap-1"
                   >
-                    <Crown className="w-4 h-4 text-black" />
+                    <Crown className="w-3 h-3 text-black" />
                     <span>PREMIUM</span>
                   </div>
 
                   {/* Luxury corner decoration */}
-                  <div className="absolute top-6 left-6">
+                  <div className="absolute top-3 left-3">
                     <div className="flex items-center gap-1">
-                      <Star className="w-4 h-4 text-amber-400 animate-pulse" />
-                      <Star className="w-3 h-3 text-amber-300 animate-pulse delay-75" />
-                      <Star className="w-2 h-2 text-amber-200 animate-pulse delay-150" />
+                      <Star className="w-3 h-3 text-amber-400" />
+                      <Star className="w-2 h-2 text-amber-300" />
                     </div>
                   </div>
 
@@ -174,13 +159,13 @@ const Cars = () => {
                 </div>
 
                 {/* Car Details */}
-                <div className="p-2 pt-2 relative z-10">
+                <div className="p-2 relative z-10">
                   <div className="flex items-center justify-between mb-1">
-                    <h3 className="text-xl font-bold text-white group-hover:text-amber-400 transition-colors truncate flex items-center gap-2">
-                      <Award className="w-5 h-5 text-amber-500" />
+                    <h3 className="text-sm font-bold text-white group-hover:text-amber-400 transition-colors truncate flex items-center gap-1">
+                      <Award className="w-3 h-3 text-amber-500" />
                       {car.name}
                     </h3>
-                    <div className="text-sm text-amber-400 bg-gradient-to-r from-amber-900/60 to-yellow-900/60 px-3 py-2 rounded-xl font-semibold border border-amber-500/30">
+                    <div className="text-xs text-amber-400 bg-gradient-to-r from-amber-900/60 to-yellow-900/60 px-2 py-1 rounded-lg font-semibold border border-amber-500/30">
                       {car.year}
                     </div>
                   </div>
@@ -189,20 +174,17 @@ const Cars = () => {
                   <div className="mb-2">
                     {/* Basic Info Row */}
                     <div className="grid grid-cols-3 gap-1">
-                      <div className="text-center bg-neutral-800/60 rounded p-1 border border-neutral-600/30">
-                        <Gauge className="w-3 h-3 text-amber-400 mx-auto mb-0.5" />
+                      <div className="text-center bg-neutral-800/60 rounded px-1 py-0.5 border border-neutral-600/30">
+                        <Gauge className="w-2.5 h-2.5 text-amber-400 mx-auto mb-0.5" />
                         <div className="text-xs text-neutral-300 font-medium">{formatPrice(car.km)}</div>
-                        <div className="text-xs text-neutral-500">km</div>
                       </div>
-                      <div className="text-center bg-neutral-800/60 rounded p-1 border border-neutral-600/30">
-                        <Fuel className="w-3 h-3 text-red-400 mx-auto mb-0.5" />
+                      <div className="text-center bg-neutral-800/60 rounded px-1 py-0.5 border border-neutral-600/30">
+                        <Fuel className="w-2.5 h-2.5 text-red-400 mx-auto mb-0.5" />
                         <div className="text-xs text-neutral-300 font-medium">{car.fuel}</div>
-                        <div className="text-xs text-neutral-500">Kraftstoff</div>
                       </div>
-                      <div className="text-center bg-neutral-800/60 rounded p-1 border border-neutral-600/30">
-                        <Settings className="w-3 h-3 text-blue-400 mx-auto mb-0.5" />
-                        <div className="text-xs text-neutral-300 font-medium">{car.gearbox?.replace('_GEAR', '') || 'AUTOMATIC'}</div>
-                        <div className="text-xs text-neutral-500">Getriebe</div>
+                      <div className="text-center bg-neutral-800/60 rounded px-1 py-0.5 border border-neutral-600/30">
+                        <Settings className="w-2.5 h-2.5 text-blue-400 mx-auto mb-0.5" />
+                        <div className="text-xs text-neutral-300 font-medium">{car.gearbox?.replace('_GEAR', '') || 'AUTO'}</div>
                       </div>
                     </div>
 
@@ -212,15 +194,13 @@ const Cars = () => {
 
 
                   {/* Compact Footer */}
-                  <div className="flex items-center justify-between pt-2 border-t border-neutral-600/30">
-                    <div className="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 px-3 py-2 rounded-lg flex items-center gap-1 text-white font-medium text-xs transition-all duration-300 hover:scale-105 shadow-md">
-                      <Award className="w-3 h-3" />
+                  <div className="flex items-center justify-between pt-1 border-t border-neutral-600/30">
+                    <div className="bg-gradient-to-r from-red-500 to-red-700 px-2 py-1 rounded-lg flex items-center gap-1 text-white font-medium text-xs">
                       <span>Details</span>
-                      <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      <ChevronRight className="w-3 h-3" />
                     </div>
                     <div className="text-right">
                       <div className="text-xs text-emerald-400 font-bold">€{formatPrice(car.priceGross)}</div>
-                      <div className="text-xs text-neutral-400">Netto: €{formatPrice(car.priceNet)}</div>
                     </div>
                   </div>
                 </div>
@@ -233,17 +213,15 @@ const Cars = () => {
         <div className="text-center">
           <button
             onClick={handleViewAll}
-            className="group inline-flex items-center gap-4 bg-gradient-to-r from-red-500 via-red-600 to-red-700 
+            className="group inline-flex items-center gap-2 bg-gradient-to-r from-red-500 via-red-600 to-red-700 
                        hover:from-red-600 hover:via-red-700 hover:to-red-800 
-                       text-white px-10 py-5 rounded-2xl font-semibold text-lg
-                       transition-all duration-400 transform hover:scale-105 hover:-translate-y-1
-                       shadow-2xl hover:shadow-3xl hover:shadow-red-500/30
-                       border border-red-400/20 backdrop-blur-sm"
+                       text-white px-6 py-3 rounded-xl font-semibold text-sm
+                       transition-all duration-300 transform hover:scale-105
+                       shadow-xl hover:shadow-red-500/20
+                       border border-red-400/20"
           >
             <span>Alle Fahrzeuge anzeigen</span>
-            <div className="bg-white/20 p-2 rounded-full group-hover:bg-white/30 transition-colors">
-              <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-            </div>
+            <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
       </div>

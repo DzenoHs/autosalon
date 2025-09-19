@@ -199,7 +199,7 @@ export default function CarDetails() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-4xl font-bold text-white mb-2">
-                {car.make} {car.model}
+                {car.make} {car.modelDescription.replace(/&amp;/g, "&")}
               </h1>
               <p className="text-xl text-neutral-400">
                 {car.year} • {formatMileage(car.mileage)} • {car.fuel}

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { useSlideshowContext } from '../context/SlideshowContext';
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { navigateToSlide, isDesktopSlideshow } = useSlideshowContext();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -13,9 +15,22 @@ export default function Header() {
   }, []);
 
   const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+    const sectionMap = {
+      'hero': 0,
+      'cars': 1,
+      'buycar': 2,
+      'why-choose-us': 3,
+      'contact': 4
+    };
+
+    if (isDesktopSlideshow && sectionMap.hasOwnProperty(sectionId)) {
+      navigateToSlide(sectionMap[sectionId]);
+    } else {
+      // Fallback to normal scroll for mobile or other pages
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
     }
     setMobileMenuOpen(false);
   };
@@ -64,7 +79,7 @@ export default function Header() {
           </li>
           <li>
             <button
-              onClick={() => scrollToSection("about")}
+              onClick={() => scrollToSection("why-choose-us")}
               className="hover:text-red-500 transition duration-300"
             >
               Über uns

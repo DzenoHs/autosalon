@@ -148,10 +148,17 @@ class MobileApiService {
 
       // Check if the response contains valid data
       if (response.data && response.data.ads) {
-        // Transform the data for the React app
-        // const transformedData = this.transformMobileData(response.data, pageNumber);
-        // console.log(`✅ Page ${pageNumber}: ${transformedData.cars.length} cars fetched`);
-        return response.data;
+        // Map transmission types for each car
+        const mappedAds = response.data.ads.map(car => ({
+          ...car,
+          gearbox: this.mapTransmissionType(car.gearbox)
+        }));
+        
+        // Return response with mapped transmission types
+        return {
+          ...response.data,
+          ads: mappedAds
+        };
       } else {
         console.warn('⚠️ No ads found in the API response');
         return this.getFallbackData(pageNumber);
@@ -355,6 +362,12 @@ class MobileApiService {
         // Backend vraća podatke direktno u response.data.data
         const carData = response.data;
 
+        // Map transmission type if gearbox exists
+        if (carData.data && carData.data.gearbox) {
+          carData.data.gearbox = this.mapTransmissionType(carData.data.gearbox);
+        }
+        console.log('🚗 Car details data:', carData.data);
+
         return carData
       } else {
         throw new Error(response.data?.error || 'Automobil nije pronađen');
@@ -429,9 +442,16 @@ class MobileApiService {
       console.log('✅ Top expensive cars odgovor:', response.data);
 
       if (response.data && response.data.success) {
+        // Map transmission types for each car
+        const mappedCars = (response.data.cars || []).map(car => ({
+          ...car,
+          gearbox: this.mapTransmissionType(car.gearbox)
+        }));
+        console.log('🚗 Najskuplji automobili:', mappedCars);
+
         return {
           success: true,
-          cars: response.data.cars || [],
+          cars: mappedCars,
           total: response.data.total || 0,
           category: 'najskupljih-6',
           source: 'api',

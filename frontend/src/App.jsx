@@ -3,41 +3,61 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
-import Hero from './components/sections/Hero';
-import Brands from './components/sections/Brands';
-import BuyingProcess from './components/sections/buycar';
-import Cars from './components/sections/Cars';
-import Contact from './components/sections/Contact';
 import Footer from './components/Footer';
+import Hero from './components/sections/Hero';
+import Cars from './components/sections/Cars';
+import BuyCar from './components/sections/buycar';
+import WhyChooseUs from './components/sections/WhyChooseUs';
+import Contact from './components/sections/Contact';
 import CarDetails from './pages/CarDetails';
 import CarsPage from './pages/CarsPage';
 import BuyCarPage from './pages/buycarpage';
-import WhyChooseUs from './components/sections/WhyChooseUs';
+import Impressum from './pages/Impressum';
+import Datenschutz from './pages/Datenschutz';
+import DesktopSlideshow from './components/DesktopSlideshow';
+import { CarsProvider } from './context/CarsContext';
+import { SlideshowProvider } from './context/SlideshowContext';
 
 function App() {
   return (
-    
- 
-    <Router>
-      <Routes>
-        <Route path="/" element={
-          <div className="min-h-screen bg-neutral-900 text-white">
-            <Header />
-            <Hero />
-            <Cars />
-            <Brands />
-            <BuyingProcess />
-            <WhyChooseUs />
-
-            <Contact />
-            <Footer />
-          </div>
-        } />
-        <Route path="/cars" element={<CarsPage />} />
-        <Route path="/car/:id" element={<CarDetails />} />
-        <Route path="/kako-kupiti" element={<BuyCarPage />} />
-      </Routes>
-    </Router>
+    <CarsProvider>
+      <SlideshowProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={
+              <DesktopSlideshow>
+                <Hero />
+                <Cars />
+                <BuyCar />
+                <WhyChooseUs />
+                <Contact />
+                <Footer />
+              </DesktopSlideshow>
+            } />
+            <Route path="/cars" element={
+              <>
+                <CarsPage />
+                <Footer />
+              </>
+            } />
+            <Route path="/car/:id" element={
+              <>
+                <CarDetails />
+                <Footer />
+              </>
+            } />
+            <Route path="/kako-kupiti" element={
+              <>
+                <BuyCarPage />
+                <Footer />
+              </>
+            } />
+            <Route path="/impressum" element={<Impressum />} />
+            <Route path="/datenschutz" element={<Datenschutz />} />
+          </Routes>
+        </Router>
+      </SlideshowProvider>
+    </CarsProvider>
   );
 }
 

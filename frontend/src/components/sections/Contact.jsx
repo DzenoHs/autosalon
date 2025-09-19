@@ -54,10 +54,10 @@ export default function Contact() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-red-900/10 via-transparent to-transparent"></div>
       </div>
 
-      <div className="container mx-auto px-4 relative z-10 max-w-7xl">
+      <div className="container mx-auto px-4 relative z-10 max-w-7xl py-8">
         {/* Title */}
-        <div className="text-center mb-14">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black mb-4 tracking-tight leading-none">
+        <div className="text-center mb-8">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-black mb-3 tracking-tight leading-none">
             <span className="bg-gradient-to-r from-red-500 via-yellow-500 to-red-600 bg-clip-text text-transparent drop-shadow-2xl">
               KONTAKT
             </span>
@@ -70,23 +70,23 @@ export default function Contact() {
           </p>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-10 mb-14">
+        <div className="flex flex-col lg:flex-row gap-6 mb-8">
           {/* Contact Form */}
           <div className="flex-1">
             <div className="relative">
-              <div className="absolute -inset-4 bg-gradient-to-r from-red-500/20 via-yellow-500/10 to-red-500/20 rounded-3xl blur-2xl opacity-30"></div>
-              <div className="relative bg-gradient-to-br from-neutral-900 via-black to-neutral-800 p-8 rounded-3xl border-2 border-neutral-700 shadow-2xl backdrop-blur-sm">
-                <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="absolute -inset-2 bg-gradient-to-r from-red-500/10 via-yellow-500/5 to-red-500/10 rounded-2xl blur-xl opacity-30"></div>
+              <div className="relative bg-gradient-to-br from-neutral-900 via-black to-neutral-800 p-4 rounded-2xl border border-neutral-700 shadow-xl backdrop-blur-sm">
+                <form onSubmit={handleSubmit} className="space-y-3">
                   {/* Name Input */}
                   <div className="group relative">
-                    <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-red-500 transition-colors duration-200" size={20} />
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-red-500 transition-colors duration-200" size={16} />
                     <input
                       type="text"
                       name="name"
                       placeholder="Ihr Name"
                       value={form.name}
                       onChange={handleChange}
-                      className={`w-full pl-10 pr-4 py-4 rounded-xl bg-neutral-800/80 backdrop-blur-sm text-white text-base border-2 ${
+                      className={`w-full pl-8 pr-3 py-2 rounded-lg bg-neutral-800/80 backdrop-blur-sm text-white text-sm border ${
                         errors.name ? "border-red-500" : "border-neutral-600 focus:border-red-500"
                       } focus:outline-none transition-all duration-300 group-hover:bg-neutral-700/80`}
                     />

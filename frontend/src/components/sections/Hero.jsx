@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 export default function Hero() {
   return (
-        <section id="hero" className="relative h-screen flex items-center justify-center bg-black overflow-hidden">
+        <section id="hero" className="relative w-full h-full flex items-center justify-center bg-black overflow-hidden" style={{minHeight: '100vh'}}>
       {/* Background Video */}
       <div className="absolute inset-0">
         <video 
@@ -21,7 +21,7 @@ export default function Hero() {
             className="w-full h-full object-cover"
           />
         </video>
-        <div className="absolute inset-0 bg-black/50"></div>
+        <div className="absolute inset-0 bg-black/40"></div>
       </div>
 
       {/* Content */}
@@ -31,7 +31,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.5 }}
         >
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-6 leading-tight">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 leading-tight">
             <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
               FINDEN SIE IHR
             </span>
@@ -46,7 +46,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 1 }}
-          className="text-lg sm:text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed px-4"
+          className="text-base md:text-lg text-gray-300 mb-6 max-w-xl mx-auto leading-relaxed px-4"
         >
           Premium-Fahrzeuge für diejenigen, die das Beste verdienen
         </motion.p>

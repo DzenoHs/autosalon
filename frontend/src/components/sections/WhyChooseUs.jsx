@@ -38,7 +38,7 @@ export default function WhyChooseUs() {
   const [hoveredStat, setHoveredStat] = useState(null);
 
   return (
-    <section className="relative py-20 bg-gradient-to-b from-black via-neutral-900 to-black overflow-hidden">
+    <section id="why-choose-us" className="relative w-full h-full bg-gradient-to-b from-black via-neutral-900 to-black overflow-hidden flex items-center justify-center py-8" style={{minHeight: '100vh'}}>
       {/* Background particles */}
       <div className="absolute inset-0">
         <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-pulse opacity-60"></div>
@@ -47,17 +47,17 @@ export default function WhyChooseUs() {
         <div className="absolute bottom-20 right-1/3 w-1 h-1 bg-green-500 rounded-full animate-ping opacity-30"></div>
       </div>
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-4 relative z-10 py-8">
         {/* Title Section */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="text-center mb-16"
+          className="text-center mb-8"
         >
           <motion.h2 
-            className="text-5xl md:text-6xl font-black mb-6 tracking-tight leading-none"
+            className="text-3xl md:text-4xl font-black mb-4 tracking-tight leading-none"
             initial={{ scale: 0.9, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
             viewport={{ once: true }}
@@ -93,7 +93,7 @@ export default function WhyChooseUs() {
         </motion.div>
 
         {/* Cards Grid - CELA KARTICA MENJA BOJU */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
           {features.map((feature, index) => (
             <motion.div
               key={index}
@@ -124,7 +124,7 @@ export default function WhyChooseUs() {
               
               {/* Main Card - CELA KARTICA POSTAJE GRADIJENT */}
               <motion.div 
-                className="relative p-5 lg:p-6 rounded-3xl border-2 transition-all duration-500 shadow-2xl backdrop-blur-sm min-h-[256px] lg:min-h-[288px]"
+                className="relative p-3 lg:p-4 rounded-2xl border-2 transition-all duration-500 shadow-xl backdrop-blur-sm min-h-[180px] lg:min-h-[200px]"
                 animate={{
                   y: hoveredCard === index ? -12 : 0,
                   scale: hoveredCard === index ? 1.03 : 1,
@@ -164,9 +164,9 @@ export default function WhyChooseUs() {
                 
                 <div className="text-center relative z-10 h-full flex flex-col justify-center">
                   {/* Icon Section */}
-                  <div className="mb-5 lg:mb-6">
+                  <div className="mb-3 lg:mb-4">
                     <motion.div 
-                      className="inline-flex p-5 lg:p-6 rounded-2xl shadow-xl transition-shadow duration-300"
+                      className="inline-flex p-2 lg:p-3 rounded-xl shadow-lg transition-shadow duration-300"
                       style={{
                         background: hoveredCard === index ? 'rgba(255,255,255,0.2)' : `linear-gradient(135deg, ${
                           feature.gradient === 'from-emerald-400 via-green-500 to-emerald-700' ? '#34d399, #10b981' :
@@ -176,23 +176,23 @@ export default function WhyChooseUs() {
                         })`
                       }}
                       animate={{
-                        rotate: hoveredCard === index ? 360 : 0,
-                        scale: hoveredCard === index ? 1.1 : 1
+                        rotate: hoveredCard === index ? 180 : 0,
+                        scale: hoveredCard === index ? 1.05 : 1
                       }}
                       transition={{ 
-                        duration: 1.0,
+                        duration: 0.5,
                         ease: [0.68, -0.55, 0.265, 1.55]
                       }}
                     >
                       <div className="text-white drop-shadow-lg">
-                        {React.cloneElement(feature.icon, { size: 42 })}
+                        {React.cloneElement(feature.icon, { size: 24 })}
                       </div>
                     </motion.div>
                   </div>
                   
                   {/* Title */}
                   <motion.h3 
-                    className="text-base lg:text-2xl font-black mb-3 lg:mb-5 tracking-wider transition-all duration-400"
+                    className="text-sm lg:text-base font-black mb-2 lg:mb-3 tracking-wider transition-all duration-400"
                     animate={{
                       scale: hoveredCard === index ? 1.05 : 1,
                       color: hoveredCard === index ? 'rgb(255 255 255)' : 'rgb(255 255 255)'
@@ -204,7 +204,7 @@ export default function WhyChooseUs() {
                   
                   {/* Description */}
                   <motion.p 
-                    className="leading-relaxed text-xs lg:text-base font-medium transition-colors duration-400"
+                    className="leading-relaxed text-xs lg:text-sm font-medium transition-colors duration-400"
                     animate={{
                       color: hoveredCard === index ? 'rgb(243 244 246)' : 'rgb(156 163 175)'
                     }}

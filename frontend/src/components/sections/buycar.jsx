@@ -2,6 +2,25 @@ import { Car, CalendarCheck, FileText, Truck, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
+const brands = [
+  { name: "Audi", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/audi.png" },
+  { name: "BMW", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/bmw.png" },
+  { name: "Mercedes", src: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Mercedes-Logo.svg/2048px-Mercedes-Logo.svg.png" },
+  { name: "Porsche", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/porsche.png" },
+  { name: "Tesla", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/tesla.png" },
+  { name: "Lexus", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/lexus.png" },
+  { name: "Jaguar", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/jaguar.png" },
+  
+  // doubling set for smooth scrolling
+  { name: "Audi", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/audi.png" },
+  { name: "BMW", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/bmw.png" },
+  { name: "Mercedes", src: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Mercedes-Logo.svg/2048px-Mercedes-Logo.svg.png" },
+  { name: "Porsche", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/porsche.png" },
+  { name: "Tesla", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/tesla.png" },
+  { name: "Lexus", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/lexus.png" },
+  { name: "Jaguar", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/jaguar.png" },
+];
+
 export default function BuyingProcessStrip() {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
@@ -47,22 +66,68 @@ export default function BuyingProcessStrip() {
   ];
 
   return (
-    <section id="buycar" className="relative py-12 sm:py-16 md:py-20 lg:py-28 bg-gradient-to-b from-black via-gray-900 to-black overflow-hidden">
-      {/* Background Effects */}
+    <section id="buycar" className="relative w-full h-full bg-gradient-to-b from-black via-gray-900 to-black overflow-hidden flex flex-col" style={{minHeight: '100vh'}}>
+      {/* Brand Showcase Section - Full Width at Top */}
+      <div className="relative w-full bg-gradient-to-r from-gray-800 via-gray-900 to-gray-800 py-3 overflow-hidden border-b border-gray-700">
+        {/* Overlays fade */}
+        <div className="pointer-events-none absolute top-0 left-0 h-full w-16 bg-gradient-to-r from-gray-900 to-transparent z-20" />
+        <div className="pointer-events-none absolute top-0 right-0 h-full w-16 bg-gradient-to-l from-gray-900 to-transparent z-20" />
+
+        <div className="overflow-hidden">
+          <div
+            className="flex animate-marquee space-x-6 px-12"
+            style={{ willChange: "transform" }}
+          >
+            {brands.map((brand, i) => (
+              <div
+                key={i}
+                className="flex-shrink-0 w-16 h-16 rounded-full bg-white/10 backdrop-blur-md border border-white/10 shadow-md hover:scale-110 hover:shadow-[0_0_10px_3px_rgba(255,255,255,0.3)] transition-transform duration-500 ease-in-out flex items-center justify-center cursor-pointer"
+                title={brand.name}
+              >
+                <img
+                  src={brand.src}
+                  alt={brand.name}
+                  draggable={false}
+                  className="max-w-12 max-h-12 select-none"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* CSS Keyframes za marquee */}
+        <style jsx>{`
+          @keyframes marquee {
+            0% {
+              transform: translateX(0%);
+            }
+            100% {
+              transform: translateX(-50%);
+            }
+          }
+          .animate-marquee {
+            animation: marquee 25s linear infinite;
+          }
+        `}</style>
+      </div>
+
+      {/* Buying Process Section - Below brands */}
+      <div className="flex-1 flex items-center justify-center relative">
+        {/* Background Effects */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500 rounded-full blur-3xl"></div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative max-w-8xl mx-auto px-4 sm:px-6 lg:px-12 xl:px-16 py-8">
         {/* Header */}
-        <div className={`mb-12 md:mb-20 text-center transform transition-all duration-1000 ${
+        <div className={`mb-8 text-center transform transition-all duration-1000 ${
           isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
         }`}>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white tracking-tight mb-4 sm:mb-6 bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight mb-3 bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">
             Wie Sie bei uns ein Auto kaufen
           </h2>
-          <p className="text-gray-300 text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed px-4">
+          <p className="text-gray-300 text-sm md:text-base max-w-2xl mx-auto leading-relaxed px-4">
             Vier einfache Schritte zu Ihrem Traumfahrzeug – transparent, sicher und professionell
           </p>
         </div>
@@ -84,17 +149,15 @@ export default function BuyingProcessStrip() {
                 
                 {/* Step Circle */}
                 <div className="relative group cursor-pointer">
-                  <div className={`w-16 h-16 lg:w-20 lg:h-20 flex items-center justify-center rounded-full bg-gradient-to-br ${step.gradient} ${step.shadow} shadow-2xl border-2 border-gray-800 group-hover:scale-110 transition-all duration-300 backdrop-blur-sm`}>
-                    <span className="text-white drop-shadow-lg">{step.icon}</span>
+                  <div className={`w-12 h-12 flex items-center justify-center rounded-full bg-gradient-to-br ${step.gradient} ${step.shadow} shadow-lg border-2 border-gray-800 group-hover:scale-105 transition-all duration-300`}>
+                    <span className="text-white text-sm">{step.icon}</span>
                   </div>
-                  {/* Glow Effect */}
-                  <div className={`absolute inset-0 rounded-full bg-gradient-to-br ${step.gradient} opacity-0 group-hover:opacity-20 blur-xl transition-all duration-300`}></div>
                 </div>
 
                 {/* Step Content */}
-                <div className="mt-6 text-center max-w-[12rem] lg:max-w-[14rem]">
-                  <h3 className="text-lg lg:text-xl font-bold text-white mb-2 font-sans">{step.title}</h3>
-                  <p className="text-gray-300 text-sm lg:text-base leading-relaxed">{step.description}</p>
+                <div className="mt-3 text-center max-w-[10rem]">
+                  <h3 className="text-sm font-bold text-white mb-1">{step.title}</h3>
+                  <p className="text-gray-300 text-xs leading-relaxed">{step.shortDesc}</p>
                 </div>
               </div>
             ))}
@@ -136,7 +199,7 @@ export default function BuyingProcessStrip() {
         }`}>
           <button
             onClick={() => window.open('/kako-kupiti', '_blank')}
-            className="group relative inline-flex items-center px-8 py-4 md:px-10 md:py-5 rounded-2xl bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 text-white font-bold text-lg md:text-xl shadow-2xl hover:shadow-amber-500/25 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1"
+            className="group relative inline-flex items-center px-4 py-2 md:px-6 md:py-3 rounded-xl bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 text-white font-semibold text-sm md:text-base shadow-lg hover:shadow-amber-500/25 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1"
           >
             <span className="relative z-10">Detaillierte Prozesserklärung</span>
             <ArrowRight className="ml-3 group-hover:translate-x-1 transition-transform duration-300" size={20} />
@@ -145,6 +208,7 @@ export default function BuyingProcessStrip() {
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 opacity-0 group-hover:opacity-20 blur-xl transition-all duration-300"></div>
           </button>
         </div>
+      </div>
       </div>
     </section>
   );
