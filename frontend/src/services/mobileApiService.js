@@ -529,4 +529,5 @@ class MobileApiService {
 }
 
 // Eksportiraj singleton instancu
-export default new MobileApiService();
+const mobileApiService = new MobileApiService();
+export default mobileApiService;

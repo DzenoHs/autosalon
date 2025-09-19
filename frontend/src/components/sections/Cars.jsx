@@ -1,13 +1,13 @@
-import React, {useState, useEffect} from 'react'
+import {useState, useEffect} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {ChevronRight, Gauge, Fuel, Settings, Crown, Star, Award, Calendar, Zap, Car} from 'lucide-react'
+import {ChevronRight, Gauge, Fuel, Settings, Crown, Star, Award} from 'lucide-react'
 
 const Cars = () => {
   const navigate = useNavigate()
-  const [hoveredCar, setHoveredCar] = useState(null)
+  // const [hoveredCar, setHoveredCar] = useState(null)
   const [topExpensiveCars, setTopExpensiveCars] = useState([])
   const [isLoadingExpensive, setIsLoadingExpensive] = useState(true)
-  const [error, setError] = useState(null)
+  // const [error, setError] = useState(null)
 
   // Fetch top expensive cars from API
   useEffect(() => {
@@ -110,7 +110,7 @@ const Cars = () => {
               Fahrzeuge
             </span>
           </h2>
-          
+
           <div className="flex items-center justify-center gap-2 mt-4">
             <div className="h-1 w-12 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-full"></div>
             <div className="w-3 h-3 bg-gradient-to-r from-red-500 to-red-700 rounded-full"></div>
@@ -136,8 +136,8 @@ const Cars = () => {
                          border border-neutral-600/60 hover:border-gradient-to-r hover:from-amber-400/60 hover:to-red-500/60
                          shadow-2xl hover:shadow-4xl hover:shadow-amber-500/30
                          before:absolute before:inset-0 before:bg-gradient-to-br before:from-amber-400/5 before:via-transparent before:to-red-500/5 before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-500"
-                onMouseEnter={() => setHoveredCar(car.id)}
-                onMouseLeave={() => setHoveredCar(null)}
+                // onMouseEnter={() => setHoveredCar(car.id)}
+                // onMouseLeave={() => setHoveredCar(null)}
                 onClick={() => handleCarClick(car.id)}
               >
                 {/* Car Image */}
@@ -201,15 +201,13 @@ const Cars = () => {
                       </div>
                       <div className="text-center bg-neutral-800/60 rounded p-1 border border-neutral-600/30">
                         <Settings className="w-3 h-3 text-blue-400 mx-auto mb-0.5" />
-                        <div className="text-xs text-neutral-300 font-medium">{car.gearbox?.replace('_GEAR', '') || 'AUTOMATIC'}</div>
+                        <div className="text-xs text-neutral-300 font-medium">
+                          {car.gearbox?.replace('_GEAR', '') || 'AUTOMATIC'}
+                        </div>
                         <div className="text-xs text-neutral-500">Getriebe</div>
                       </div>
                     </div>
-
-
                   </div>
-
-
 
                   {/* Compact Footer */}
                   <div className="flex items-center justify-between pt-2 border-t border-neutral-600/30">

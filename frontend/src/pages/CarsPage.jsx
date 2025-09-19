@@ -4,6 +4,7 @@ import {FaFilter, FaSearch, FaHome, FaTimes, FaTachometerAlt, FaGasPump, FaCogs,
 import mobileApiService from '../services/mobileApiService'
 
 const FALLBACK_IMG = 'https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800&h=600&fit=crop&crop=center'
+const PAGE_SIZE = 16
 
 export default function CarsPage() {
   const navigate = useNavigate()
@@ -15,7 +16,7 @@ export default function CarsPage() {
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1)
-  const [pageSize, setPageSize] = useState(16) // Default page size
+  // const [pageSize, setPageSize] = useState(16) // Default page size
   const [total, setTotal] = useState(0)
   const [maxPages, setMaxPages] = useState(1)
 
@@ -56,7 +57,7 @@ export default function CarsPage() {
   })
 
   // All cars (za generiranje filter opcija)
-  const [allCars, setAllCars] = useState([])
+  // const [allCars, setAllCars] = useState([])
   const [displayedCars, setDisplayedCars] = useState([])
 
   // State for unique car makes
@@ -146,18 +147,23 @@ export default function CarsPage() {
         setError(null)
 
         console.log('🔄 Fetching cars from API...')
-        const result = await mobileApiService.fetchCarsFromMobileApi(currentPage, pageSize, filters.make, filters.model)
+        const result = await mobileApiService.fetchCarsFromMobileApi(
+          currentPage,
+          PAGE_SIZE,
+          filters.make,
+          filters.model
+        )
 
         console.log('✅ Cars fetched successfully:', result)
         setCars(result.ads)
         setTotal(result.total)
         setMaxPages(result.maxPages)
         // Čuvaj sve automobile za filtriranje (samo na prvoj stranici)
-        if (currentPage === 1) {
-          setAllCars(result.ads)
-        } else {
-          setAllCars((prev) => [...prev, ...result.ads])
-        }
+        // if (currentPage === 1) {
+        //   setAllCars(result.ads)
+        // } else {
+        //   setAllCars((prev) => [...prev, ...result.ads])
+        // }
 
         setDisplayedCars(result.ads)
       } catch (err) {
@@ -169,7 +175,7 @@ export default function CarsPage() {
     }
 
     fetchCars()
-  }, [currentPage, pageSize, filters.make, filters.model]) // Refetch cars when currentPage or pageSize changes
+  }, [currentPage, filters.make, filters.model]) // Refetch cars when currentPage or pageSize changes
 
   // Handle car click
   const handleCarClick = (car) => {
@@ -486,7 +492,7 @@ export default function CarsPage() {
           <div>
             <label className="block text-sm font-medium text-red-300 mb-2">Modell</label>
             <select
-              disabled={filters.make == ''}
+              disabled={filters.make === ''}
               value={filters.model}
               onChange={(e) => handleFilterChange('model', e.target.value)}
               className="w-full p-3 bg-black border-2 border-red-600 rounded-lg text-white focus:border-red-400 focus:ring-2 focus:ring-red-600/30 transition-all"
