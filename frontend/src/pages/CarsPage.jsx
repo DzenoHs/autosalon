@@ -619,10 +619,10 @@ export default function CarsPage() {
                     <div
                       key={car.mobileAdId || car.id}
                       onClick={() => handleCarClick(car)}
-                      className="bg-gradient-to-br from-black via-gray-900 to-black rounded-2xl shadow-2xl hover:shadow-red-500/20 transition-all duration-300 cursor-pointer overflow-hidden group border border-gray-800 hover:border-red-500 hover:scale-105"
+                      className="h-full flex flex-col bg-gradient-to-br from-black via-gray-900 to-black rounded-2xl shadow-2xl hover:shadow-red-500/20 transition-all duration-300 cursor-pointer overflow-hidden group border border-gray-800 hover:border-red-500 hover:scale-105"
                     >
                       {/* Car Image */}
-                      <div className="relative h-48 bg-black">
+                      <div className="relative  h-48 bg-black">
                         <img
                           src={car.images?.[0]?.xxl || FALLBACK_IMG}
                           alt={`${car.make} ${car.model}`}
@@ -636,9 +636,9 @@ export default function CarsPage() {
                       </div>
 
                       {/* Car Info */}
-                      <div className="p-5 bg-gradient-to-b from-gray-900 to-black">
-                        <h3 className="text-xl font-bold text-white group-hover:text-red-400 transition-colors mb-2 truncate">
-                          {car.make} {car.model}
+                      <div className="p-5 bg-gradient-to-b from-gray-900 to-black flex-1">
+                        <h3 className="text-sm font-bold text-white group-hover:text-red-400 transition-colors mb-2 line-clamp-2">
+                          {car.make} {car.modelDescription.replace(/&amp;/g, '&')}
                         </h3>
                         {/* Main Details */}
                         <div className="grid grid-cols-2 gap-2 mb-3 text-xs">
@@ -664,9 +664,7 @@ export default function CarsPage() {
                         {(car.doors || car.seats || car.driveType) && (
                           <div className="flex flex-wrap gap-2 mb-3">
                             {car.doors && (
-                              <span className="bg-gray-800 text-gray-300 px-2 py-1 rounded text-xs">
-                                {car.doors} Türen
-                              </span>
+                              <span className="bg-gray-800 text-gray-300 px-2 py-1 rounded text-xs">{car.doors}</span>
                             )}
                             {car.seats && (
                               <span className="bg-gray-800 text-gray-300 px-2 py-1 rounded text-xs">

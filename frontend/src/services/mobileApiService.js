@@ -1,10 +1,11 @@
 import axios from 'axios';
+import { mapCarValues } from './mapper';
 
 // Mobile.de API servis za dohvaćanje podataka kroz proxy server
 class MobileApiService {
   constructor() {
     // Koristi environment variable za production ili localhost za development
-    this.proxyUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5003';
+    this.proxyUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5003';
     this.isLoading = false;
     this.lastError = null;
 
@@ -149,9 +150,10 @@ class MobileApiService {
       // Check if the response contains valid data
       if (response.data && response.data.ads) {
         // Transform the data for the React app
-        // const transformedData = this.transformMobileData(response.data, pageNumber);
+        const transformedCars = response.data.ads?.map(car => mapCarValues(car))
         // console.log(`✅ Page ${pageNumber}: ${transformedData.cars.length} cars fetched`);
-        return response.data;
+
+        return { ...response.data, ads: transformedCars };
       } else {
         console.warn('⚠️ No ads found in the API response');
         //NEED TO RETURN EMPTY DATA
@@ -238,28 +240,6 @@ class MobileApiService {
   //   };
   // }
 
-  // Mapiraj tip goriva
-  mapFuelType(fuel) {
-    const fuelMap = {
-      'PETROL': 'Benzin',
-      'DIESEL': 'Diesel',
-      'ELECTRIC': 'Elektro',
-      'HYBRID': 'Hybrid',
-      'LPG': 'LPG',
-      'CNG': 'CNG'
-    };
-    return fuelMap[fuel] || fuel || 'Benzin';
-  }
-
-  // Mapiraj tip transmisije
-  mapTransmissionType(gearbox) {
-    const gearboxMap = {
-      'MANUAL_GEAR': 'Manuell',
-      'AUTOMATIC_GEAR': 'Automatik',
-      'SEMI_AUTOMATIC_GEAR': 'Halbautomatik'
-    };
-    return gearboxMap[gearbox] || gearbox || 'Automatik';
-  }
 
   // Mapiraj Mobile.de slike u format aplikacije
   // mapMobileImages(mobileImages, make, model) {
@@ -353,13 +333,20 @@ class MobileApiService {
 
       console.log('✅ Car details odgovor:', response.data);
 
-      if (response.data && response.data.success) {
-        // Backend vraća podatke direktno u response.data.data
-        const carData = response.data;
+      if (response.data) {
+        // Some backends return { success, data }, others return the raw object
+        if (response.data.success && response.data.data) {
+          const mapped = mapCarValues(response.data.car);
 
-        return carData
+          return { ...response.data, car: mapped };
+        }
+
+        // If it's a raw object, just map it directly
+        const mapped = mapCarValues(response.data.car);
+
+        return { ...response.data, car: mapped };
       } else {
-        throw new Error(response.data?.error || 'Automobil nije pronađen');
+        throw new Error('Prazan odgovor sa API-ja');
       }
 
     } catch (error) {
@@ -432,9 +419,10 @@ class MobileApiService {
       console.log('✅ Top expensive cars odgovor:', response.data);
 
       if (response.data && response.data.success) {
+        const mappedCars = response.data.cars.map(car => mapCarValues(car))
         return {
           success: true,
-          cars: response.data.cars || [],
+          cars: mappedCars || [],
           total: response.data.total || 0,
           category: 'najskupljih-6',
           source: 'api',

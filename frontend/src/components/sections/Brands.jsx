@@ -1,23 +1,65 @@
-import React from "react";
+import React from 'react'
 
 const brands = [
-  { name: "Audi", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/audi.png" },
-  { name: "BMW", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/bmw.png" },
-  { name: "Mercedes", src: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Mercedes-Logo.svg/2048px-Mercedes-Logo.svg.png" },
-  { name: "Porsche", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/porsche.png" },
-  { name: "Tesla", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/tesla.png" },
-  { name: "Lexus", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/lexus.png" },
-  { name: "Jaguar", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/jaguar.png" },
+  {
+    name: 'Audi',
+    src: 'https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/audi.png'
+  },
+  {
+    name: 'BMW',
+    src: 'https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/bmw.png'
+  },
+  {
+    name: 'Mercedes',
+    src: 'https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/mercedes-benz.png'
+  },
+  {
+    name: 'Porsche',
+    src: 'https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/porsche.png'
+  },
+  {
+    name: 'Tesla',
+    src: 'https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/tesla.png'
+  },
+  {
+    name: 'Lexus',
+    src: 'https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/lexus.png'
+  },
+  {
+    name: 'Jaguar',
+    src: 'https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/jaguar.png'
+  },
 
   // doubling set for smooth scrolling
-  { name: "Audi", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/audi.png" },
-  { name: "BMW", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/bmw.png" },
-  { name: "Mercedes", src: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Mercedes-Logo.svg/2048px-Mercedes-Logo.svg.png" },
-  { name: "Porsche", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/porsche.png" },
-  { name: "Tesla", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/tesla.png" },
-  { name: "Lexus", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/lexus.png" },
-  { name: "Jaguar", src: "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/jaguar.png" },
-];
+  {
+    name: 'Audi',
+    src: 'https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/audi.png'
+  },
+  {
+    name: 'BMW',
+    src: 'https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/bmw.png'
+  },
+  {
+    name: 'Mercedes',
+    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Mercedes-Logo.svg/2048px-Mercedes-Logo.svg.png'
+  },
+  {
+    name: 'Porsche',
+    src: 'https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/porsche.png'
+  },
+  {
+    name: 'Tesla',
+    src: 'https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/tesla.png'
+  },
+  {
+    name: 'Lexus',
+    src: 'https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/lexus.png'
+  },
+  {
+    name: 'Jaguar',
+    src: 'https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/jaguar.png'
+  }
+]
 
 export default function BrandShowcase() {
   return (
@@ -27,10 +69,7 @@ export default function BrandShowcase() {
       <div className="pointer-events-none absolute top-0 right-0 h-full w-16 bg-gradient-to-l from-gray-50 dark:from-gray-900 to-transparent z-20" />
 
       <div className="overflow-hidden">
-        <div
-          className="flex animate-marquee space-x-8 px-16"
-          style={{ willChange: "transform" }}
-        >
+        <div className="flex animate-marquee space-x-8 px-16" style={{willChange: 'transform'}}>
           {brands.map((brand, i) => (
             <div
               key={i}
@@ -49,7 +88,7 @@ export default function BrandShowcase() {
       </div>
 
       {/* CSS Keyframes za marquee */}
-      <style jsx>{`
+      <style jsx="true">{`
         @keyframes marquee {
           0% {
             transform: translateX(0%);
@@ -63,5 +102,5 @@ export default function BrandShowcase() {
         }
       `}</style>
     </section>
-  );
+  )
 }

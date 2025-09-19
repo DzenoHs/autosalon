@@ -204,7 +204,7 @@ export default function CarDetails() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-4xl font-bold text-white mb-2">
-                {car.make} {car.model}
+                {car.make} {car.modelDescription.replace(/&amp;/g, '&')}
               </h1>
               <p className="text-xl text-neutral-400">
                 {car.year} • {formatMileage(car.mileage)} • {car.fuel}
@@ -497,7 +497,9 @@ export default function CarDetails() {
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-2">
               <div className="text-center p-2 sm:p-3 bg-black/40 rounded-lg border border-red-600/20">
                 <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 mx-auto mb-1 sm:mb-2" />
-                <div className="text-sm sm:text-lg font-bold text-white">{car.year || 'N/A'}</div>
+                <div className="text-sm sm:text-lg font-bold text-white">
+                  {new Date(car.modificationDate).getFullYear() || 'N/A'}
+                </div>
                 <div className="text-xs text-neutral-400">Baujahr</div>
               </div>
 

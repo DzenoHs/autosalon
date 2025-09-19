@@ -1,6 +1,7 @@
 import {useState, useEffect} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {ChevronRight, Gauge, Fuel, Settings, Crown, Star, Award} from 'lucide-react'
+import mobileApiService from '../../services/mobileApiService'
 
 const Cars = () => {
   const navigate = useNavigate()
@@ -11,32 +12,30 @@ const Cars = () => {
 
   // Fetch top expensive cars from API
   useEffect(() => {
-    const fetchTopExpensiveCars = async () => {
+    const fetchExpensiveCars = async () => {
       try {
         setIsLoadingExpensive(true)
 
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/cars/top/expensive`)
-        const data = await response.json()
+        const data = await mobileApiService.fetchTopExpensiveCars()
 
         if (data.success && data.cars) {
           // Map API data to component format
-          const mappedExpensiveCars = data.cars.map((car, index) => ({
-            id: car.mobileAdId || car.id || `expensive-car-${index}`,
-            name: `${car.make} ${car.model}`,
-            year: car.year,
-            km: car.mileage || 0,
-            priceNet: car.price?.value || car.price?.consumerPriceNet || 0,
-            priceGross: car.price?.consumerPriceGross || (car.price?.value ? Math.round(car.price.value * 1.19) : 0),
-            fuel: car.fuel || 'Unbekannt',
-            gearbox: car.gearbox || 'Unbekannt',
-            engine: `${car.power || 0} kW`,
-            images: car.images,
-            condition: car.condition || 'USED',
-            category: 'premium'
-          }))
+          // const mappedExpensiveCars = data.cars.map((car, index) => ({
+          //   id: car.mobileAdId || car.id || `expensive-car-${index}`,
+          //   name: `${car.make} ${car.model}`,
+          //   year: car.year,
+          //   km: car.mileage || 0,
+          //   priceNet: car.price?.value || car.price?.consumerPriceNet || 0,
+          //   priceGross: car.price?.consumerPriceGross || (car.price?.value ? Math.round(car.price.value * 1.19) : 0),
+          //   fuel: car.fuel || 'Unbekannt',
+          //   gearbox: car.gearbox || 'Unbekannt',
+          //   engine: `${car.power || 0} kW`,
+          //   images: car.images,
+          //   condition: car.condition || 'USED',
+          //   category: 'premium'
+          // }))
 
-          setTopExpensiveCars(mappedExpensiveCars)
-          console.log('✅ Najskuplji automobili učitani:', mappedExpensiveCars.length)
+          setTopExpensiveCars(data.cars)
         } else {
           console.log('⚠️ Nema podataka o najskupljim automobilima')
         }
@@ -48,19 +47,15 @@ const Cars = () => {
       }
     }
 
-    fetchTopExpensiveCars()
+    fetchExpensiveCars()
   }, [])
-
-  const handleCarClick = (carId) => {
-    navigate(`/car/${carId}`)
-  }
-
-  const handleViewAll = () => {
-    navigate('/cars')
-  }
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('de-DE').format(price)
+  }
+  const formatMileage = (mileage) => {
+    if (!mileage) return 'k.A.'
+    return `${Number(mileage).toLocaleString('de-DE')} km`
   }
 
   if (isLoadingExpensive) {
@@ -127,9 +122,9 @@ const Cars = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16 max-w-6xl mx-auto">
-            {topExpensiveCars.slice(0, 6).map((car) => (
+            {topExpensiveCars.map((car) => (
               <div
-                key={car.id}
+                key={car.mobileAdId}
                 className="group relative bg-gradient-to-br from-neutral-900/98 via-neutral-800/95 to-black/98 
                          rounded-3xl overflow-hidden backdrop-blur-xl
                          transform hover:scale-[1.05] hover:-translate-y-4 transition-all duration-700 cursor-pointer
@@ -138,7 +133,7 @@ const Cars = () => {
                          before:absolute before:inset-0 before:bg-gradient-to-br before:from-amber-400/5 before:via-transparent before:to-red-500/5 before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-500"
                 // onMouseEnter={() => setHoveredCar(car.id)}
                 // onMouseLeave={() => setHoveredCar(null)}
-                onClick={() => handleCarClick(car.id)}
+                onClick={() => navigate(`/car/${car.mobileAdId}`)}
               >
                 {/* Car Image */}
                 <div className="relative h-40 overflow-hidden rounded-t-3xl">
@@ -191,7 +186,7 @@ const Cars = () => {
                     <div className="grid grid-cols-3 gap-1">
                       <div className="text-center bg-neutral-800/60 rounded p-1 border border-neutral-600/30">
                         <Gauge className="w-3 h-3 text-amber-400 mx-auto mb-0.5" />
-                        <div className="text-xs text-neutral-300 font-medium">{formatPrice(car.km)}</div>
+                        <div className="text-xs text-neutral-300 font-medium">{formatPrice(car.mileage)}</div>
                         <div className="text-xs text-neutral-500">km</div>
                       </div>
                       <div className="text-center bg-neutral-800/60 rounded p-1 border border-neutral-600/30">
@@ -217,8 +212,10 @@ const Cars = () => {
                       <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </div>
                     <div className="text-right">
-                      <div className="text-xs text-emerald-400 font-bold">€{formatPrice(car.priceGross)}</div>
-                      <div className="text-xs text-neutral-400">Netto: €{formatPrice(car.priceNet)}</div>
+                      <div className="text-xs text-emerald-400 font-bold">
+                        €{formatPrice(car.price.consumerPriceGross)}
+                      </div>
+                      <div className="text-xs text-neutral-400">Netto: €{formatPrice(car.price?.consumerPriceNet)}</div>
                     </div>
                   </div>
                 </div>
@@ -230,7 +227,7 @@ const Cars = () => {
         {/* View All Button */}
         <div className="text-center">
           <button
-            onClick={handleViewAll}
+            onClick={() => navigate('/cars')}
             className="group inline-flex items-center gap-4 bg-gradient-to-r from-red-500 via-red-600 to-red-700 
                        hover:from-red-600 hover:via-red-700 hover:to-red-800 
                        text-white px-10 py-5 rounded-2xl font-semibold text-lg
