@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {FaFilter, FaSearch, FaHome, FaTimes, FaTachometerAlt, FaGasPump, FaCogs, FaBolt} from 'react-icons/fa'
+import {Calendar} from 'lucide-react'
 import mobileApiService from '../services/mobileApiService'
 
 const FALLBACK_IMG = 'https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800&h=600&fit=crop&crop=center'
+const PAGE_SIZE = 16
 
 export default function CarsPage() {
   const navigate = useNavigate()
@@ -15,7 +17,7 @@ export default function CarsPage() {
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1)
-  const [pageSize, setPageSize] = useState(16) // Default page size
+  // const [pageSize, setPageSize] = useState(16) // Default page size
   const [total, setTotal] = useState(0)
   const [maxPages, setMaxPages] = useState(1)
 
@@ -56,11 +58,14 @@ export default function CarsPage() {
   })
 
   // All cars (za generiranje filter opcija)
-  const [allCars, setAllCars] = useState([])
+  // const [allCars, setAllCars] = useState([])
   const [displayedCars, setDisplayedCars] = useState([])
 
   // State for unique car makes
   const [uniqueMakes, setUniqueMakes] = useState([])
+
+  // Add state for car models
+  const [carModels, setCarModels] = useState([])
 
   // Fetch unique car makes from API
   useEffect(() => {
@@ -76,6 +81,29 @@ export default function CarsPage() {
 
     fetchUniqueMakes()
   }, [])
+
+  // Fetch car models when the make filter changes
+  useEffect(() => {
+    const fetchModels = async () => {
+      if (!filters.make) {
+        setCarModels([]) // Reset models if no make is selected
+        return
+      }
+
+      try {
+        console.log(`🔄 Fetching car models for make: ${filters.make}`)
+        const models = await mobileApiService.fetchCarModels(filters.make)
+        setCarModels(models)
+        console.log(`✅ Fetched ${models.length} models for make: ${filters.make}`)
+      } catch (error) {
+        console.error('❌ Error fetching car models:', error)
+        setCarModels([]) // Reset models on error
+      }
+    }
+
+    fetchModels()
+  }, [filters.make])
+
   // Reset filters function
   const resetFilters = () => {
     const emptyFilters = {
@@ -120,18 +148,23 @@ export default function CarsPage() {
         setError(null)
 
         console.log('🔄 Fetching cars from API...')
-        const result = await mobileApiService.fetchCarsFromMobileApi(currentPage, pageSize, filters.make)
+        const result = await mobileApiService.fetchCarsFromMobileApi(
+          currentPage,
+          PAGE_SIZE,
+          filters.make,
+          filters.model
+        )
 
         console.log('✅ Cars fetched successfully:', result)
         setCars(result.ads)
         setTotal(result.total)
         setMaxPages(result.maxPages)
         // Čuvaj sve automobile za filtriranje (samo na prvoj stranici)
-        if (currentPage === 1) {
-          setAllCars(result.ads)
-        } else {
-          setAllCars((prev) => [...prev, ...result.ads])
-        }
+        // if (currentPage === 1) {
+        //   setAllCars(result.ads)
+        // } else {
+        //   setAllCars((prev) => [...prev, ...result.ads])
+        // }
 
         setDisplayedCars(result.ads)
       } catch (err) {
@@ -143,7 +176,7 @@ export default function CarsPage() {
     }
 
     fetchCars()
-  }, [currentPage, pageSize, filters.make]) // Refetch cars when currentPage or pageSize changes
+  }, [currentPage, filters.make, filters.model]) // Refetch cars when currentPage or pageSize changes
 
   // Handle car click
   const handleCarClick = (car) => {
@@ -212,10 +245,17 @@ export default function CarsPage() {
 
   // Handle filter change
   const handleFilterChange = (field, value) => {
-    const newFilters = {
+    let newFilters = {
       ...filters,
       [field]: value
     }
+    if (field === 'make') {
+      newFilters = {
+        ...newFilters,
+        model: '' // Reset the model filter
+      }
+    }
+
     setFilters(newFilters)
     applyFilters(newFilters)
   }
@@ -231,9 +271,9 @@ export default function CarsPage() {
     // if (currentFilters.make) {
     //   filtered = filtered.filter((car) => car.make?.toLowerCase().includes(currentFilters.make.toLowerCase()))
     // }
-    if (currentFilters.model) {
-      filtered = filtered.filter((car) => car.model?.toLowerCase().includes(currentFilters.model.toLowerCase()))
-    }
+    // if (currentFilters.model) {
+    //   filtered = filtered.filter((car) => car.model?.toLowerCase().includes(currentFilters.model.toLowerCase()))
+    // }
     if (currentFilters.yearFrom) {
       filtered = filtered.filter((car) => car.year >= parseInt(currentFilters.yearFrom))
     }
@@ -453,12 +493,13 @@ export default function CarsPage() {
           <div>
             <label className="block text-sm font-medium text-red-300 mb-2">Modell</label>
             <select
+              disabled={filters.make === ''}
               value={filters.model}
               onChange={(e) => handleFilterChange('model', e.target.value)}
               className="w-full p-3 bg-black border-2 border-red-600 rounded-lg text-white focus:border-red-400 focus:ring-2 focus:ring-red-600/30 transition-all"
             >
               <option value="">Alle Modelle</option>
-              {getUniqueValues('model').map((model) => (
+              {carModels.map((model) => (
                 <option key={model} value={model}>
                   {model}
                 </option>
@@ -579,26 +620,22 @@ export default function CarsPage() {
                     <div
                       key={car.mobileAdId || car.id}
                       onClick={() => handleCarClick(car)}
-                      className="bg-gradient-to-br from-black via-gray-900 to-black rounded-2xl shadow-2xl hover:shadow-red-500/20 transition-all duration-300 cursor-pointer overflow-hidden group border border-gray-800 hover:border-red-500 hover:scale-105"
+                      className="h-full flex flex-col bg-gradient-to-br from-black via-gray-900 to-black rounded-2xl shadow-2xl hover:shadow-red-500/20 transition-all duration-300 cursor-pointer overflow-hidden group border border-gray-800 hover:border-red-500 hover:scale-105"
                     >
                       {/* Car Image */}
-                      <div className="relative h-48 bg-black">
+                      <div className="relative  h-48 bg-black">
                         <img
                           src={car.images?.[0]?.xxl || FALLBACK_IMG}
-                          alt={`${car.make} ${car.modelDescription.replace(/&amp;/g, "&")}`}
+                          alt={`${car.make} ${car.modelDescription.replace(/&amp;/g, '&')}`}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                        {/* Year Badge */}
-                        <div className="absolute top-3 right-3 bg-red-600 text-white px-2 py-1 rounded-lg text-xs font-bold">
-                          {car.year}
-                        </div>
                       </div>
 
                       {/* Car Info */}
-                      <div className="p-5 bg-gradient-to-b from-gray-900 to-black">
-                        <h3 className="text-xl font-bold text-white group-hover:text-red-400 transition-colors mb-2 truncate">
-                          {car.make} {car.modelDescription.replace(/&amp;/g, "&")}
+                      <div className="p-5 bg-gradient-to-b from-gray-900 to-black flex-1">
+                        <h3 className="text-sm font-bold text-white group-hover:text-red-400 transition-colors mb-2 line-clamp-2">
+                          {car.make} {car.modelDescription.replace(/&amp;/g, '&')}
                         </h3>
                         {/* Main Details */}
                         <div className="grid grid-cols-2 gap-2 mb-3 text-xs">
@@ -620,13 +657,27 @@ export default function CarsPage() {
                           </div>
                         </div>
 
+                        {/* Year and Power Info */}
+                        <div className="grid grid-cols-2 gap-1 mb-2">
+                          <div className="text-center bg-red-900/20 px-1 py-1 rounded border border-red-500/20">
+                            <div className="text-xs text-red-400 font-medium">Baujahr</div>
+                            <div className="text-xs text-red-300 font-bold">
+                              {car.year || (car.firstRegistration ? car.firstRegistration.substring(0, 4) : 'N/A')}
+                            </div>
+                          </div>
+                          <div className="text-center bg-red-900/20 px-1 py-1 rounded border border-red-500/20">
+                            <div className="text-xs text-red-400 font-medium">Leistung</div>
+                            <div className="text-xs text-red-300 font-bold">
+                              {car.power ? `${car.power} kW` : 'N/A'}
+                            </div>
+                          </div>
+                        </div>
+
                         {/* Additional Details */}
                         {(car.doors || car.seats || car.driveType) && (
                           <div className="flex flex-wrap gap-2 mb-3">
                             {car.doors && (
-                              <span className="bg-gray-800 text-gray-300 px-2 py-1 rounded text-xs">
-                                {car.doors} Türen
-                              </span>
+                              <span className="bg-gray-800 text-gray-300 px-2 py-1 rounded text-xs">{car.doors}</span>
                             )}
                             {car.seats && (
                               <span className="bg-gray-800 text-gray-300 px-2 py-1 rounded text-xs">

@@ -1,14 +1,14 @@
-import React, {useState, useEffect} from 'react'
+import {useState, useEffect} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {ChevronRight, Gauge, Fuel, Settings, Crown, Star, Award, Calendar, Zap, Car} from 'lucide-react'
+import {ChevronRight, Gauge, Fuel, Settings, Crown, Star, Award, Calendar} from 'lucide-react'
 import mobileApiService from '../../services/mobileApiService'
 
 const Cars = () => {
   const navigate = useNavigate()
-  const [hoveredCar, setHoveredCar] = useState(null)
+  // const [hoveredCar, setHoveredCar] = useState(null)
   const [topExpensiveCars, setTopExpensiveCars] = useState([])
   const [isLoadingExpensive, setIsLoadingExpensive] = useState(true)
-  const [error, setError] = useState(null)
+  // const [error, setError] = useState(null)
 
   // Fetch top expensive cars from API
   useEffect(() => {
@@ -17,25 +17,25 @@ const Cars = () => {
         setIsLoadingExpensive(true)
 
         const data = await mobileApiService.fetchTopExpensiveCars()
+
         if (data.success && data.cars) {
           // Map API data to component format
-          const mappedExpensiveCars = data.cars.map((car, index) => ({
-            id: car.mobileAdId || car.id || `expensive-car-${index}`,
-            name: `${car.make} ${car.model}`,
-            year: car.year,
-            km: car.mileage || 0,
-            priceNet: car.price?.value || car.price?.consumerPriceNet || 0,
-            priceGross: car.price?.consumerPriceGross || (car.price?.value ? Math.round(car.price.value * 1.19) : 0),
-            fuel: car.fuel || 'Unbekannt',
-            gearbox: car.gearbox || 'Unbekannt',
-            engine: `${car.power || 0} kW`,
-            images: car.images,
-            condition: car.condition || 'USED',
-            category: 'premium'
-          }))
+          // const mappedExpensiveCars = data.cars.map((car, index) => ({
+          //   id: car.mobileAdId || car.id || `expensive-car-${index}`,
+          //   name: `${car.make} ${car.model}`,
+          //   year: car.year,
+          //   km: car.mileage || 0,
+          //   priceNet: car.price?.value || car.price?.consumerPriceNet || 0,
+          //   priceGross: car.price?.consumerPriceGross || (car.price?.value ? Math.round(car.price.value * 1.19) : 0),
+          //   fuel: car.fuel || 'Unbekannt',
+          //   gearbox: car.gearbox || 'Unbekannt',
+          //   engine: `${car.power || 0} kW`,
+          //   images: car.images,
+          //   condition: car.condition || 'USED',
+          //   category: 'premium'
+          // }))
 
-          setTopExpensiveCars(mappedExpensiveCars)
-          console.log('✅ Najskuplji automobili učitani:', mappedExpensiveCars.length)
+          setTopExpensiveCars(data.cars)
         } else {
           console.log('⚠️ Nema podataka o najskupljim automobilima')
         }
@@ -50,16 +50,12 @@ const Cars = () => {
     fetchExpensiveCars()
   }, [])
 
-  const handleCarClick = (carId) => {
-    navigate(`/car/${carId}`)
-  }
-
-  const handleViewAll = () => {
-    navigate('/cars')
-  }
-
   const formatPrice = (price) => {
     return new Intl.NumberFormat('de-DE').format(price)
+  }
+  const formatMileage = (mileage) => {
+    if (!mileage) return 'k.A.'
+    return `${Number(mileage).toLocaleString('de-DE')} km`
   }
 
   if (isLoadingExpensive) {
@@ -96,12 +92,8 @@ const Cars = () => {
         {/* Simple Header */}
         <div className="text-center mb-8">
           <h2 className="text-3xl lg:text-4xl font-bold text-white">
-            <span className="text-white">
-              Premium
-            </span>
-            <span className="text-gray-300 ml-3">
-              Fahrzeuge
-            </span>
+            <span className="text-white">Premium</span>
+            <span className="text-gray-300 ml-3">Fahrzeuge</span>
           </h2>
         </div>
 
@@ -113,19 +105,19 @@ const Cars = () => {
             <p className="text-neutral-400 text-sm">Bitte haben Sie einen Moment Geduld...</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 max-w-6xl mx-auto">
-            {topExpensiveCars.slice(0, 6).map((car) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16 max-w-6xl mx-auto">
+            {topExpensiveCars.map((car) => (
               <div
-                key={car.id}
+                key={car.mobileAdId}
                 className="group relative bg-gradient-to-br from-neutral-900/98 via-neutral-800/95 to-black/98 
                          rounded-3xl overflow-hidden backdrop-blur-xl
                          transform hover:scale-[1.05] hover:-translate-y-4 transition-all duration-700 cursor-pointer
                          border border-neutral-600/60 hover:border-gradient-to-r hover:from-amber-400/60 hover:to-red-500/60
                          shadow-2xl hover:shadow-4xl hover:shadow-amber-500/30
                          before:absolute before:inset-0 before:bg-gradient-to-br before:from-amber-400/5 before:via-transparent before:to-red-500/5 before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-500"
-                onMouseEnter={() => setHoveredCar(car.id)}
-                onMouseLeave={() => setHoveredCar(null)}
-                onClick={() => handleCarClick(car.id)}
+                // onMouseEnter={() => setHoveredCar(car.id)}
+                // onMouseLeave={() => setHoveredCar(null)}
+                onClick={() => navigate(`/car/${car.mobileAdId}`)}
               >
                 {/* Car Image */}
                 <div className="relative h-40 overflow-hidden rounded-t-2xl">
@@ -159,11 +151,11 @@ const Cars = () => {
                 </div>
 
                 {/* Car Details */}
-                <div className="p-2 relative z-10">
-                  <div className="flex items-center justify-between mb-1">
-                    <h3 className="text-sm font-bold text-white group-hover:text-amber-400 transition-colors truncate flex items-center gap-1">
-                      <Award className="w-3 h-3 text-amber-500" />
-                      {car.name}
+                <div className="p-2 pt-2 relative z-10">
+                  <div className="mb-1">
+                    <h3 className="text-xl font-bold text-white group-hover:text-amber-400 transition-colors truncate flex items-center gap-2">
+                      <Award className="w-5 h-5 text-amber-500" />
+                      {car.make} {car.modelDescription?.replace(/&amp;/g, '&')}
                     </h3>
                     <div className="text-xs text-amber-400 bg-gradient-to-r from-amber-900/60 to-yellow-900/60 px-2 py-1 rounded-lg font-semibold border border-amber-500/30">
                       {car.year}
@@ -174,9 +166,10 @@ const Cars = () => {
                   <div className="mb-2">
                     {/* Basic Info Row */}
                     <div className="grid grid-cols-3 gap-1">
-                      <div className="text-center bg-neutral-800/60 rounded px-1 py-0.5 border border-neutral-600/30">
-                        <Gauge className="w-2.5 h-2.5 text-amber-400 mx-auto mb-0.5" />
-                        <div className="text-xs text-neutral-300 font-medium">{formatPrice(car.km)}</div>
+                      <div className="text-center bg-neutral-800/60 rounded p-1 border border-neutral-600/30">
+                        <Gauge className="w-3 h-3 text-amber-400 mx-auto mb-0.5" />
+                        <div className="text-xs text-neutral-300 font-medium">{formatMileage(car.mileage)}</div>
+                        <div className="text-xs text-neutral-500">Kilometraza</div>
                       </div>
                       <div className="text-center bg-neutral-800/60 rounded px-1 py-0.5 border border-neutral-600/30">
                         <Fuel className="w-2.5 h-2.5 text-red-400 mx-auto mb-0.5" />
@@ -184,14 +177,28 @@ const Cars = () => {
                       </div>
                       <div className="text-center bg-neutral-800/60 rounded px-1 py-0.5 border border-neutral-600/30">
                         <Settings className="w-2.5 h-2.5 text-blue-400 mx-auto mb-0.5" />
-                        <div className="text-xs text-neutral-300 font-medium">{car.gearbox?.replace('_GEAR', '') || 'AUTO'}</div>
+                        <div className="text-xs text-neutral-300 font-medium">
+                          {car.gearbox?.replace('_GEAR', '') || 'AUTO'}
+                        </div>
                       </div>
                     </div>
 
-
+                    {/* Additional Info Row with Year */}
+                    <div className="grid grid-cols-2 gap-1 mt-1">
+                      <div className="text-center bg-gradient-to-r from-red-900/40 to-red-800/40 rounded p-1 border border-red-500/20">
+                        <div className="text-xs text-red-300 font-bold">
+                          {car.year || (car.firstRegistration ? car.firstRegistration.substring(0, 4) : 'N/A')}
+                        </div>
+                        <div className="text-xs text-red-400">Baujahr</div>
+                      </div>
+                      <div className="text-center bg-neutral-800/60 rounded p-1 border border-neutral-600/30">
+                        <div className="text-xs text-neutral-300 font-medium text-center">
+                          {car.power ? `${car.power} kW` : 'N/A'}
+                        </div>
+                        <div className="text-xs text-neutral-500 text-center">Leistung</div>
+                      </div>
+                    </div>
                   </div>
-
-
 
                   {/* Compact Footer */}
                   <div className="flex items-center justify-between pt-1 border-t border-neutral-600/30">
@@ -200,7 +207,10 @@ const Cars = () => {
                       <ChevronRight className="w-3 h-3" />
                     </div>
                     <div className="text-right">
-                      <div className="text-xs text-emerald-400 font-bold">€{formatPrice(car.priceGross)}</div>
+                      <div className="text-xs text-emerald-400 font-bold">
+                        €{formatPrice(car.price.consumerPriceGross)}
+                      </div>
+                      <div className="text-xs text-neutral-400">Netto: €{formatPrice(car.price?.consumerPriceNet)}</div>
                     </div>
                   </div>
                 </div>
@@ -212,8 +222,8 @@ const Cars = () => {
         {/* View All Button */}
         <div className="text-center">
           <button
-            onClick={handleViewAll}
-            className="group inline-flex items-center gap-2 bg-gradient-to-r from-red-500 via-red-600 to-red-700 
+            onClick={() => navigate('/cars')}
+            className="group inline-flex items-center gap-4 bg-gradient-to-r from-red-500 via-red-600 to-red-700 
                        hover:from-red-600 hover:via-red-700 hover:to-red-800 
                        text-white px-6 py-3 rounded-xl font-semibold text-sm
                        transition-all duration-300 transform hover:scale-105

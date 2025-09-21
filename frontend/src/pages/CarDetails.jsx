@@ -9,23 +9,18 @@ import {
   Settings,
   Phone,
   Mail,
-  MapPin,
   Eye,
   ChevronLeft,
   ChevronRight,
   X,
   Heart,
   Share2,
-  Car,
-  Palette,
   Cog,
   Shield,
-  FileText,
   Zap,
   Info,
   Award,
-  CheckCircle,
-  FileText2
+  CheckCircle
 } from 'lucide-react'
 import mobileApiService from '../services/mobileApiService'
 
@@ -107,21 +102,31 @@ export default function CarDetails() {
 
   const formatRegistrationDate = (dateStr) => {
     if (!dateStr) return 'k.A.'
-    
+
     // Handle YYYYMM format like "201903"
     if (dateStr.length === 6 && /^\d{6}$/.test(dateStr)) {
       const year = dateStr.substring(0, 4)
       const month = dateStr.substring(4, 6)
       const monthNames = [
-        'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
-        'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'
+        'Januar',
+        'Februar',
+        'März',
+        'April',
+        'Mai',
+        'Juni',
+        'Juli',
+        'August',
+        'September',
+        'Oktober',
+        'November',
+        'Dezember'
       ]
       const monthIndex = parseInt(month) - 1
       if (monthIndex >= 0 && monthIndex < 12) {
         return `${monthNames[monthIndex]} ${year}`
       }
     }
-    
+
     // Return as is if not in expected format
     return dateStr
   }
@@ -199,7 +204,7 @@ export default function CarDetails() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-4xl font-bold text-white mb-2">
-                {car.make} {car.modelDescription.replace(/&amp;/g, "&")}
+                {car.make} {car.modelDescription.replace(/&amp;/g, '&')}
               </h1>
               <p className="text-xl text-neutral-400">
                 {car.year} • {formatMileage(car.mileage)} • {car.fuel}
@@ -412,14 +417,10 @@ export default function CarDetails() {
               {/* Price Display */}
               <div className="space-y-4 mb-8">
                 <div className="text-center">
-                  <div className="text-4xl font-bold text-white mb-2">
-                    27.999,00 €
-                  </div>
-                  <div className="text-lg text-neutral-300 font-medium">
-                    Nettopreis: 23.528,57 €
-                  </div>
+                  <div className="text-4xl font-bold text-white mb-2">27.999,00 €</div>
+                  <div className="text-lg text-neutral-300 font-medium">Nettopreis: 23.528,57 €</div>
                 </div>
-                
+
                 {/* Financing hint */}
                 <div className="p-3 bg-red-600/10 border border-red-600/30 rounded-lg text-center">
                   <div className="text-xs text-red-300">💰 Finanzierung möglich</div>
@@ -441,40 +442,40 @@ export default function CarDetails() {
                   </div>
                 </div>
 
-                  <div className="space-y-3">
-                    <motion.button
-                      className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-3 shadow-xl text-sm sm:text-base"
-                      whileHover={{scale: 1.02}}
-                      whileTap={{scale: 0.98}}
-                      onClick={() => {
-                        window.location.href = `tel:+4917476926697`
-                      }}
-                    >
-                      <Phone size={20} />
-                      +49 174 7692697
-                    </motion.button>
+                <div className="space-y-3">
+                  <motion.button
+                    className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-3 shadow-xl text-sm sm:text-base"
+                    whileHover={{scale: 1.02}}
+                    whileTap={{scale: 0.98}}
+                    onClick={() => {
+                      window.location.href = `tel:+4917476926697`
+                    }}
+                  >
+                    <Phone size={20} />
+                    +49 174 7692697
+                  </motion.button>
 
-                    <motion.button
-                      className="w-full bg-gradient-to-r from-neutral-700 to-neutral-800 hover:from-neutral-600 hover:to-neutral-700 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-3 text-sm sm:text-base"
-                      whileHover={{scale: 1.02}}
-                      whileTap={{scale: 0.98}}
-                      onClick={() => {
-                        if (car.seller.email) {
-                          const subject = encodeURIComponent(`Anfrage zu ${car.make} ${car.model}`)
-                          const body = encodeURIComponent(
-                            `Hallo,\n\nich interessiere mich für Ihr Fahrzeug:\n${car.make} ${car.model}\nPreis: ${
-                              formatPriceNet(car.price) || formatPrice(car.price)
-                            }\n\nBitte kontaktieren Sie mich für weitere Informationen.\n\nMit freundlichen Grüßen`
-                          )
-                          window.location.href = `mailto:${car.seller.email}?subject=${subject}&body=${body}`
-                        }
-                      }}
-                    >
-                      <Mail size={20} />
-                      Nachricht senden
-                    </motion.button>
-                  </div>
+                  <motion.button
+                    className="w-full bg-gradient-to-r from-neutral-700 to-neutral-800 hover:from-neutral-600 hover:to-neutral-700 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-3 text-sm sm:text-base"
+                    whileHover={{scale: 1.02}}
+                    whileTap={{scale: 0.98}}
+                    onClick={() => {
+                      if (car.seller.email) {
+                        const subject = encodeURIComponent(`Anfrage zu ${car.make} ${car.model}`)
+                        const body = encodeURIComponent(
+                          `Hallo,\n\nich interessiere mich für Ihr Fahrzeug:\n${car.make} ${car.model}\nPreis: ${
+                            formatPriceNet(car.price) || formatPrice(car.price)
+                          }\n\nBitte kontaktieren Sie mich für weitere Informationen.\n\nMit freundlichen Grüßen`
+                        )
+                        window.location.href = `mailto:${car.seller.email}?subject=${subject}&body=${body}`
+                      }
+                    }}
+                  >
+                    <Mail size={20} />
+                    Nachricht senden
+                  </motion.button>
                 </div>
+              </div>
             </motion.div>
           </div>
         </div>
@@ -496,7 +497,9 @@ export default function CarDetails() {
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-2">
               <div className="text-center p-2 sm:p-3 bg-black/40 rounded-lg border border-red-600/20">
                 <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 mx-auto mb-1 sm:mb-2" />
-                <div className="text-sm sm:text-lg font-bold text-white">{car.year || 'N/A'}</div>
+                <div className="text-sm sm:text-lg font-bold text-white">
+                  {new Date(car.modificationDate).getFullYear() || 'N/A'}
+                </div>
                 <div className="text-xs text-neutral-400">Baujahr</div>
               </div>
 
@@ -599,7 +602,12 @@ export default function CarDetails() {
             </div>
 
             {/* Compact Environmental Data Section */}
-            {(car.consumption || car.emissionClass || car.co2Emission || car.fuelConsumption || car.firstRegistration || car.weight) && (
+            {(car.consumption ||
+              car.emissionClass ||
+              car.co2Emission ||
+              car.fuelConsumption ||
+              car.firstRegistration ||
+              car.weight) && (
               <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Environmental Data */}
                 <div className="bg-black/30 rounded-lg p-4">
@@ -691,8 +699,6 @@ export default function CarDetails() {
             </div>
           </motion.div>
         )}
-
-
       </div>
 
       {/* Image Modal */}
