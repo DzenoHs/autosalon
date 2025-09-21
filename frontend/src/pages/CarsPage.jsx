@@ -651,10 +651,6 @@ export default function CarsPage() {
                             <FaCogs className="text-red-500 text-sm" />
                             {car.gearbox || 'N/A'}
                           </div>
-                          <div className="flex items-center gap-2 text-gray-400">
-                            <FaBolt className="text-red-500 text-sm" />
-                            {car.power ? `${car.power} kW` : 'N/A'}
-                          </div>
                         </div>
                         
                         {/* Year and Power Info */}
