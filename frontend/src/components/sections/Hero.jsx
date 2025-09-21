@@ -1,29 +1,51 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import herovideo from '../../../assets/herovideo.mp4';
+import autokuca1 from '../../../assets/autokuca1.jpg';
+import autokuca2 from '../../../assets/autokuca2.jpg';
 
 export default function Hero() {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const images = [autokuca1, autokuca2];
+
+  // Smooth rotation every 4 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 4000); // 4 sekunde za dovoljno vremena da se vidi slika
+
+    return () => clearInterval(interval);
+  }, [images.length]);
 
   return (
     <section id="hero" className="relative w-full h-full flex items-center justify-center bg-black overflow-hidden" style={{minHeight: '100vh'}}>
-      {/* Background Video */}
+      {/* Background Images - Ultra Smooth */}
       <div className="absolute inset-0">
-        <video 
-          autoPlay 
-          loop 
-          muted 
-          playsInline
-          className="w-full h-full object-cover"
-        >
-          <source src={herovideo} type="video/mp4" />
-          {/* Fallback image if video fails to load */}
-          <img 
-            src="https://images.unsplash.com/photo-1542282088-fe8426682b8f?w=1920&h=1080&fit=crop&crop=center" 
-            alt="Luxusauto Hintergrund" 
-            className="w-full h-full object-cover"
-          />
-        </video>
-        <div className="absolute inset-0 bg-black/40"></div>
+        {images.map((image, index) => (
+          <motion.div
+            key={index}
+            className="absolute inset-0"
+            initial={{ opacity: 0 }}
+            animate={{ 
+              opacity: currentImageIndex === index ? 1 : 0 
+            }}
+            transition={{ 
+              duration: 1.2,
+              ease: "easeInOut"
+            }}
+          >
+            <img
+              src={image}
+              alt={`Auto kuća ${index + 1}`}
+              className="w-full h-full object-cover"
+              style={{ 
+                backfaceVisibility: 'hidden',
+                transform: 'translateZ(0)',
+                willChange: 'opacity'
+              }}
+            />
+          </motion.div>
+        ))}
+        <div className="absolute inset-0 bg-black/40 z-10"></div>
       </div>
 
       {/* Content */}
