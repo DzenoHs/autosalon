@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {ChevronRight, Gauge, Fuel, Settings, Crown, Star, Award} from 'lucide-react'
+import {ChevronRight, Gauge, Fuel, Settings, Crown, Star, Award, Calendar} from 'lucide-react'
 import mobileApiService from '../../services/mobileApiService'
 
 const Cars = () => {
@@ -170,14 +170,11 @@ const Cars = () => {
 
                 {/* Car Details */}
                 <div className="p-2 pt-2 relative z-10">
-                  <div className="flex items-center justify-between mb-1">
+                  <div className="mb-1">
                     <h3 className="text-xl font-bold text-white group-hover:text-amber-400 transition-colors truncate flex items-center gap-2">
                       <Award className="w-5 h-5 text-amber-500" />
-                      {car.name}
+                      {car.make} {car.modelDescription?.replace(/&amp;/g, '&')}
                     </h3>
-                    <div className="text-sm text-amber-400 bg-gradient-to-r from-amber-900/60 to-yellow-900/60 px-3 py-2 rounded-xl font-semibold border border-amber-500/30">
-                      {car.year}
-                    </div>
                   </div>
 
                   {/* Compact Specifications */}
@@ -186,8 +183,8 @@ const Cars = () => {
                     <div className="grid grid-cols-3 gap-1">
                       <div className="text-center bg-neutral-800/60 rounded p-1 border border-neutral-600/30">
                         <Gauge className="w-3 h-3 text-amber-400 mx-auto mb-0.5" />
-                        <div className="text-xs text-neutral-300 font-medium">{formatPrice(car.mileage)}</div>
-                        <div className="text-xs text-neutral-500">km</div>
+                        <div className="text-xs text-neutral-300 font-medium">{formatMileage(car.mileage)}</div>
+                        <div className="text-xs text-neutral-500">Kilometraza</div>
                       </div>
                       <div className="text-center bg-neutral-800/60 rounded p-1 border border-neutral-600/30">
                         <Fuel className="w-3 h-3 text-red-400 mx-auto mb-0.5" />
@@ -200,6 +197,18 @@ const Cars = () => {
                           {car.gearbox?.replace('_GEAR', '') || 'AUTOMATIC'}
                         </div>
                         <div className="text-xs text-neutral-500">Getriebe</div>
+                      </div>
+                    </div>
+                    
+                    {/* Additional Info Row with Year */}
+                    <div className="grid grid-cols-2 gap-1 mt-1">
+                      <div className="text-center bg-gradient-to-r from-red-900/40 to-red-800/40 rounded p-1 border border-red-500/20">
+                        <div className="text-xs text-red-300 font-bold">{car.year || (car.firstRegistration ? car.firstRegistration.substring(0, 4) : 'N/A')}</div>
+                        <div className="text-xs text-red-400">Baujahr</div>
+                      </div>
+                      <div className="text-center bg-neutral-800/60 rounded p-1 border border-neutral-600/30">
+                        <div className="text-xs text-neutral-300 font-medium text-center">{car.power ? `${car.power} kW` : 'N/A'}</div>
+                        <div className="text-xs text-neutral-500 text-center">Leistung</div>
                       </div>
                     </div>
                   </div>

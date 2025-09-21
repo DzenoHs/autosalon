@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {FaFilter, FaSearch, FaHome, FaTimes, FaTachometerAlt, FaGasPump, FaCogs, FaBolt} from 'react-icons/fa'
+import {Calendar} from 'lucide-react'
 import mobileApiService from '../services/mobileApiService'
 
 const FALLBACK_IMG = 'https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800&h=600&fit=crop&crop=center'
@@ -629,10 +630,6 @@ export default function CarsPage() {
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                        {/* Year Badge */}
-                        <div className="absolute top-3 right-3 bg-red-600 text-white px-2 py-1 rounded-lg text-xs font-bold">
-                          {car.year}
-                        </div>
                       </div>
 
                       {/* Car Info */}
@@ -657,6 +654,18 @@ export default function CarsPage() {
                           <div className="flex items-center gap-2 text-gray-400">
                             <FaBolt className="text-red-500 text-sm" />
                             {car.power ? `${car.power} kW` : 'N/A'}
+                          </div>
+                        </div>
+                        
+                        {/* Year and Power Info */}
+                        <div className="grid grid-cols-2 gap-1 mb-2">
+                          <div className="text-center bg-red-900/20 px-1 py-1 rounded border border-red-500/20">
+                            <div className="text-xs text-red-400 font-medium">Baujahr</div>
+                            <div className="text-xs text-red-300 font-bold">{car.year || (car.firstRegistration ? car.firstRegistration.substring(0, 4) : 'N/A')}</div>
+                          </div>
+                          <div className="text-center bg-red-900/20 px-1 py-1 rounded border border-red-500/20">
+                            <div className="text-xs text-red-400 font-medium">Leistung</div>
+                            <div className="text-xs text-red-300 font-bold">{car.power ? `${car.power} kW` : 'N/A'}</div>
                           </div>
                         </div>
 
