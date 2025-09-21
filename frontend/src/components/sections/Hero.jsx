@@ -1,39 +1,29 @@
-import React, { useState, useEffect } from 'react'
-import {motion} from 'framer-motion'
-import autokuca1 from '../../../assets/autokuca1.jpg'
-import autokuca2 from '../../../assets/autokuca2.jpg'
+import React from 'react';
+import { motion } from 'framer-motion';
+import herovideo from '../../../assets/herovideo.mp4';
 
 export default function Hero() {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const images = [autokuca1, autokuca2];
-
-  // Rotate images every 3 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 4000);
-
-    return () => clearInterval(interval);
-  }, [images.length]);
 
   return (
-    <section id="hero" className="relative h-screen flex items-center justify-center bg-black overflow-hidden">
-      {/* Background Images */}
+    <section id="hero" className="relative w-full h-full flex items-center justify-center bg-black overflow-hidden" style={{minHeight: '100vh'}}>
+      {/* Background Video */}
       <div className="absolute inset-0">
-        {images.map((image, index) => (
-          <motion.img
-            key={index}
-            src={image}
-            alt={`Auto kuća ${index + 1}`}
-            className="absolute inset-0 w-full h-full object-cover"
-            initial={{ opacity: 0 }}
-            animate={{ 
-              opacity: currentImageIndex === index ? 1 : 0 
-            }}
-            transition={{ duration: 1, ease: "easeInOut" }}
+        <video 
+          autoPlay 
+          loop 
+          muted 
+          playsInline
+          className="w-full h-full object-cover"
+        >
+          <source src={herovideo} type="video/mp4" />
+          {/* Fallback image if video fails to load */}
+          <img 
+            src="https://images.unsplash.com/photo-1542282088-fe8426682b8f?w=1920&h=1080&fit=crop&crop=center" 
+            alt="Luxusauto Hintergrund" 
+            className="w-full h-full object-cover"
           />
-        ))}
-        <div className="absolute inset-0 bg-black/50"></div>
+        </video>
+        <div className="absolute inset-0 bg-black/40"></div>
       </div>
 
       {/* Content */}
