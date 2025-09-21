@@ -165,7 +165,7 @@ export default function BuyingProcessStrip() {
           </button>
         </div>
       </div>
-      </div>
+      {/* </div> */}
     </section>
   )
 }

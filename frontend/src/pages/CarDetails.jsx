@@ -59,13 +59,10 @@ export default function CarDetails() {
     }
 
     if (id) {
-      fetchCarDetails()
+      fetchCarDetails(id)
       window.scrollTo(0, 0)
     }
   }, [id])
-
-  console.log('car')
-  console.log(car)
 
   // Image navigation
   const nextImage = () => {
@@ -186,7 +183,9 @@ export default function CarDetails() {
       </div>
     )
   }
-
+  console.log('car')
+  console.log('car')
+  console.log(car)
   return (
     <div className="min-h-screen bg-black">
       {/* Header */}
@@ -200,11 +199,10 @@ export default function CarDetails() {
             <ArrowLeft size={20} />
             <span>Zurück zur Übersicht</span>
           </motion.button>
-
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-4xl font-bold text-white mb-2">
-                {car.make} {car.modelDescription.replace(/&amp;/g, '&')}
+                {car.make} {car.modelDescription?.replace(/&amp;/g, '&')}
               </h1>
               <p className="text-xl text-neutral-400">
                 {car.year} • {formatMileage(car.mileage)} • {car.fuel}

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { mapCarValues } from './mapper';
+import { mapCarValues, mapGearbox } from './mapper';
 
 // Mobile.de API servis za dohvaćanje podataka kroz proxy server
 class MobileApiService {
@@ -152,7 +152,7 @@ class MobileApiService {
         // Map transmission types for each car
         const mappedAds = response.data.ads.map(car => ({
           ...car,
-          gearbox: this.mapTransmissionType(car.gearbox)
+          gearbox: mapGearbox(car.gearbox)
         }));
 
         // Return response with mapped transmission types
@@ -344,12 +344,12 @@ class MobileApiService {
         const carData = response.data;
 
         // Map transmission type if gearbox exists
-        if (carData.data && carData.data.gearbox) {
-          carData.data.gearbox = this.mapTransmissionType(carData.data.gearbox);
+        if (carData.car && carData.car.gearbox) {
+          carData.car.gearbox = mapGearbox(carData.car.gearbox);
         }
-        console.log('🚗 Car details data:', carData.data);
+        console.log('🚗 Car details data:', carData.car);
 
-        return { ...response.data, car: mapped };
+        return { ...response.data, car: carData.car };
       } else {
         throw new Error('Prazan odgovor sa API-ja');
       }
@@ -427,7 +427,7 @@ class MobileApiService {
         // Map transmission types for each car
         const mappedCars = (response.data.cars || []).map(car => ({
           ...car,
-          gearbox: this.mapTransmissionType(car.gearbox)
+          gearbox: mapGearbox(car.gearbox)
         }));
         console.log('🚗 Najskuplji automobili:', mappedCars);
 
