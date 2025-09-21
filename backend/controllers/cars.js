@@ -43,15 +43,14 @@ export const cars = async (req, res) => {
     }
 
     const { allCars, totalCount } = await fetchCarsFromMobileAPI(apiParams, 5); // Fetch up to 5 pages
-    const cars = allCars.slice(0, requestedPageSize);
 
     const responseData = {
       success: true,
-      total: totalCount || cars.length,
+      total: totalCount || totalCount,
       currentPage: pageNumber,
       pageSize: requestedPageSize,
-      maxPages: Math.ceil((totalCount || cars.length) / requestedPageSize),
-      ads: cars,
+      maxPages: Math.ceil((totalCount || totalCount) / requestedPageSize),
+      ads: allCars,
       cached: false,
       timestamp: new Date().toISOString(),
       responseTime: Date.now() - startTime,
