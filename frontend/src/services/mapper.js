@@ -175,7 +175,7 @@ export function unmapCondition(label) {
 const DRIVETYPE_MAP = {
   FRONT: 'Frontantrieb',
   REAR: 'Heckantrieb',
-  ALL_WHEEL: 'Allrad',
+  ALL_WHEEL: 'Allradantrieb',
 };
 
 export function mapDriveType(code) {

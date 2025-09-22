@@ -31,7 +31,7 @@ export default function Header() {
       <nav className="max-w-7xl mx-auto flex items-center justify-between px-4 py-4">
         <div className="flex items-center">
           <h1 className="text-2xl font-bold">
-            <span className="text-white">Autohouse</span>
+            <span className="text-white">Autohaus</span>
             <span className="text-red-500 ml-1">Miftari</span>
           </h1>
         </div>

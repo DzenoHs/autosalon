@@ -20,7 +20,7 @@ const features = [
   {
     icon: <CreditCard size={52} />,
     title: 'FINANZIERUNG',
-    description: 'Maßgeschneiderte Zahlungspläne für jeden Geldbeutel',
+    description: 'Zahlungspläne für jeden Geldbeutel',
     gradient: 'from-violet-400 via-purple-500 to-fuchsia-700',
     shadowColor: 'shadow-purple-500/25'
   },
@@ -38,7 +38,9 @@ export default function WhyChooseUs() {
   const [hoveredStat, setHoveredStat] = useState(null);
 
   return (
-    <section className="relative py-20 bg-gradient-to-b from-black via-neutral-900 to-black overflow-hidden">
+    <section 
+     id="about"
+    className="relative py-20 bg-gradient-to-b from-black via-neutral-900 to-black overflow-hidden">
       {/* Background particles */}
       <div className="absolute inset-0">
         <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-pulse opacity-60"></div>

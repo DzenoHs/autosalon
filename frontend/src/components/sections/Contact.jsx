@@ -179,7 +179,7 @@ export default function Contact() {
                 className="flex items-center justify-center gap-2 text-blue-500 hover:text-blue-400 transition-colors break-all"
               >
                 <Mail size={24} />
-                info@autohausmiftari.com
+                info@autohaus-miftari.de
               </a>
             </div>
           </div>

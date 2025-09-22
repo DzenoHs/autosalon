@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {FaFilter, FaSearch, FaHome, FaTimes, FaTachometerAlt, FaGasPump, FaCogs, FaBolt} from 'react-icons/fa'
-import {Calendar} from 'lucide-react'
+import {FaFilter, FaSearch, FaHome, FaTimes, FaTachometerAlt, FaGasPump, FaCogs, FaClipboardCheck} from 'react-icons/fa'
+import {Calendar, ClipboardCheck, Zap} from 'lucide-react'
 import mobileApiService from '../services/mobileApiService'
 import {mapFuel, mapGearbox} from '../services/mapper'
 
@@ -245,6 +245,25 @@ export default function CarsPage() {
   const formatMileage = (mileage) => {
     if (!mileage) return 'k.A.'
     return `${mileage.toLocaleString('de-DE')} km`
+  }
+
+  // Format power (kW to PS conversion)
+  const formatPower = (powerKw) => {
+    if (!powerKw) return 'N/A'
+    const ps = Math.round(powerKw * 1.35962)
+    return `${powerKw} kW (${ps} PS)`
+  }
+
+  // Format HU (Hauptuntersuchung) date
+  const formatHU = (huDate) => {
+    if (!huDate) return 'N/A'
+    // Format: "202608" -> "08/2026"
+    if (huDate.length === 6) {
+      const year = huDate.substring(0, 4)
+      const month = huDate.substring(4, 6)
+      return `${month}/${year}`
+    }
+    return huDate
   }
 
   // Handle pagination
@@ -704,6 +723,10 @@ export default function CarsPage() {
                             <FaCogs className="text-red-500 text-sm" />
                             {car.gearbox || 'N/A'}
                           </div>
+                          <div className="flex items-center gap-2 text-gray-400">
+                            <ClipboardCheck className="w-4 h-4 text-red-500" />
+                            HU {formatHU(car.generalInspection)}
+                          </div>
                         </div>
 
                         {/* Year and Power Info */}
@@ -717,7 +740,7 @@ export default function CarsPage() {
                           <div className="text-center bg-red-900/20 px-1 py-1 rounded border border-red-500/20">
                             <div className="text-xs text-red-400 font-medium">Leistung</div>
                             <div className="text-xs text-red-300 font-bold">
-                              {car.power ? `${car.power} kW` : 'N/A'}
+                              {formatPower(car.power)}
                             </div>
                           </div>
                         </div>

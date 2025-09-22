@@ -235,25 +235,7 @@ export default function KakoKupitiAuto() {
         </div>
       </div>
 
-      {/* Kontakt dugme */}
-      <div className="w-full max-w-4xl px-4 mt-12 mb-8">
-        <div className="bg-gradient-to-r from-red-500 to-red-600 rounded-lg p-8 text-center">
-          <h3 className="text-2xl font-bold text-white mb-4">Haben Sie weitere Fragen?</h3>
-          <p className="text-red-100 mb-6">
-            Unser Kundenservice-Team steht Ihnen gerne zur Verfügung und beantwortet alle Ihre Fragen zum Autokauf.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-white text-red-600 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors flex items-center justify-center gap-2">
-              <Phone size={20} />
-              Jetzt anrufen
-            </button>
-            <button className="bg-red-700 text-white px-6 py-3 rounded-lg font-medium hover:bg-red-800 transition-colors flex items-center justify-center gap-2">
-              <Mail size={20} />
-              E-Mail senden
-            </button>
-          </div>
-        </div>
-      </div>
+
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {ChevronRight, Gauge, Fuel, Settings, Crown, Star, Award, Calendar} from 'lucide-react'
+import {ChevronRight, Gauge, Fuel, Settings, Crown, Star, Award, Calendar, ClipboardCheck, Zap} from 'lucide-react'
 import mobileApiService from '../../services/mobileApiService'
 
 const Cars = () => {
@@ -56,6 +56,23 @@ const Cars = () => {
   const formatMileage = (mileage) => {
     if (!mileage) return 'k.A.'
     return `${Number(mileage).toLocaleString('de-DE')} km`
+  }
+
+  const formatPower = (powerKw) => {
+    if (!powerKw) return 'N/A'
+    const ps = Math.round(powerKw * 1.35962)
+    return `${powerKw}kW(${ps}PS)`
+  }
+
+  const formatHU = (huDate) => {
+    if (!huDate) return 'N/A'
+    // Format: "202608" -> "08/2026"
+    if (huDate.length === 6) {
+      const year = huDate.substring(0, 4)
+      const month = huDate.substring(4, 6)
+      return `${month}/${year}`
+    }
+    return huDate
   }
 
   if (isLoadingExpensive) {
@@ -177,14 +194,14 @@ const Cars = () => {
                     </h3>
                   </div>
 
-                  {/* Compact Specifications */}
+                  {/* Compact Specifications - 2 rows x 3 elements */}
                   <div className="mb-2">
-                    {/* Basic Info Row */}
+                    {/* First Row */}
                     <div className="grid grid-cols-3 gap-1">
                       <div className="text-center bg-neutral-800/60 rounded p-1 border border-neutral-600/30">
                         <Gauge className="w-3 h-3 text-amber-400 mx-auto mb-0.5" />
                         <div className="text-xs text-neutral-300 font-medium">{formatMileage(car.mileage)}</div>
-                        <div className="text-xs text-neutral-500">Kilometraza</div>
+                        <div className="text-xs text-neutral-500">Kilometerstand</div>
                       </div>
                       <div className="text-center bg-neutral-800/60 rounded p-1 border border-neutral-600/30">
                         <Fuel className="w-3 h-3 text-red-400 mx-auto mb-0.5" />
@@ -200,14 +217,21 @@ const Cars = () => {
                       </div>
                     </div>
                     
-                    {/* Additional Info Row with Year */}
-                    <div className="grid grid-cols-2 gap-1 mt-1">
+                    {/* Second Row */}
+                    <div className="grid grid-cols-3 gap-1 mt-1">
+                      <div className="text-center bg-neutral-800/60 rounded p-1 border border-neutral-600/30">
+                        <ClipboardCheck className="w-3 h-3 text-green-400 mx-auto mb-0.5" />
+                        <div className="text-xs text-neutral-300 font-medium">{formatHU(car.generalInspection)}</div>
+                        <div className="text-xs text-neutral-500">HU</div>
+                      </div>
                       <div className="text-center bg-gradient-to-r from-red-900/40 to-red-800/40 rounded p-1 border border-red-500/20">
-                        <div className="text-xs text-red-300 font-bold">{car.year || (car.firstRegistration ? car.firstRegistration.substring(0, 4) : 'N/A')}</div>
-                        <div className="text-xs text-red-400">Baujahr</div>
+                        <Calendar className="w-3 h-3 text-red-400 mx-auto mb-0.5" />
+                        <div className="text-xs text-red-300 font-bold text-center">{car.year || (car.firstRegistration ? car.firstRegistration.substring(0, 4) : 'N/A')}</div>
+                        <div className="text-xs text-red-400 text-center">Baujahr</div>
                       </div>
                       <div className="text-center bg-neutral-800/60 rounded p-1 border border-neutral-600/30">
-                        <div className="text-xs text-neutral-300 font-medium text-center">{car.power ? `${car.power} kW` : 'N/A'}</div>
+                        <Zap className="w-3 h-3 text-amber-400 mx-auto mb-0.5" />
+                        <div className="text-xs text-neutral-300 font-medium text-center" style={{fontSize: '12px'}}>{formatPower(car.power)}</div>
                         <div className="text-xs text-neutral-500 text-center">Leistung</div>
                       </div>
                     </div>
