@@ -37,14 +37,14 @@ export function unmapGearbox(label) {
 const FUEL_MAP = {
   PETROL: 'Benzin',
   DIESEL: 'Diesel',
-  ELECTRIC: 'Elektro',
-  HYBRID: 'Hybrid',
-  PLUG_IN_HYBRID: 'Plug-in-Hybrid',
-  LPG: 'LPG',
-  CNG: 'CNG',
-  ETHANOL: 'Ethanol',
-  HYDROGEN: 'Wasserstoff',
-  OTHER: 'Sonstiges',
+  LPG: 'Autogas (LPG)',
+  CNG: 'Erdgas (CNG)',
+  ELECTRICITY: 'Elektro',
+  HYBRID: 'Hybrid (Benzin/Elektro)',
+  HYDROGENIUM: 'Wasserstoff',
+  ETHANOL: 'Ethanol (FFV, E85 etc.)',
+  HYBRID_DIESEL: 'Hybrid (Diesel/Elektro)',
+  OTHER: 'Andere',
 };
 
 export function mapFuel(code) {

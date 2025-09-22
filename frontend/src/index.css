@@ -3,14 +3,14 @@
 @tailwind utilities;
 
 /* Enhanced smooth scrolling */
-html { 
-  scroll-behavior: smooth; 
+html {
+  scroll-behavior: smooth;
   font-size: clamp(14px, 2.5vw, 18px);
   overflow-x: hidden;
 }
 
 /* Responsive base font and background */
-body { 
+body {
   @apply font-ui bg-neutral-900 text-white;
   line-height: 1.6;
   overflow-x: hidden;
@@ -40,10 +40,10 @@ body {
 }
 
 /* Fluid container with mobile optimization */
-.container-max { 
-  max-width: min(1200px, 100vw); 
-  margin-left: auto; 
-  margin-right: auto; 
+.container-max {
+  max-width: min(1200px, 100vw);
+  margin-left: auto;
+  margin-right: auto;
   padding-left: clamp(0.75rem, 4vw, 2rem);
   padding-right: clamp(0.75rem, 4vw, 2rem);
   box-sizing: border-box;
@@ -76,8 +76,12 @@ body {
 
 /* Optimized Marquee Animation */
 @keyframes marquee {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 .animate-marquee {
@@ -103,20 +107,37 @@ img {
   display: block;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* For Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+/* General appearance property for broader compatibility (though -webkit- and -moz- are often needed) */
+input[type='number'] {
+  appearance: none;
+}
+
 /* Mobile-specific optimizations */
 @media (max-width: 768px) {
   /* Prevent horizontal overflow */
-  body, html {
+  body,
+  html {
     overflow-x: hidden;
     max-width: 100vw;
   }
-  
+
   /* Ensure all sections fit within viewport */
   section {
     max-width: 100vw;
     overflow-x: hidden;
   }
-  
+
   /* Mobile button optimization */
   .mobile-button {
     min-height: 44px;
@@ -124,7 +145,7 @@ img {
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
   }
-  
+
   /* Touch-friendly spacing */
   .mobile-spacing {
     padding: 1rem 0.75rem;
@@ -136,12 +157,12 @@ img {
   .text-responsive {
     font-size: clamp(1rem, 4vw, 1.5rem);
   }
-  
+
   .heading-responsive {
     font-size: clamp(2rem, 8vw, 4rem);
     line-height: 1.1;
   }
-  
+
   /* Prevent overflow utilities */
   .no-overflow {
     overflow-x: hidden;

@@ -126,7 +126,7 @@ class MobileApiService {
   // }
 
   // Glavni API poziv za dohvaćanje automobila
-  async fetchCarsFromMobileApi(pageNumber = 1, pageSize = 20, make = '', model = '', gearbox = '') {
+  async fetchCarsFromMobileApi(pageNumber = 1, pageSize = 20, make = '', model = '', gearbox = '', fuel = '', priceFrom = 0, priceTo = 999999, yearFrom = 0, yearTo = 2030) {
     this.isLoading = true;
     this.lastError = null;
 
@@ -134,7 +134,7 @@ class MobileApiService {
       console.log(`🚗 Fetching cars from Mobile API (page ${pageNumber}, pageSize ${pageSize})...`);
 
       // Construct the API URL
-      const apiUrl = `${this.proxyUrl}/api/cars?pageNumber=${pageNumber}&pageSize=${pageSize}&make=${make}&model=${model}&gearbox=${gearbox}`;
+      const apiUrl = `${this.proxyUrl}/api/cars?pageNumber=${pageNumber}&pageSize=${pageSize}&make=${make}&model=${model}&gearbox=${gearbox}&fuel=${fuel}&priceFrom=${priceFrom}&priceTo=${priceTo}&yearFrom=${yearFrom}&yearTo=${yearTo}`;
 
       // Make the API call using axios
       const response = await axios.get(apiUrl, {
@@ -505,6 +505,36 @@ class MobileApiService {
       throw new Error(`Failed to fetch car gearbox: ${error.message}`);
     }
   }
+
+  // Fetch unique car fuel
+  async fetchCarFuel() {
+    try {
+      console.log('🔍 Fetching unique car fuels from API...');
+
+      const url = `${this.proxyUrl}/api/cars/fuel`; // API endpoint for unique car makes
+      console.log('📡 Unique car fuel URL:', url);
+
+      const response = await axios.get(url, {
+        timeout: 15000,
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log('✅ Unique car fuel response:', response.data);
+
+      if (response.data && response.data.data) {
+        return response.data.data; // Return the array of unique car fuel
+      } else {
+        throw new Error('No data found for car fuel');
+      }
+    } catch (error) {
+      console.error('❌ Error fetching unique car fuel:', error.message);
+      throw new Error(`Failed to fetch car fuel: ${error.message}`);
+    }
+  }
+
 
   async fetchCarModels(make) {
     if (!make) {

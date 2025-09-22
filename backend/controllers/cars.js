@@ -22,10 +22,10 @@ export const cars = async (req, res) => {
         : req.query.make
           ? { "classification": `refdata/classes/Car/makes/${req.query.make}` }
           : {}),
-      ...(req.query.priceFrom && { priceFrom: req.query.priceFrom }),
-      ...(req.query.priceTo && { priceTo: req.query.priceTo }),
-      ...(req.query.yearFrom && { firstRegistrationFrom: `${req.query.yearFrom}-01-01` }),
-      ...(req.query.yearTo && { firstRegistrationTo: `${req.query.yearTo}-12-31` }),
+      ...(req.query.priceFrom && { 'price.min': req.query.priceFrom }),
+      ...(req.query.priceTo && { 'price.max': req.query.priceTo }),
+      ...(req.query.yearFrom && { "firstRegistrationDate.min": `${req.query.yearFrom}-01` }),
+      ...(req.query.yearTo && { "firstRegistrationDate.max": `${req.query.yearTo}-12` }),
       ...(req.query.fuel && { fuel: req.query.fuel }),
       ...(req.query.gearbox && { gearbox: req.query.gearbox }),
     };

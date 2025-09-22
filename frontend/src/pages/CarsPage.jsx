@@ -3,7 +3,7 @@ import {useNavigate} from 'react-router-dom'
 import {FaFilter, FaSearch, FaHome, FaTimes, FaTachometerAlt, FaGasPump, FaCogs, FaBolt} from 'react-icons/fa'
 import {Calendar} from 'lucide-react'
 import mobileApiService from '../services/mobileApiService'
-import {mapGearbox} from '../services/mapper'
+import {mapFuel, mapGearbox} from '../services/mapper'
 
 const FALLBACK_IMG = 'https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800&h=600&fit=crop&crop=center'
 const PAGE_SIZE = 16
@@ -25,6 +25,8 @@ export default function CarsPage() {
   // UI State
   const [isFilterOpen, setIsFilterOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [yearFromInput, setYearFromInput] = useState('')
+  const [yearToInput, setYearToInput] = useState('')
 
   // Filter state (compat with FilterPanel)
   const [filters, setFilters] = useState({
@@ -70,6 +72,8 @@ export default function CarsPage() {
 
   const [gearboxes, setGearboxes] = useState([])
 
+  const [fuels, setFuels] = useState([])
+
   // Fetch unique car makes from API
   useEffect(() => {
     const fetchUniqueMakes = async () => {
@@ -90,6 +94,16 @@ export default function CarsPage() {
         setError('Failed to load car makes. Please try again later.')
       }
     }
+    const fetchFuels = async () => {
+      try {
+        const fuels = await mobileApiService.fetchCarFuel() // Use the new method
+        setFuels(fuels)
+      } catch (err) {
+        console.error('❌ Error fetching car fuels:', err)
+        setError('Failed to load car makes. Please try again later.')
+      }
+    }
+    fetchFuels()
 
     fetchGearbox()
 
@@ -151,7 +165,10 @@ export default function CarsPage() {
       buyNow: false
     }
     setFilters(emptyFilters)
+    setYearFromInput('')
+    setYearToInput('')
     setDisplayedCars(cars)
+    setCurrentPage(1)
   }
 
   // Fetch cars from API
@@ -167,7 +184,12 @@ export default function CarsPage() {
           PAGE_SIZE,
           filters.make,
           filters.model,
-          filters.transmission
+          filters.transmission,
+          filters.fuel,
+          filters.priceFrom,
+          filters.priceTo,
+          filters.yearFrom,
+          filters.yearTo
         )
 
         console.log('✅ Cars fetched successfully:', result)
@@ -191,7 +213,17 @@ export default function CarsPage() {
     }
 
     fetchCars()
-  }, [currentPage, filters.make, filters.model, filters.transmission]) // Refetch cars when currentPage or pageSize changes
+  }, [
+    currentPage,
+    filters.make,
+    filters.model,
+    filters.transmission,
+    filters.fuel,
+    filters.priceFrom,
+    filters.priceTo,
+    filters.yearFrom,
+    filters.yearTo
+  ]) // Refetch cars when currentPage or pageSize changes
 
   // Handle car click
   const handleCarClick = (car) => {
@@ -272,6 +304,7 @@ export default function CarsPage() {
     }
 
     setFilters(newFilters)
+    setCurrentPage(1)
     applyFilters(newFilters)
   }
 
@@ -289,24 +322,24 @@ export default function CarsPage() {
     // if (currentFilters.model) {
     //   filtered = filtered.filter((car) => car.model?.toLowerCase().includes(currentFilters.model.toLowerCase()))
     // }
-    if (currentFilters.yearFrom) {
-      filtered = filtered.filter((car) => car.year >= parseInt(currentFilters.yearFrom))
-    }
-    if (currentFilters.yearTo) {
-      filtered = filtered.filter((car) => car.year <= parseInt(currentFilters.yearTo))
-    }
-    if (currentFilters.priceFrom) {
-      filtered = filtered.filter((car) => {
-        const price = car.price?.consumerPriceGross || car.price?.consumerPriceNet || car.price?.value
-        return price >= parseInt(currentFilters.priceFrom)
-      })
-    }
-    if (currentFilters.priceTo) {
-      filtered = filtered.filter((car) => {
-        const price = car.price?.consumerPriceGross || car.price?.consumerPriceNet || car.price?.value
-        return price <= parseInt(currentFilters.priceTo)
-      })
-    }
+    // if (currentFilters.yearFrom) {
+    //   filtered = filtered.filter((car) => car.year >= parseInt(currentFilters.yearFrom))
+    // }
+    // if (currentFilters.yearTo) {
+    //   filtered = filtered.filter((car) => car.year <= parseInt(currentFilters.yearTo))
+    // }
+    // if (currentFilters.priceFrom) {
+    //   filtered = filtered.filter((car) => {
+    //     const price = car.price?.consumerPriceGross || car.price?.consumerPriceNet || car.price?.value
+    //     return price >= parseInt(currentFilters.priceFrom)
+    //   })
+    // }
+    // if (currentFilters.priceTo) {
+    //   filtered = filtered.filter((car) => {
+    //     const price = car.price?.consumerPriceGross || car.price?.consumerPriceNet || car.price?.value
+    //     return price <= parseInt(currentFilters.priceTo)
+    //   })
+    // }
     if (currentFilters.mileageMax) {
       filtered = filtered.filter((car) => car.mileage <= parseInt(currentFilters.mileageMax))
     }
@@ -321,9 +354,9 @@ export default function CarsPage() {
     }
 
     // Tehnički filteri
-    if (currentFilters.fuel) {
-      filtered = filtered.filter((car) => car.fuel?.toLowerCase().includes(currentFilters.fuel.toLowerCase()))
-    }
+    // if (currentFilters.fuel) {
+    //   filtered = filtered.filter((car) => car.fuel?.toLowerCase().includes(currentFilters.fuel.toLowerCase()))
+    // }
     if (currentFilters.powerMin) {
       filtered = filtered.filter((car) => car.power >= parseInt(currentFilters.powerMin))
     }
@@ -388,18 +421,6 @@ export default function CarsPage() {
     }
 
     setDisplayedCars(filtered)
-  }
-
-  // Get unique values for filter options
-  const getUniqueValues = (field) => {
-    const values = cars
-      .map((car) => {
-        if (field === 'make' || field === 'model' || field === 'fuel') return car[field]
-        if (field === 'transmission') return car.gearbox
-        return null
-      })
-      .filter(Boolean)
-    return [...new Set(values)].sort()
   }
 
   return (
@@ -549,17 +570,33 @@ export default function CarsPage() {
             <label className="block text-sm font-medium text-red-300 mb-2">Baujahr</label>
             <div className="grid grid-cols-2 gap-3">
               <input
-                type="number"
+                type="text"
+                inputMode="numeric"
+                maxLength={4}
                 placeholder="Von"
-                value={filters.yearFrom}
-                onChange={(e) => handleFilterChange('yearFrom', e.target.value)}
+                value={yearFromInput}
+                onChange={(e) => {
+                  const v = e.target.value.replace(/\D/g, '').slice(0, 4)
+                  setYearFromInput(v)
+                  if (v.length === 4 || v === '') {
+                    handleFilterChange('yearFrom', v)
+                  }
+                }}
                 className="p-3 bg-black border-2 border-red-600 rounded-lg text-white placeholder-red-400/60 focus:border-red-400 focus:ring-2 focus:ring-red-600/30 transition-all"
               />
               <input
-                type="number"
+                type="text"
+                inputMode="numeric"
+                maxLength={4}
                 placeholder="Bis"
-                value={filters.yearTo}
-                onChange={(e) => handleFilterChange('yearTo', e.target.value)}
+                value={yearToInput}
+                onChange={(e) => {
+                  const v = e.target.value.replace(/\D/g, '').slice(0, 4)
+                  setYearToInput(v)
+                  if (v.length === 4 || v === '') {
+                    handleFilterChange('yearTo', v)
+                  }
+                }}
                 className="p-3 bg-black border-2 border-red-600 rounded-lg text-white placeholder-red-400/60 focus:border-red-400 focus:ring-2 focus:ring-red-600/30 transition-all"
               />
             </div>
@@ -574,9 +611,9 @@ export default function CarsPage() {
               className="w-full p-3 bg-black border-2 border-red-600 rounded-lg text-white focus:border-red-400 focus:ring-2 focus:ring-red-600/30 transition-all"
             >
               <option value="">Alle Kraftstoffe</option>
-              {getUniqueValues('fuel').map((fuel) => (
+              {fuels.map((fuel) => (
                 <option key={fuel} value={fuel}>
-                  {fuel}
+                  {mapFuel(fuel)}
                 </option>
               ))}
             </select>
