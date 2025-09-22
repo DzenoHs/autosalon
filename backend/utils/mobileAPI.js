@@ -23,62 +23,30 @@ const MOBILE_API_CONFIG = {
 
 // Funkcija za dohvaćanje automobila sa Mobile.de API-ja
 export const fetchCarsFromMobileAPI = async (apiParams, maxPagesToFetch = 5) => {
-  let allCars = [];
-  let totalCount = 0;
-  const uniqueCarIds = new Set(); // Track unique car IDs to avoid duplicates
-
-  for (let currentPageNum = 1; currentPageNum <= maxPagesToFetch && allCars.length < 100; currentPageNum++) {
-    const currentApiParams = { ...apiParams, 'page.number': currentPageNum };
-    const queryString = new URLSearchParams(currentApiParams).toString();
+  try {
+    const queryString = new URLSearchParams(apiParams).toString();
     const apiUrl = `${MOBILE_API_CONFIG.baseURL}search-api/search?imageCount.min=1&${queryString}`;
+    console.log(`📡 Fetching cars: ${apiUrl}`);
 
-    console.log(`📡 Fetching page ${currentPageNum}/${maxPagesToFetch}: ${apiUrl}`);
+    const response = await axios.get(apiUrl, {
+      headers: MOBILE_API_CONFIG.headers,
+      timeout: MOBILE_API_CONFIG.timeout,
+      validateStatus: (status) => status >= 200 && status < 500,
+    });
 
-    let response;
-    let attempts = 0;
-    const maxAttempts = 3;
-
-    while (attempts < maxAttempts) {
-      attempts++;
-      try {
-        response = await axios.get(apiUrl, {
-          headers: MOBILE_API_CONFIG.headers,
-          timeout: MOBILE_API_CONFIG.timeout,
-          validateStatus: (status) => status >= 200 && status < 500,
-        });
-
-        if (response.status === 200) break;
-        if (attempts === maxAttempts) throw new Error(`API returned status ${response.status}`);
-      } catch (error) {
-        if (attempts === maxAttempts) throw error;
-        await new Promise((resolve) => setTimeout(resolve, 1000 * attempts));
-      }
-    }
-
-    if (!response || response.status !== 200) {
-      console.log(`⚠️ Page ${currentPageNum} failed, skipping`);
-      continue;
+    if (response.status !== 200) {
+      throw new Error(`API returned status ${response.status}`);
     }
 
     const pageData = response.data;
+    const allCars = pageData.ads || [];
+    const totalCount = pageData.total || pageData.totalCount || allCars.length;
 
-    if (pageData.ads && Array.isArray(pageData.ads)) {
-      pageData.ads.forEach((ad) => {
-        if (!uniqueCarIds.has(ad.id)) // Skip if the car ID already exists
-          allCars.push(ad); // Add the car to the result array
-      });
-
-      totalCount = pageData.total || pageData.totalCount || totalCount;
-      console.log(`✅ Page ${currentPageNum}: ${pageData.ads.length} cars (Unique: ${allCars.length})`);
-    }
-
-    if (!pageData.ads || pageData.ads.length === 0) {
-      console.log(`🛑 No more results on page ${currentPageNum}`);
-      break;
-    }
+    return { allCars, totalCount };
+  } catch (error) {
+    console.error(`❌ Error fetching cars:`, error.message);
+    throw error;
   }
-
-  return { allCars, totalCount };
 };
 
 // Funkcija za dohvaćanje najskupljih automobila
