@@ -6,7 +6,7 @@ import { getCarById } from './controllers/getCarById.js';
 import { topExpensiveCars } from './controllers/topExpensiveCars.js';
 import { clearCache, getCacheStats } from './utils/cache.js';
 import morgan from 'morgan';
-import { getCarsMake, getCarsModels } from './controllers/filters.js';
+import { getCarsGearbox, getCarsMake, getCarsModels } from './controllers/filters.js';
 
 const app = express();
 const PORT = process.env.PORT || 5003;
@@ -45,6 +45,7 @@ app.get('/', (req, res) => {
 app.get("/api/cars", cars);
 app.get("/api/cars/make", getCarsMake)
 app.get("/api/cars/models", getCarsModels)
+app.get("/api/cars/gearbox", getCarsGearbox)
 app.get("/api/cars/:id", getCarById);
 app.get("/api/cars/top/expensive", topExpensiveCars);
 

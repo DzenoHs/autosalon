@@ -64,9 +64,6 @@ export default function CarDetails() {
     }
   }, [id])
 
-  console.log('car')
-  console.log(car)
-
   // Image navigation
   const nextImage = () => {
     if (car?.images && car.images.length > 1) {
@@ -498,7 +495,7 @@ export default function CarDetails() {
               <div className="text-center p-2 sm:p-3 bg-black/40 rounded-lg border border-red-600/20">
                 <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 mx-auto mb-1 sm:mb-2" />
                 <div className="text-sm sm:text-lg font-bold text-white">
-                  {new Date(car.modificationDate).getFullYear() || 'N/A'}
+                  {car.firstRegistration ? car.firstRegistration.substring(0, 4) : 'N/A'}
                 </div>
                 <div className="text-xs text-neutral-400">Baujahr</div>
               </div>

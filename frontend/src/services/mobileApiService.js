@@ -126,7 +126,7 @@ class MobileApiService {
   // }
 
   // Glavni API poziv za dohvaćanje automobila
-  async fetchCarsFromMobileApi(pageNumber = 1, pageSize = 20, make = '', model = '') {
+  async fetchCarsFromMobileApi(pageNumber = 1, pageSize = 20, make = '', model = '', gearbox = '') {
     this.isLoading = true;
     this.lastError = null;
 
@@ -134,7 +134,7 @@ class MobileApiService {
       console.log(`🚗 Fetching cars from Mobile API (page ${pageNumber}, pageSize ${pageSize})...`);
 
       // Construct the API URL
-      const apiUrl = `${this.proxyUrl}/api/cars?pageNumber=${pageNumber}&pageSize=${pageSize}&make=${make}&model=${model}`;
+      const apiUrl = `${this.proxyUrl}/api/cars?pageNumber=${pageNumber}&pageSize=${pageSize}&make=${make}&model=${model}&gearbox=${gearbox}`;
 
       // Make the API call using axios
       const response = await axios.get(apiUrl, {
@@ -474,6 +474,35 @@ class MobileApiService {
     } catch (error) {
       console.error('❌ Error fetching unique car makes:', error.message);
       throw new Error(`Failed to fetch car makes: ${error.message}`);
+    }
+  }
+
+  // Fetch unique car gearboxes
+  async fetchCarGearbox() {
+    try {
+      console.log('🔍 Fetching unique car gearbox from API...');
+
+      const url = `${this.proxyUrl}/api/cars/gearbox`; // API endpoint for unique car makes
+      console.log('📡 Unique car gearbox URL:', url);
+
+      const response = await axios.get(url, {
+        timeout: 15000,
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log('✅ Unique car gearbox response:', response.data);
+
+      if (response.data && response.data.data) {
+        return response.data.data; // Return the array of unique car gearbox
+      } else {
+        throw new Error('No data found for car gearbox');
+      }
+    } catch (error) {
+      console.error('❌ Error fetching unique car gearbox:', error.message);
+      throw new Error(`Failed to fetch car gearbox: ${error.message}`);
     }
   }
 

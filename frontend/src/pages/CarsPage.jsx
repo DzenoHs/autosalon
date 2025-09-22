@@ -3,6 +3,7 @@ import {useNavigate} from 'react-router-dom'
 import {FaFilter, FaSearch, FaHome, FaTimes, FaTachometerAlt, FaGasPump, FaCogs, FaBolt} from 'react-icons/fa'
 import {Calendar} from 'lucide-react'
 import mobileApiService from '../services/mobileApiService'
+import {mapGearbox} from '../services/mapper'
 
 const FALLBACK_IMG = 'https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800&h=600&fit=crop&crop=center'
 const PAGE_SIZE = 16
@@ -67,6 +68,8 @@ export default function CarsPage() {
   // Add state for car models
   const [carModels, setCarModels] = useState([])
 
+  const [gearboxes, setGearboxes] = useState([])
+
   // Fetch unique car makes from API
   useEffect(() => {
     const fetchUniqueMakes = async () => {
@@ -78,6 +81,17 @@ export default function CarsPage() {
         setError('Failed to load car makes. Please try again later.')
       }
     }
+    const fetchGearbox = async () => {
+      try {
+        const gearboxes = await mobileApiService.fetchCarGearbox() // Use the new method
+        setGearboxes(gearboxes)
+      } catch (err) {
+        console.error('❌ Error fetching car makes:', err)
+        setError('Failed to load car makes. Please try again later.')
+      }
+    }
+
+    fetchGearbox()
 
     fetchUniqueMakes()
   }, [])
@@ -152,7 +166,8 @@ export default function CarsPage() {
           currentPage,
           PAGE_SIZE,
           filters.make,
-          filters.model
+          filters.model,
+          filters.transmission
         )
 
         console.log('✅ Cars fetched successfully:', result)
@@ -176,7 +191,7 @@ export default function CarsPage() {
     }
 
     fetchCars()
-  }, [currentPage, filters.make, filters.model]) // Refetch cars when currentPage or pageSize changes
+  }, [currentPage, filters.make, filters.model, filters.transmission]) // Refetch cars when currentPage or pageSize changes
 
   // Handle car click
   const handleCarClick = (car) => {
@@ -411,8 +426,9 @@ export default function CarsPage() {
               </div>
 
               <div className="flex items-center gap-3">
+                {/* TO DO: FIX SEARCH TO WORK WITH API */}
                 {/* Search */}
-                <div className="relative">
+                {/* <div className="relative">
                   <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                   <input
                     type="text"
@@ -421,7 +437,7 @@ export default function CarsPage() {
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="pl-10 pr-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-64 text-white placeholder-gray-400"
                   />
-                </div>
+                </div> */}
 
                 {/* Filter Toggle */}
                 <button
@@ -575,9 +591,9 @@ export default function CarsPage() {
               className="w-full p-3 bg-black border-2 border-red-600 rounded-lg text-white focus:border-red-400 focus:ring-2 focus:ring-red-600/30 transition-all"
             >
               <option value="">Alle Getriebe</option>
-              {getUniqueValues('transmission').map((transmission) => (
+              {gearboxes.map((transmission) => (
                 <option key={transmission} value={transmission}>
-                  {transmission}
+                  {mapGearbox(transmission)}
                 </option>
               ))}
             </select>
@@ -652,16 +668,20 @@ export default function CarsPage() {
                             {car.gearbox || 'N/A'}
                           </div>
                         </div>
-                        
+
                         {/* Year and Power Info */}
                         <div className="grid grid-cols-2 gap-1 mb-2">
                           <div className="text-center bg-red-900/20 px-1 py-1 rounded border border-red-500/20">
                             <div className="text-xs text-red-400 font-medium">Baujahr</div>
-                            <div className="text-xs text-red-300 font-bold">{car.year || (car.firstRegistration ? car.firstRegistration.substring(0, 4) : 'N/A')}</div>
+                            <div className="text-xs text-red-300 font-bold">
+                              {car.year || (car.firstRegistration ? car.firstRegistration.substring(0, 4) : 'N/A')}
+                            </div>
                           </div>
                           <div className="text-center bg-red-900/20 px-1 py-1 rounded border border-red-500/20">
                             <div className="text-xs text-red-400 font-medium">Leistung</div>
-                            <div className="text-xs text-red-300 font-bold">{car.power ? `${car.power} kW` : 'N/A'}</div>
+                            <div className="text-xs text-red-300 font-bold">
+                              {car.power ? `${car.power} kW` : 'N/A'}
+                            </div>
                           </div>
                         </div>
 
