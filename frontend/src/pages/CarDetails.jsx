@@ -288,231 +288,297 @@ export default function CarDetails() {
     return result;
   };
 
-  // PREMIUM EQUIPMENT PARSER - Mobile.de API specialist
-  const parseEquipmentList = (plainTextDescription) => {
-    if (!plainTextDescription) return [];
+const parseEquipmentList = (plainTextDescription) => {
+  if (!plainTextDescription) return [];
+  
+  let items = [];
+  
+  // 🎯 PORSCHE GT3 RS SPECIAL HANDLING (NOVO!)
+  if (plainTextDescription.includes('**\\\\') || plainTextDescription.includes('\\\\**') || 
+      (plainTextDescription.includes('GT3') && plainTextDescription.includes('Porsche'))) {
+    console.log('🏁 Detected Porsche GT3 RS pattern - special handling');
+    
+    // Split by Porsche separators: **\\ and \\**
+    items = plainTextDescription
+      .split(/\*\*\\\\|\\\\\*\*/)
+      .map(item => item.trim())
+      .filter(item => item.length > 3)
+      // Remove Porsche category headers
+      .filter(item => ![
+        'Außenfarben', 'Räder', 'Innenfarben & Material', 'Sitze', 'Ausstattungspakete', 
+        'Licht & Sicht', 'Antrieb & Performance', 'Assistenzsysteme', 'Infotainment', 
+        'Exterieurdesign', 'Dach- & Transportsysteme', 'Schriftzüge & Dekorbeklebungen', 
+        'Interieurpakete & Dekore/Materialien', 'Gurte & Sitzdesign', 'Lenkrad, Schalt-/Wählhebel', 
+        'Interieurdesign', 'Komfort & Alltagstauglichkeit', 'Exclusive Manufaktur',
+        '911 GT3 RS', 'Ausführung'
+      ].includes(item.trim()));
+  } else {
+    // 🚗 STANDARD HANDLING FOR ALL OTHER CARS (tvoja postojeća logika)
+    console.log('🚗 Using standard parsing for non-Porsche vehicle');
     
     // Split on multiple delimiters commonly used in Mobile.de
-    let items = plainTextDescription
+    items = plainTextDescription
       .split(/[,;]\s*|\*\s*|\n\s*/)
       .map(item => item.trim())
       .filter(item => item.length > 0);
-    
-    // Remove legal/contact information noise
-    items = items
-      .filter(item => !item.includes('Hinweise für Interessenten'))
-      .filter(item => !item.includes('www.gm-top-cars.de'))
-      .filter(item => !item.includes('Öffnungszeiten'))
-      .filter(item => !item.includes('Terminvereinbarung'))
-      .filter(item => !item.includes('Tagespreise'))
-      .filter(item => !item.includes('Fahrzeuganfragen'))
-      .filter(item => !item.includes('Verkaufsablauf'))
-      .filter(item => !item.includes('Finanzierungsangebote'))
-      .filter(item => !item.includes('Gewährleistung'))
-      .filter(item => !item.includes('Zulassung'))
-      .filter(item => !item.includes('TÜV/AU'))
-      .filter(item => !item.includes('Ankauf'))
-      .filter(item => !item.includes('Besichtigung'))
-      .filter(item => !item.includes('Fahrzeugbeschreibung'))
-      .filter(item => !item.includes('Identifizierung'))
-      .filter(item => !item.includes('Vollständigkeit'))
-      .filter(item => !item.includes('Irrtümer'))
-      .filter(item => !item.includes('Zwischenverkauf'))
-      .filter(item => !item.includes('Druckfehler'))
-      .filter(item => !item.includes('AGB'))
-      .filter(item => item.length > 2); // More permissive for fragments
-    
-    // Step 1: Merge fragments into complete descriptions
-    items = mergeFragments(items);
-    
-    // Step 2: Remove duplicates with advanced similarity detection
-    items = removeDuplicates(items);
-    
-    // Step 3: Final quality filter
-    items = items
-      .filter(item => item.length > 5) // Complete items only
-      .sort((a, b) => a.localeCompare(b, 'de', { numeric: true, sensitivity: 'base' }));
-    
-    return items;
-  };
+  }
+  
+  // 🗑️ Remove legal/contact information noise (POSTOJEĆA LOGIKA)
+  items = items
+    .filter(item => !item.includes('Hinweise für Interessenten'))
+    .filter(item => !item.includes('www.gm-top-cars.de'))
+    .filter(item => !item.includes('Öffnungszeiten'))
+    .filter(item => !item.includes('Terminvereinbarung'))
+    .filter(item => !item.includes('Tagespreise'))
+    .filter(item => !item.includes('Fahrzeuganfragen'))
+    .filter(item => !item.includes('Verkaufsablauf'))
+    .filter(item => !item.includes('Finanzierungsangebote'))
+    .filter(item => !item.includes('Gewährleistung'))
+    .filter(item => !item.includes('Zulassung'))
+    .filter(item => !item.includes('TÜV/AU'))
+    .filter(item => !item.includes('Ankauf'))
+    .filter(item => !item.includes('Besichtigung'))
+    .filter(item => !item.includes('Fahrzeugbeschreibung'))
+    .filter(item => !item.includes('Identifizierung'))
+    .filter(item => !item.includes('Vollständigkeit'))
+    .filter(item => !item.includes('Irrtümer'))
+    .filter(item => !item.includes('Zwischenverkauf'))
+    .filter(item => !item.includes('Druckfehler'))
+    .filter(item => !item.includes('AGB'))
+    .filter(item => item.length > 2); // More permissive for fragments
+
+  // 🚗 AUDI SECONDARY SPLIT - podeli " - -" spojene stavke (NOVO DODANO!)
+  items = items.flatMap(item => {
+    if (item.includes(' - -') && (item.includes('Audi') || item.includes('MMI') || item.includes('S line') || item.length > 50)) {
+      console.log('🚗 Splitting Audi " - -" combined item:', item.substring(0, 50) + '...');
+      return item.split(' - -')
+        .map(subItem => subItem.trim())
+        .filter(subItem => subItem.length > 3)
+        // Remove common Audi header fragments
+        .filter(subItem => ![
+          'Leder schwarz', 'Himmel', 'Armaturentafel', 'Teppich',
+          'Sitzbezug', 'Mythosschwarz Metallic'
+        ].some(header => subItem.toLowerCase().startsWith(header.toLowerCase())));
+    }
+    return item;
+  });
+  
+  // Step 1: Merge fragments into complete descriptions (POSTOJEĆA LOGIKA)
+  items = mergeFragments(items);
+  
+  // Step 2: Remove duplicates with advanced similarity detection (POSTOJEĆA LOGIKA)
+  items = removeDuplicates(items);
+  
+  // Step 3: Final quality filter (POSTOJEĆA LOGIKA)
+  items = items
+    .filter(item => item.length > 5) // Complete items only
+    .sort((a, b) => a.localeCompare(b, 'de', { numeric: true, sensitivity: 'base' }));
+  
+  return items;
+};
 
   
 
   // SMART CATEGORY PRIORITY SYSTEM - Mercedes/BMW/Audi Standard
-  const categorizeEquipment = (equipment) => {
-    const categories = {
-      safety: {
+ const categorizeEquipment = (equipment) => {
+  // 🏁 PORSCHE SECONDARY SPLIT - podeli spojene stavke na \\
+  const expandedEquipment = [];
+  
+  equipment.forEach(item => {
+    if (item.includes('\\\\') && (item.includes('GT3') || item.includes('Porsche') || item.length > 100)) {
+      // Ovo je Porsche spojeni item - podeli ga
+      console.log('🏁 Splitting Porsche combined item:', item.substring(0, 50) + '...');
+      const splitItems = item.split('\\\\')
+        .map(subItem => subItem.trim())
+        .filter(subItem => subItem.length > 5)
+        // Remove category headers and noise
+        .filter(subItem => ![
+          'Assistenzsysteme', 'Komfort & Alltagstauglichkeit', 'Licht & Sicht',
+          'Antrieb & Performance', 'Exterieurdesign', 'Gurte & Sitzdesign',
+          'Interieurpakete & Dekore/Materialien', 'Exclusive Manufaktur',
+          'Lenkrad, Schalt-/Wählhebel', 'Dach- & Transportsysteme',
+          'Schriftzüge & Dekorbeklebungen', 'Interieurdesign'
+        ].includes(subItem.trim()));
+      
+      expandedEquipment.push(...splitItems);
+    } else {
+      // Normalna stavka - dodaj direktno
+      expandedEquipment.push(item);
+    }
+  });
 
-        name: 'Sicherheit & Fahrassistenz',
-       
-        priority: 1,
-        items: [],
-        exactMatches: [
-          'Elektron. Stabilitäts-Programm (ESP)',
-          'Elektronisches Stabilitätsprogramm',
-          'Anti-Blockier-System (ABS)',
-          'Antiblockiersystem',
-          'Fahrassistenzsystem',
-          'pre sense',
-          'Side Assist',
-          'Spurhalteassistent',
-          'Spurwechselassistent',
-          'Notbremsassistent',
-          'Kollisionsvermeidung',
-          'Totwinkelassistent',
-          'Verkehrszeichenerkennung',
-          'Müdigkeitserkennung',
-          'Aufmerksamkeitsassistent'
-        ],
-        keywords: ['Airbag', 'ABS', 'ESP', 'Fahrassistenz', 'Bremsassistent', 'Spurhalte', 'Spurwechsel', 'Notbrems', 'Kollisions', 'Totwinkel', 'Verkehrszeichen', 'Müdigkeits', 'Aufmerksamkeits', 'Sicherheits', 'Gurtstraffer', 'ISOFIX', 'Kindersitz', 'Warnung', 'Überwachung']
-      },
+  console.log(`🏁 Expanded ${equipment.length} items to ${expandedEquipment.length} items`);
+
+  const categories = {
+    safety: {
+      name: 'Sicherheit & Fahrassistenz',
+      priority: 1,
+      items: [],
+      exactMatches: [
+        'Elektron. Stabilitäts-Programm (ESP)',
+        'Elektronisches Stabilitätsprogramm',
+        'Anti-Blockier-System (ABS)',
+        'Antiblockiersystem',
+        'Fahrassistenzsystem',
+        'pre sense',
+        'Side Assist',
+        'Spurhalteassistent',
+        'Spurwechselassistent',
+        'Notbremsassistent',
+        'Kollisionsvermeidung',
+        'Totwinkelassistent',
+        'Verkehrszeichenerkennung',
+        'Müdigkeitserkennung',
+        'Aufmerksamkeitsassistent'
+      ],
+      keywords: ['Airbag', 'ABS', 'ESP', 'Fahrassistenz', 'Bremsassistent', 'Spurhalte', 'Spurwechsel', 'Notbrems', 'Kollisions', 'Totwinkel', 'Verkehrszeichen', 'Müdigkeits', 'Aufmerksamkeits', 'Sicherheits', 'Gurtstraffer', 'ISOFIX', 'Kindersitz', 'Warnung', 'Überwachung']
+    },
+    
+    comfort: {
+      name: 'Komfort & Bedienung',
+      priority: 2,
+      items: [],
+      exactMatches: [
+        'Panorama-Ausstelldach',
+        'Panorama-Schiebedach',
+        'Memory-Funktion',
+        'Memory Paket',
+        'Sitzheizung',
+        'Sitzbelüftung',
+        'Lordosenstütze',
+        'Massage-Funktion',
+        'Keyless Go',
+        'Keyless Entry'
+      ],
+      keywords: ['Klimaautomatik', 'Klimaanlage', 'Sitzheizung', 'Sitzbelüftung', 'elektr', 'Komfort', 'Lenkrad', 'Mittelarmlehne', 'Lordosen', 'Massage', 'Memory', 'beheizbar', 'Tempomat', 'Keyless', 'Regensensor', 'Sensor', 'automatisch', 'Panorama', 'Dach', 'Verdeck']
+    },
+
+    lighting: {
+      name: 'Licht & Sicht',
+      priority: 3,
+      items: [],
+      exactMatches: [
+        'Fernlichtassistent',
+        'Matrix-LED-Scheinwerfer',
+        'Matrix LED',
+        'LED-Scheinwerfer',
+        'Bi-Xenon-Scheinwerfer',
+        'Xenon-Scheinwerfer',
+        'Adaptive Scheinwerfer',
+        'Kurvenlicht',
+        'Abbiegelicht'
+      ],
+      keywords: ['LED', 'Scheinwerfer', 'Tagfahrlicht', 'Fernlicht', 'Matrix', 'Xenon', 'Bi-Xenon', 'Kurvenlicht', 'Abbiegelicht', 'Nebelscheinwerfer', 'Rückfahrlicht', 'Blinker', 'Beleuchtung', 'Licht', 'adaptiv']
+    },
+
+    audio: {
+      name: 'Audio & Konnektivität',
+      priority: 4,
+      items: [],
+      exactMatches: [
+        'MMI Navigation',
+        'Android Auto',
+        'Apple CarPlay',
+        'Bluetooth-Freisprecheinrichtung',
+        'Bang & Olufsen',
+        'Bose Soundsystem',
+        'Harman Kardon'
+      ],
+      keywords: ['Navigation', 'MMI', 'Bluetooth', 'Connect', 'CarPlay', 'Android Auto', 'Soundsystem', 'Radio', 'Lautsprecher', 'Freisprecheinrichtung', 'Telefon', 'USB', 'Multimedia', 'Infotainment', 'Display', 'Touchscreen', 'Audio', 'Musik', 'Streaming']
+    },
+
+    exterior: {
+      name: 'Exterieur & Design',
+      priority: 5,
+      items: [],
+      exactMatches: [
+        'S line Exterieurpaket',
+        'S line Sportpaket',
+        'M Sportpaket',
+        'AMG Line',
+        'Black Edition'
+      ],
+      keywords: ['S line', 'Sportpaket', 'Felgen', 'Lackierung', 'Spoiler', 'Verglasung', 'Dachkanten', 'Exterieur', 'Styling', 'Paket', 'Design', 'Aerodynamik', 'Seitenschutz', 'Türgriff', 'Spiegelgehäuse', 'Dachträger', 'Roof', 'Außenspiegel', 'Schweller', 'Diffusor']
+    },
+
+    drivetrain: {
+      name: 'Antrieb & Fahrwerk',
+      priority: 6,
+      items: [],
+      exactMatches: [
+        'Allradantrieb quattro',
+        'quattro',
+        'xDrive',
+        '4MATIC',
+        'Mild-Hybrid',
+        'Sportfahrwerk',
+        'Adaptive Dämpfer',
+        'Luftfederung'
+      ],
+      keywords: ['Getriebe', 'Automatik', 'Mild-Hybrid', 'Allradantrieb', 'quattro', 'xDrive', '4MATIC', 'Fahrwerk', 'Dämpfer', 'Stabilisator', 'Differential', 'Sportfahrwerk', 'adaptive', 'Luftfederung', 'Niveauregelung', 'Antrieb', 'Motor', 'Turbo']
+    },
+
+    other: {
+      name: 'Weitere Ausstattung',
+      priority: 7,
+      items: [],
+      exactMatches: [],
+      keywords: []
+    }
+  };
+
+  // Category assignment with priority system (highest priority wins)
+  // Use expandedEquipment instead of equipment for Porsche support
+  expandedEquipment.forEach(item => {
+    let assignedCategory = null;
+    let highestPriority = 999;
+    
+    // First check exact matches (highest priority)
+    Object.entries(categories).forEach(([catKey, category]) => {
+      if (catKey === 'other') return;
       
-      comfort: {
-        name: 'Komfort & Bedienung',
+      const itemLower = item.toLowerCase();
+      const exactMatch = category.exactMatches.some(exact => 
+        itemLower.includes(exact.toLowerCase()) || exact.toLowerCase().includes(itemLower)
+      );
       
-        priority: 2,
-        items: [],
-        exactMatches: [
-          'Panorama-Ausstelldach',
-          'Panorama-Schiebedach',
-          'Memory-Funktion',
-          'Memory Paket',
-          'Sitzheizung',
-          'Sitzbelüftung',
-          'Lordosenstütze',
-          'Massage-Funktion',
-          'Keyless Go',
-          'Keyless Entry'
-        ],
-        keywords: ['Klimaautomatik', 'Klimaanlage', 'Sitzheizung', 'Sitzbelüftung', 'elektr', 'Komfort', 'Lenkrad', 'Mittelarmlehne', 'Lordosen', 'Massage', 'Memory', 'beheizbar', 'Tempomat', 'Keyless', 'Regensensor', 'Sensor', 'automatisch', 'Panorama', 'Dach', 'Verdeck']
-      },
-      lighting: {
-        name: 'Licht & Sicht',
-        
-        priority: 3,
-        items: [],
-        exactMatches: [
-          'Fernlichtassistent',
-          'Matrix-LED-Scheinwerfer',
-          'Matrix LED',
-          'LED-Scheinwerfer',
-          'Bi-Xenon-Scheinwerfer',
-          'Xenon-Scheinwerfer',
-          'Adaptive Scheinwerfer',
-          'Kurvenlicht',
-          'Abbiegelicht'
-        ],
-        keywords: ['LED', 'Scheinwerfer', 'Tagfahrlicht', 'Fernlicht', 'Matrix', 'Xenon', 'Bi-Xenon', 'Kurvenlicht', 'Abbiegelicht', 'Nebelscheinwerfer', 'Rückfahrlicht', 'Blinker', 'Beleuchtung', 'Licht', 'adaptiv']
-      },
-      audio: {
-        name: 'Audio & Konnektivität',
-       
-        priority: 4,
-        items: [],
-        exactMatches: [
-          'MMI Navigation',
-          'Android Auto',
-          'Apple CarPlay',
-          'Bluetooth-Freisprecheinrichtung',
-          'Bang & Olufsen',
-          'Bose Soundsystem',
-          'Harman Kardon'
-        ],
-        keywords: ['Navigation', 'MMI', 'Bluetooth', 'Connect', 'CarPlay', 'Android Auto', 'Soundsystem', 'Radio', 'Lautsprecher', 'Freisprecheinrichtung', 'Telefon', 'USB', 'Multimedia', 'Infotainment', 'Display', 'Touchscreen', 'Audio', 'Musik', 'Streaming']
-      },
-      exterior: {
-        name: 'Exterieur & Design',
-      
-        priority: 5,
-        items: [],
-        exactMatches: [
-          'S line Exterieurpaket',
-          'S line Sportpaket',
-          'M Sportpaket',
-          'AMG Line',
-          'Black Edition'
-        ],
-        keywords: ['S line', 'Sportpaket', 'Felgen', 'Lackierung', 'Spoiler', 'Verglasung', 'Dachkanten', 'Exterieur', 'Styling', 'Paket', 'Design', 'Aerodynamik', 'Seitenschutz', 'Türgriff', 'Spiegelgehäuse', 'Dachträger', 'Roof', 'Außenspiegel', 'Schweller', 'Diffusor']
-      },
-      drivetrain: {
-        name: 'Antrieb & Fahrwerk',
-       
-        priority: 6,
-        items: [],
-        exactMatches: [
-          'Allradantrieb quattro',
-          'quattro',
-          'xDrive',
-          '4MATIC',
-          'Mild-Hybrid',
-          'Sportfahrwerk',
-          'Adaptive Dämpfer',
-          'Luftfederung'
-        ],
-        keywords: ['Getriebe', 'Automatik', 'Mild-Hybrid', 'Allradantrieb', 'quattro', 'xDrive', '4MATIC', 'Fahrwerk', 'Dämpfer', 'Stabilisator', 'Differential', 'Sportfahrwerk', 'adaptive', 'Luftfederung', 'Niveauregelung', 'Antrieb', 'Motor', 'Turbo']
-      },
-      other: {
-        name: 'Weitere Ausstattung',
-        
-        priority: 7,
-        items: [],
-        exactMatches: [],
-        keywords: []
+      if (exactMatch && category.priority < highestPriority) {
+        assignedCategory = catKey;
+        highestPriority = category.priority;
       }
-
-    };
-
-    // Category assignment with priority system (highest priority wins)
-    equipment.forEach(item => {
-      let assignedCategory = null;
-      let highestPriority = 999;
-      
-      // First check exact matches (highest priority)
+    });
+    
+    // If no exact match, check keywords with priority
+    if (!assignedCategory) {
       Object.entries(categories).forEach(([catKey, category]) => {
         if (catKey === 'other') return;
         
         const itemLower = item.toLowerCase();
-        const exactMatch = category.exactMatches.some(exact => 
-          itemLower.includes(exact.toLowerCase()) || exact.toLowerCase().includes(itemLower)
+        const keywordMatch = category.keywords.some(keyword => 
+          itemLower.includes(keyword.toLowerCase())
         );
         
-        if (exactMatch && category.priority < highestPriority) {
+        if (keywordMatch && category.priority < highestPriority) {
           assignedCategory = catKey;
           highestPriority = category.priority;
         }
       });
-      
-      // If no exact match, check keywords with priority
-      if (!assignedCategory) {
-        Object.entries(categories).forEach(([catKey, category]) => {
-          if (catKey === 'other') return;
-          
-          const itemLower = item.toLowerCase();
-          const keywordMatch = category.keywords.some(keyword => 
-            itemLower.includes(keyword.toLowerCase())
-          );
-          
-          if (keywordMatch && category.priority < highestPriority) {
-            assignedCategory = catKey;
-            highestPriority = category.priority;
-          }
-        });
-      }
-      
-      // Assign to category (or 'other' if no match)
-      const targetCategory = assignedCategory || 'other';
-      categories[targetCategory].items.push(item);
-    });
+    }
+    
+    // Assign to category (or 'other' if no match)
+    const targetCategory = assignedCategory || 'other';
+    categories[targetCategory].items.push(item);
+  });
 
-    // Return only non-empty categories, sorted by priority
-    return Object.entries(categories)
-      .filter(([key, category]) => category.items.length > 0)
-      .sort(([,a], [,b]) => a.priority - b.priority)
-      .reduce((acc, [key, category]) => {
-        acc[key] = category;
-        return acc;
-      }, {});
-  };
+  // Return only non-empty categories, sorted by priority
+  return Object.entries(categories)
+    .filter(([key, category]) => category.items.length > 0)
+    .sort(([,a], [,b]) => a.priority - b.priority)
+    .reduce((acc, [key, category]) => {
+      acc[key] = category;
+      return acc;
+    }, {});
+};
 
   // PERFORMANCE-OPTIMIZED EQUIPMENT PROCESSOR with Caching
   const processEquipmentData = useCallback((car) => {
@@ -1030,7 +1096,7 @@ export default function CarDetails() {
                   <h2 className="text-2xl font-bold text-white mb-4 lg:mb-0 flex items-center gap-3">
                     <span className="w-1 h-8 bg-gradient-to-b from-red-500 to-red-700 rounded-full"></span>
                     <Award className="w-7 h-7 text-red-400" />
-                    Ausstattung & Features
+                    Ausstattung & Merkmale
                   </h2>
                   
                   {/* Search Bar */}
@@ -1113,7 +1179,7 @@ export default function CarDetails() {
                               <h3 className="text-lg font-semibold text-white">{category.name}</h3>
                             </div>
                             <span className="px-3 py-1 bg-gradient-to-r from-red-600/20 to-red-500/20 text-red-300 text-xs rounded-full font-medium border border-red-600/30">
-                              {category.items.length} Features
+                              {category.items.length} Merkmale
                             </span>
                           </div>
                           {/* Priority Indicator for Premium Categories */}
@@ -1128,64 +1194,59 @@ export default function CarDetails() {
                         <div className="p-6 bg-gradient-to-br from-neutral-900/40 to-black/60">
                           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                             {category.items.map((item, index) => {
-                              // ADVANCED PREMIUM FEATURE DETECTION
-                              const itemLower = item.toLowerCase();
-                              const isPremiumBrand = itemLower.includes('s line') || 
-                                                   itemLower.includes('quattro') || 
-                                                   itemLower.includes('xdrive') || 
-                                                   itemLower.includes('4matic') ||
-                                                   itemLower.includes('amg');
-                              
-                              const isPremiumTech = itemLower.includes('matrix') || 
-                                                  itemLower.includes('led') || 
-                                                  itemLower.includes('adaptive') ||
-                                                  itemLower.includes('assistance') ||
-                                                  itemLower.includes('assistant');
-                              
-                              const isPremiumComfort = itemLower.includes('memory') || 
-                                                     itemLower.includes('massage') || 
-                                                     itemLower.includes('panorama') ||
-                                                     itemLower.includes('belüftung') ||
-                                                     itemLower.includes('alcantara');
-                              
-                              const isPremium = isPremiumBrand || isPremiumTech || isPremiumComfort;
-                              
-                              // Determine quality level for visual hierarchy
-                              let qualityClass = 'bg-neutral-800/30 border-neutral-700/30 hover:border-neutral-600/50';
-                              let iconColor = 'text-red-400';
-                              let textColor = 'text-neutral-200';
-                              let icon = '✓';
-                              
-                              if (isPremiumBrand) {
-                                qualityClass = 'bg-gradient-to-r from-amber-900/30 to-yellow-900/30 border-amber-600/40 hover:border-amber-500/60';
-                                iconColor = 'text-amber-400';
-                                textColor = 'text-amber-100 font-medium';
-                                icon = '★';
-                              } else if (isPremiumTech) {
-                                qualityClass = 'bg-gradient-to-r from-blue-900/20 to-cyan-900/20 border-blue-600/30 hover:border-blue-500/50';
-                                iconColor = 'text-blue-400';
-                                textColor = 'text-blue-100 font-medium';
-                                icon = '◆';
-                              } else if (isPremiumComfort) {
-                                qualityClass = 'bg-gradient-to-r from-purple-900/20 to-indigo-900/20 border-purple-600/30 hover:border-purple-500/50';
-                                iconColor = 'text-purple-400';
-                                textColor = 'text-purple-100 font-medium';
-                                icon = '♦';
-                              }
-                              
-                              return (
-                                <div
-                                  key={index}
-                                  className={`flex items-start gap-3 text-sm py-3 px-4 rounded-lg border transition-all duration-300 transform-gpu will-change-transform ${qualityClass}`}
-                                >
-                                  <span className={`mt-0.5 flex-shrink-0 text-sm ${iconColor}`}>
-                                    {icon}
-                                  </span>
-                                  <span className={`leading-relaxed ${textColor}`}>
-                                    {item}
-                                  </span>
-                                </div>
-                              );
+                         // ADVANCED PREMIUM FEATURE DETECTION
+const itemLower = item.toLowerCase();
+const isPremiumBrand = itemLower.includes('s line') || 
+                     itemLower.includes('quattro') || 
+                     itemLower.includes('xdrive') || 
+                     itemLower.includes('4matic') ||
+                     itemLower.includes('amg');
+
+const isPremiumTech = itemLower.includes('matrix') || 
+                    itemLower.includes('led') || 
+                    itemLower.includes('adaptive') ||
+                    itemLower.includes('assistance') ||
+                    itemLower.includes('assistant');
+
+const isPremiumComfort = itemLower.includes('memory') || 
+                       itemLower.includes('massage') || 
+                       itemLower.includes('panorama') ||
+                       itemLower.includes('belüftung') ||
+                       itemLower.includes('alcantara');
+
+const isPremium = isPremiumBrand || isPremiumTech || isPremiumComfort;
+
+// 🎯 UNIFIED CHECKMARK SYSTEM - VŠETCI SU ZELENI CHECKMARK
+let qualityClass = 'bg-neutral-800/30 border-neutral-700/30 hover:border-neutral-600/50';
+let iconColor = 'text-red-400'; // 🔴 SVÍM CRVENO
+let textColor = 'text-neutral-200';
+
+// Premium styling samo za pozadinu
+if (isPremiumBrand) {
+  qualityClass = 'bg-gradient-to-r from-amber-900/30 to-yellow-900/30 border-amber-600/40 hover:border-amber-500/60';
+  textColor = 'text-amber-100 font-medium';
+} else if (isPremiumTech) {
+  qualityClass = 'bg-gradient-to-r from-blue-900/20 to-cyan-900/20 border-blue-600/30 hover:border-blue-500/50';
+  textColor = 'text-blue-100 font-medium';
+} else if (isPremiumComfort) {
+  qualityClass = 'bg-gradient-to-r from-purple-900/20 to-indigo-900/20 border-purple-600/30 hover:border-purple-500/50';
+  textColor = 'text-purple-100 font-medium';
+}
+
+return (
+  <div
+    key={index}
+    className={`flex items-start gap-3 text-sm py-3 px-4 rounded-lg border transition-all duration-300 transform-gpu will-change-transform ${qualityClass}`}
+  >
+    <span className={`mt-0.5 flex-shrink-0 text-sm ${iconColor}`}>
+      ✓
+    </span>
+    <span className={`leading-relaxed ${textColor}`}>
+      {item}
+    </span>
+  </div>
+);
+
                             })}
                           </div>
                         </div>
@@ -1362,3 +1423,4 @@ export default function CarDetails() {
     </div>
   )
 }
+//cardetails
