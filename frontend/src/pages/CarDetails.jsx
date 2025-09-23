@@ -744,7 +744,7 @@ export default function CarDetails() {
 
     // Fallback: description field
     if (equipment.length === 0 && car.description) {
-      equipment = parseEquipmentList(car.description)
+      equipment = parseEquipmentList(car.description.replace(/&amp;/g, '&').replace(/&quot;/g, '"'))
     }
 
     // Final deduplication pass (belt and suspenders approach)
@@ -850,7 +850,7 @@ export default function CarDetails() {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div>
               <h1 className="text-2xl lg:text-4xl font-bold text-white mb-2">
-                {car.make} {car.modelDescription.replace(/&amp;/g, '&')}
+                {car.make} {car.modelDescription.replace(/&amp;/g, '&').replace(/&quot;/g, '"')}
               </h1>
               <p className="text-lg lg:text-xl text-neutral-400">
                 {car.year} • {formatMileage(car.mileage)} • {car.fuel}

@@ -707,7 +707,7 @@ export default function CarsPage() {
                       {/* Car Info */}
                       <div className="p-5 bg-gradient-to-b from-gray-900 to-black flex-1">
                         <h3 className="text-sm font-bold text-white group-hover:text-red-400 transition-colors mb-2 line-clamp-2">
-                          {car.make} {car.modelDescription.replace(/&amp;/g, '&')}
+                          {car.make} {car.modelDescription.replace(/&amp;/g, '&').replace(/&quot;/g, '"')}
                         </h3>
                         {/* Main Details */}
                         <div className="grid grid-cols-2 gap-2 mb-3 text-xs">
@@ -739,9 +739,7 @@ export default function CarsPage() {
                           </div>
                           <div className="text-center bg-red-900/20 px-1 py-1 rounded border border-red-500/20">
                             <div className="text-xs text-red-400 font-medium">Leistung</div>
-                            <div className="text-xs text-red-300 font-bold">
-                              {formatPower(car.power)}
-                            </div>
+                            <div className="text-xs text-red-300 font-bold">{formatPower(car.power)}</div>
                           </div>
                         </div>
 
@@ -749,7 +747,6 @@ export default function CarsPage() {
                         {(car.doors || car.seats || car.driveType) && (
                           <div className="flex flex-wrap gap-2 mb-3">
                             {car.doors && (
-  
                               <span className="bg-gray-800 text-gray-300 px-2 py-1 rounded text-xs">{car.doors}</span>
                             )}
                             {car.seats && (

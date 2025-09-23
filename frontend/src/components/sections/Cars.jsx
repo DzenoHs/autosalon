@@ -190,7 +190,7 @@ const Cars = () => {
                   <div className="mb-1">
                     <h3 className="text-xl font-bold text-white group-hover:text-amber-400 transition-colors truncate flex items-center gap-2">
                       <Award className="w-5 h-5 text-amber-500" />
-                      {car.make} {car.modelDescription?.replace(/&amp;/g, '&')}
+                      {car.make} {car.modelDescription?.replace(/&amp;/g, '&').replace(/&quot;/g, '"')}
                     </h3>
                   </div>
 
@@ -216,7 +216,7 @@ const Cars = () => {
                         <div className="text-xs text-neutral-500">Getriebe</div>
                       </div>
                     </div>
-                    
+
                     {/* Second Row */}
                     <div className="grid grid-cols-3 gap-1 mt-1">
                       <div className="text-center bg-neutral-800/60 rounded p-1 border border-neutral-600/30">
@@ -226,12 +226,16 @@ const Cars = () => {
                       </div>
                       <div className="text-center bg-gradient-to-r from-red-900/40 to-red-800/40 rounded p-1 border border-red-500/20">
                         <Calendar className="w-3 h-3 text-red-400 mx-auto mb-0.5" />
-                        <div className="text-xs text-red-300 font-bold text-center">{car.year || (car.firstRegistration ? car.firstRegistration.substring(0, 4) : 'N/A')}</div>
+                        <div className="text-xs text-red-300 font-bold text-center">
+                          {car.year || (car.firstRegistration ? car.firstRegistration.substring(0, 4) : 'N/A')}
+                        </div>
                         <div className="text-xs text-red-400 text-center">Baujahr</div>
                       </div>
                       <div className="text-center bg-neutral-800/60 rounded p-1 border border-neutral-600/30">
                         <Zap className="w-3 h-3 text-amber-400 mx-auto mb-0.5" />
-                        <div className="text-xs text-neutral-300 font-medium text-center" style={{fontSize: '12px'}}>{formatPower(car.power)}</div>
+                        <div className="text-xs text-neutral-300 font-medium text-center" style={{fontSize: '12px'}}>
+                          {formatPower(car.power)}
+                        </div>
                         <div className="text-xs text-neutral-500 text-center">Leistung</div>
                       </div>
                     </div>
