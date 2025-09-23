@@ -749,6 +749,7 @@ export default function CarsPage() {
                         {(car.doors || car.seats || car.driveType) && (
                           <div className="flex flex-wrap gap-2 mb-3">
                             {car.doors && (
+  
                               <span className="bg-gray-800 text-gray-300 px-2 py-1 rounded text-xs">{car.doors}</span>
                             )}
                             {car.seats && (
