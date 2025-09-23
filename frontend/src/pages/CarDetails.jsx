@@ -857,7 +857,7 @@ export default function CarDetails() {
               </p>
             </div>
 
-            <div className="flex items-center gap-4">
+            {/* <div className="flex items-center gap-4">
               <button className="p-3 bg-neutral-800 hover:bg-neutral-700 rounded-xl border border-neutral-600 transition-colors duration-300 transform-gpu">
                 <Heart size={24} className="text-neutral-400" />
               </button>
@@ -865,7 +865,7 @@ export default function CarDetails() {
               <button className="p-3 bg-neutral-800 hover:bg-neutral-700 rounded-xl border border-neutral-600 transition-colors duration-300 transform-gpu">
                 <Share2 size={24} className="text-neutral-400" />
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
