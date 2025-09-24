@@ -18,7 +18,7 @@ export default function VideosSection({ car }) {
   const videoRef = useRef(null)
   const thumbnailRefs = useRef([])
 
-  const videos = [
+  const Videos = [
     { src: herovideo1 },
     { src: herovideo2 },
     { src: herovideo3 }
@@ -109,7 +109,7 @@ export default function VideosSection({ car }) {
             <video
               ref={videoRef}
               className="absolute inset-0 w-full h-full object-cover"
-              src={videos[currentVideo].src}
+              src={Videos[currentVideo].src}
               muted={isMuted}
               loop
               playsInline
@@ -179,7 +179,7 @@ export default function VideosSection({ car }) {
 
       {/* Clean Video Thumbnails */}
       <div className="grid grid-cols-3 gap-3 md:gap-6 max-w-4xl mx-auto">
-        {videos.map((video, index) => (
+        {Videos.map((video, index) => (
           <button
             key={index}
             onClick={() => switchVideo(index)}

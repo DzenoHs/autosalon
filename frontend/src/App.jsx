@@ -13,8 +13,8 @@ import CarDetails from './pages/CarDetails';
 import CarsPage from './pages/CarsPage';
 import BuyCarPage from './pages/buycarpage';
 import WhyChooseUs from './components/sections/WhyChooseUs';
+import VideosSection from './components/sections/Videos';
 
-import VideosSection from './components/sections/videos';
 function App() {
   return (
     
