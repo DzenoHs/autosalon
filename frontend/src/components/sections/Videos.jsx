@@ -1,10 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { Play, Pause, Volume2, VolumeX, RotateCcw } from 'lucide-react'
+import { Play, Pause, Volume2, VolumeX, RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react'
 
 // Simple direct imports
 import herovideo1 from '/assets/herovideo1.mp4'
 import herovideo2 from '/assets/herovideo2.mp4'
 import herovideo3 from '/assets/herovideo3.mp4'
+import herovideo4 from '/assets/herovideo4.mp4'
+import herovideo5 from '/assets/herovideo5.mp4'
+import herovideo6 from '/assets/herovideo6.mp4'
+import herovideo7 from '/assets/herovideo7.mp4'
 
 export default function VideosSection({ car }) {
   const [currentVideo, setCurrentVideo] = useState(0)
@@ -12,8 +16,10 @@ export default function VideosSection({ car }) {
   const [isMuted, setIsMuted] = useState(true)
   const [progress, setProgress] = useState(0)
   const [hoveredVideo, setHoveredVideo] = useState(null)
+  const [scrollPosition, setScrollPosition] = useState(0)
   const videoRef = useRef(null)
   const thumbnailRefs = useRef([])
+  const scrollContainerRef = useRef(null)
 
   const videos = [
     { 
@@ -27,6 +33,22 @@ export default function VideosSection({ car }) {
     { 
       src: herovideo3, 
       name: "911 GT3 RS"
+    },
+    { 
+      src: herovideo4, 
+      name: "AMG S 63 E Performance"
+    },
+    { 
+      src: herovideo5, 
+      name: "RS6 Avant C8"
+    },
+    { 
+      src: herovideo6, 
+      name: "G-Class 4×4²"
+    },
+    { 
+      src: herovideo7, 
+      name: "GLS 63 AMG"
     }
   ]
 
@@ -98,169 +120,284 @@ export default function VideosSection({ car }) {
     }
   }
 
+  const scrollThumbnails = (direction) => {
+    const container = scrollContainerRef.current
+    if (container) {
+      const scrollAmount = 300
+      const newPosition = direction === 'left' 
+        ? Math.max(0, scrollPosition - scrollAmount)
+        : Math.min(container.scrollWidth - container.clientWidth, scrollPosition + scrollAmount)
+      
+      container.scrollTo({
+        left: newPosition,
+        behavior: 'smooth'
+      })
+      setScrollPosition(newPosition)
+    }
+  }
+
   return (
-    <div className="relative bg-black rounded-3xl p-4 md:p-8 overflow-hidden">
-      {/* German Title */}
-      <div className="relative mb-6 md:mb-8 text-center">
-        <h2 className="text-2xl md:text-4xl font-bold text-red-500 mb-2">
-          Car-Impressionen
-        </h2>
-      </div>
+    <div 
+      className="relative"
+      style={{
+        isolation: 'isolate'
+      }}
+    >
+      <div 
+        className="relative bg-black rounded-3xl p-4 md:p-8"
+        style={{
+          overflow: 'hidden',
+          WebkitBackfaceVisibility: 'hidden',
+          backfaceVisibility: 'hidden',
+          transform: 'translateZ(0)',
+          WebkitTransform: 'translateZ(0)',
+          WebkitClipPath: 'inset(0)',
+          clipPath: 'inset(0)',
+          backgroundClip: 'padding-box',
+          WebkitBackgroundClip: 'padding-box'
+        }}
+      >
+        {/* German Title */}
+        <div className="relative mb-6 md:mb-8 text-center">
+          <h2 className="text-2xl md:text-4xl font-bold text-red-500 mb-2">
+            Car-Impressionen
+          </h2>
+          <p className="text-neutral-400 text-sm md:text-base">
+            {videos.length} Premium Fahrzeuge
+          </p>
+        </div>
 
-      {/* Optimized Video Player for Better Quality */}
-      <div className="relative mb-6 md:mb-8">
-        <div className="relative w-full max-w-4xl mx-auto bg-neutral-900 rounded-2xl md:rounded-3xl overflow-hidden group shadow-2xl shadow-black/50">
-          {/* Narrower aspect ratio for better quality - 18:9 instead of 21:9 */}
-          <div className="relative aspect-video md:aspect-[18/9] overflow-hidden">
-            <video
-              ref={videoRef}
-              className="absolute inset-0 w-full h-full object-cover"
-              src={videos[currentVideo].src}
-              muted={isMuted}
-              loop
-              playsInline
-              onPlay={() => setIsPlaying(true)}
-              onPause={() => setIsPlaying(false)}
-            />
+        {/* Optimized Video Player with Fixed Overflow */}
+        <div className="relative mb-6 md:mb-8">
+          <div 
+            className="relative w-full max-w-4xl mx-auto bg-neutral-900 rounded-2xl md:rounded-3xl group shadow-2xl shadow-black/50"
+            style={{
+              overflow: 'hidden',
+              isolation: 'isolate'
+            }}
+          >
+            <div 
+              className="relative aspect-video md:aspect-[18/9]"
+              style={{
+                overflow: 'hidden'
+              }}
+            >
+              <video
+                ref={videoRef}
+                className="absolute inset-0 w-full h-full object-cover"
+                src={videos[currentVideo].src}
+                muted={isMuted}
+                loop
+                playsInline
+                onPlay={() => setIsPlaying(true)}
+                onPause={() => setIsPlaying(false)}
+                style={{
+                  borderRadius: 'inherit',
+                  objectFit: 'cover'
+                }}
+              />
 
-            {/* Enhanced Cinematic Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/25 to-transparent"></div>
-            
-            {/* Progress Bar */}
-            <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-black/60">
-              <div 
-                className="h-full bg-gradient-to-r from-red-500 to-red-400 transition-all duration-300 shadow-lg shadow-red-500/50"
-                style={{ width: `${progress}%` }}
-              ></div>
-            </div>
+              {/* Enhanced Cinematic Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/25 to-transparent"></div>
+              
+              {/* Progress Bar */}
+              <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-black/60">
+                <div 
+                  className="h-full bg-gradient-to-r from-red-500 to-red-400 transition-all duration-300 shadow-lg shadow-red-500/50"
+                  style={{ width: `${progress}%` }}
+                ></div>
+              </div>
 
-            {/* Center Play Button */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500">
-              <button
-                onClick={handlePlay}
-                className="w-14 h-14 md:w-20 md:h-20 bg-white/15 backdrop-blur-md rounded-full flex items-center justify-center hover:bg-white/25 transition-all duration-300 hover:scale-110 border border-white/30 shadow-xl"
-              >
-                {isPlaying ? (
-                  <Pause className="w-6 h-6 md:w-10 md:h-10 text-white" />
-                ) : (
-                  <Play className="w-6 h-6 md:w-10 md:h-10 text-white ml-1" />
-                )}
-              </button>
-            </div>
+              {/* Center Play Button */}
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500">
+                <button
+                  onClick={handlePlay}
+                  className="w-14 h-14 md:w-20 md:h-20 bg-white/15 backdrop-blur-md rounded-full flex items-center justify-center hover:bg-white/25 transition-all duration-300 hover:scale-110 border border-white/30 shadow-xl"
+                >
+                  {isPlaying ? (
+                    <Pause className="w-6 h-6 md:w-10 md:h-10 text-white" />
+                  ) : (
+                    <Play className="w-6 h-6 md:w-10 md:h-10 text-white ml-1" />
+                  )}
+                </button>
+              </div>
 
-            {/* Refined Car Info Layout */}
-            <div className="absolute bottom-4 md:bottom-8 left-4 md:left-8 right-4 md:right-8">
-              <div className="flex items-end justify-between">
-                <div className="flex-1">
-                  <div className="mb-3 md:mb-4">
-                    <h3 className="text-white font-bold text-lg md:text-2xl mb-1 leading-tight drop-shadow-lg">
-                      {videos[currentVideo].name}
-                    </h3>
+              {/* Refined Car Info Layout */}
+              <div className="absolute bottom-4 md:bottom-8 left-4 md:left-8 right-4 md:right-8">
+                <div className="flex items-end justify-between">
+                  <div className="flex-1">
+                    <div className="mb-3 md:mb-4">
+                      <h3 className="text-white font-bold text-lg md:text-2xl mb-1 leading-tight drop-shadow-lg">
+                        {videos[currentVideo].name}
+                      </h3>
+                      <p className="text-white/70 text-sm md:text-base">
+                        Video {currentVideo + 1} von {videos.length}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                
-                <div className="flex items-center gap-2 md:gap-3 ml-4">
-                  <button
-                    onClick={handleRestart}
-                    className="w-9 h-9 md:w-11 md:h-11 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-black/70 transition-all duration-300 border border-white/30 shadow-lg"
-                    title="Neu starten"
-                  >
-                    <RotateCcw className="w-4 h-4 md:w-5 md:h-5 text-white" />
-                  </button>
-                  <button
-                    onClick={handleMute}
-                    className="w-9 h-9 md:w-11 md:h-11 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-black/70 transition-all duration-300 border border-white/30 shadow-lg"
-                    title={isMuted ? "Ton einschalten" : "Ton ausschalten"}
-                  >
-                    {isMuted ? (
-                      <VolumeX className="w-4 h-4 md:w-5 md:h-5 text-white" />
-                    ) : (
-                      <Volume2 className="w-4 h-4 md:w-5 md:h-5 text-white" />
-                    )}
-                  </button>
+                  
+                  <div className="flex items-center gap-2 md:gap-3 ml-4">
+                    <button
+                      onClick={handleRestart}
+                      className="w-9 h-9 md:w-11 md:h-11 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-black/70 transition-all duration-300 border border-white/30 shadow-lg"
+                      title="Neu starten"
+                    >
+                      <RotateCcw className="w-4 h-4 md:w-5 md:h-5 text-white" />
+                    </button>
+                    <button
+                      onClick={handleMute}
+                      className="w-9 h-9 md:w-11 md:h-11 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-black/70 transition-all duration-300 border border-white/30 shadow-lg"
+                      title={isMuted ? "Ton einschalten" : "Ton ausschalten"}
+                    >
+                      {isMuted ? (
+                        <VolumeX className="w-4 h-4 md:w-5 md:h-5 text-white" />
+                      ) : (
+                        <Volume2 className="w-4 h-4 md:w-5 md:h-5 text-white" />
+                      )}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Compact Video Thumbnails */}
-      <div className="grid grid-cols-3 gap-3 md:gap-6 max-w-3xl mx-auto">
-        {videos.map((video, index) => (
+        {/* Fixed Scrollable Video Thumbnails */}
+        <div className="relative">
+          {/* Scroll Navigation Buttons */}
           <button
-            key={index}
-            onClick={() => switchVideo(index)}
-            onMouseEnter={() => handleThumbnailHover(index, true)}
-            onMouseLeave={() => handleThumbnailHover(index, false)}
-            className={`relative group transition-all duration-500 ${
-              index === currentVideo 
-                ? 'scale-105' 
-                : 'hover:scale-102'
-            }`}
+            onClick={() => scrollThumbnails('left')}
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 md:w-12 md:h-12 bg-black/60 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-black/80 transition-all duration-300 border border-white/20 shadow-lg -ml-2"
           >
-            <div className={`relative aspect-video rounded-xl md:rounded-2xl overflow-hidden border-2 transition-all duration-500 ${
-              index === currentVideo 
-                ? 'border-red-500 shadow-lg shadow-red-500/40' 
-                : 'border-neutral-700 hover:border-neutral-500'
-            }`}>
-              
-              <video
-                ref={el => thumbnailRefs.current[index] = el}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                src={video.src}
-                muted
-                playsInline
-              />
-              
-              {/* Enhanced Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/35 to-transparent"></div>
-
-              {/* Clean Car Names */}
-              <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4">
-                <h4 className="text-white font-bold text-xs md:text-sm text-center leading-tight drop-shadow-md">
-                  {video.name}
-                </h4>
-              </div>
-
-              {/* Play Icon on Hover */}
-              {hoveredVideo === index && index !== currentVideo && (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-8 h-8 md:w-12 md:h-12 bg-white/25 backdrop-blur-sm rounded-full flex items-center justify-center animate-pulse shadow-xl">
-                    <Play className="w-4 h-4 md:w-6 md:h-6 text-white ml-0.5" />
-                  </div>
-                </div>
-              )}
-
-              {/* Active Indicator */}
-              {index === currentVideo && (
-                <div className="absolute top-2 md:top-3 right-2 md:right-3">
-                  <div className="w-2 h-2 md:w-3 md:h-3 bg-red-500 rounded-full animate-pulse shadow-lg shadow-red-500/50"></div>
-                </div>
-              )}
-            </div>
+            <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-white" />
           </button>
-        ))}
-      </div>
+          <button
+            onClick={() => scrollThumbnails('right')}
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 md:w-12 md:h-12 bg-black/60 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-black/80 transition-all duration-300 border border-white/20 shadow-lg -mr-2"
+          >
+            <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-white" />
+          </button>
 
-      {/* Progress Indicator */}
-      <div className="flex items-center justify-center mt-6 md:mt-8">
-        <div className="flex items-center gap-3 md:gap-4 bg-neutral-800/70 rounded-full px-4 md:px-6 py-2 md:py-3 border border-neutral-700 shadow-lg">
-          <div className="flex gap-1.5 md:gap-2">
-            {videos.map((_, index) => (
-              <div
+          {/* Scrollable Container with Fixed Overflow */}
+          <div 
+            ref={scrollContainerRef}
+            className="flex gap-3 md:gap-4 pb-2 px-8"
+            style={{
+              overflowX: 'auto',
+              overflowY: 'hidden',
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+              WebkitOverflowScrolling: 'touch'
+            }}
+          >
+            {videos.map((video, index) => (
+              <button
                 key={index}
-                className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full transition-all duration-300 ${
+                onClick={() => switchVideo(index)}
+                onMouseEnter={() => handleThumbnailHover(index, true)}
+                onMouseLeave={() => handleThumbnailHover(index, false)}
+                className={`relative group transition-all duration-500 flex-shrink-0 ${
                   index === currentVideo 
-                    ? 'bg-red-500 w-6 md:w-8 shadow-lg shadow-red-500/50' 
-                    : 'bg-neutral-400'
+                    ? 'scale-105' 
+                    : 'hover:scale-102'
                 }`}
-              ></div>
+              >
+                <div 
+                  className={`relative w-48 md:w-56 aspect-video rounded-xl md:rounded-2xl border-2 transition-all duration-500 ${
+                    index === currentVideo 
+                      ? 'border-red-500 shadow-lg shadow-red-500/40' 
+                      : 'border-neutral-700 hover:border-neutral-500'
+                  }`}
+                  style={{
+                    overflow: 'hidden',
+                    isolation: 'isolate'
+                  }}
+                >
+                  
+                  <video
+                    ref={el => thumbnailRefs.current[index] = el}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    src={video.src}
+                    muted
+                    playsInline
+                    style={{
+                      borderRadius: 'inherit'
+                    }}
+                  />
+                  
+                  {/* Enhanced Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/35 to-transparent"></div>
+
+                  {/* Car Names */}
+                  <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4">
+                    <h4 className="text-white font-bold text-xs md:text-sm text-center leading-tight drop-shadow-md">
+                      {video.name}
+                    </h4>
+                  </div>
+
+                  {/* Video Number */}
+                  <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-sm rounded-full w-6 h-6 md:w-8 md:h-8 flex items-center justify-center">
+                    <span className="text-white text-xs md:text-sm font-bold">{index + 1}</span>
+                  </div>
+
+                  {/* Play Icon on Hover */}
+                  {hoveredVideo === index && index !== currentVideo && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-8 h-8 md:w-12 md:h-12 bg-white/25 backdrop-blur-sm rounded-full flex items-center justify-center animate-pulse shadow-xl">
+                        <Play className="w-4 h-4 md:w-6 md:h-6 text-white ml-0.5" />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Active Indicator */}
+                  {index === currentVideo && (
+                    <div className="absolute top-2 md:top-3 right-2 md:right-3">
+                      <div className="w-2 h-2 md:w-3 md:h-3 bg-red-500 rounded-full animate-pulse shadow-lg shadow-red-500/50"></div>
+                    </div>
+                  )}
+                </div>
+              </button>
             ))}
           </div>
-          
+        </div>
+
+        {/* Progress Indicator */}
+        <div className="flex items-center justify-center mt-6 md:mt-8">
+          <div className="flex items-center gap-3 md:gap-4 bg-neutral-800/70 rounded-full px-4 md:px-6 py-2 md:py-3 border border-neutral-700 shadow-lg">
+            <div className="flex gap-1.5 md:gap-2">
+              {videos.map((_, index) => (
+                <div
+                  key={index}
+                  className={`w-1 h-1 md:w-1.5 md:h-1.5 rounded-full transition-all duration-300 ${
+                    index === currentVideo 
+                      ? 'bg-red-500 w-6 md:w-8 shadow-lg shadow-red-500/50' 
+                      : 'bg-neutral-400'
+                  }`}
+                ></div>
+              ))}
+            </div>
+            <div className="w-px h-3 md:h-4 bg-neutral-600"></div>
+            <span className="text-neutral-300 text-xs md:text-sm font-medium">
+              {currentVideo + 1}/{videos.length}
+            </span>
+          </div>
         </div>
       </div>
+
+      {/* CSS Styles */}
+      <style jsx>{`
+        div[ref] {
+          -webkit-overflow-scrolling: touch;
+        }
+        div[ref]::-webkit-scrollbar {
+          display: none;
+        }
+        @media screen and (-webkit-min-device-pixel-ratio: 0) {
+          div[style*="overflow: hidden"] {
+            -webkit-mask-image: -webkit-radial-gradient(white, black);
+          }
+        }
+      `}</style>
     </div>
   )
 }
