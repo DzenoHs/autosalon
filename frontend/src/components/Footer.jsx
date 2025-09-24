@@ -47,6 +47,11 @@ export default function Footer() {
             </div>
           </div>
         </div>
+        <div className="mt-8 text-center text-gray-500 text-sm">
+          <a href="/datenschutzerklarung" className="hover:text-red-500 transition underline mx-2">Datenschutzerklärung</a>
+          |
+          <a href="/impressum" className="hover:text-red-500 transition underline mx-2">Impressum</a>
+        </div>
         
         <div className="border-t border-gray-800 pt-8 mt-8 text-center text-gray-400">
           <p>&copy; 2025 Autohausmiftari. Alle Rechte vorbehalten.</p>
