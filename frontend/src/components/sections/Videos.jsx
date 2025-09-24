@@ -232,7 +232,7 @@ export default function VideosSection({ car }) {
       <div className="flex items-center justify-center mt-6 md:mt-8">
         <div className="flex items-center gap-3 md:gap-4 bg-neutral-800/60 rounded-full px-4 md:px-6 py-2 md:py-3 border border-neutral-700">
           <div className="flex gap-1.5 md:gap-2">
-            {videos.map((_, index) => (
+            {Videos.map((_, index) => (
               <div
                 key={index}
                 className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full transition-all duration-300 ${
@@ -245,7 +245,7 @@ export default function VideosSection({ car }) {
           </div>
           <div className="w-px h-3 md:h-4 bg-neutral-600"></div>
           <span className="text-neutral-300 text-xs md:text-sm font-medium">
-            {currentVideo + 1}/{videos.length}
+            {currentVideo + 1}/{Videos.length}
           </span>
         </div>
       </div>
