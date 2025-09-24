@@ -155,9 +155,7 @@ export default function VideosSection() {
                   <h3 className="text-white font-bold text-lg md:text-xl mb-1">
                     {videos[currentVideo].name}
                   </h3>
-                  <p className="text-white/70 text-sm">
-                    Video {currentVideo + 1} von {videos.length}
-                  </p>
+                
                 </div>
                 
                 <div className="flex gap-2">
