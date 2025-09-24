@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {motion} from 'framer-motion'
+import {motion, AnimatePresence} from 'framer-motion'
 
 import autokuca1 from '/assets/autokuca1.jpg'
 import autokuca2 from '/assets/autokuca2.jpg'
@@ -23,7 +23,7 @@ export default function Hero() {
           }
           resolve()
         }
-        img.onerror = () => resolve() // Still resolve on error
+        img.onerror = () => resolve()
         img.src = image
       })
     })
@@ -43,7 +43,7 @@ export default function Hero() {
       }, 4000)
 
       return () => clearInterval(interval)
-    }, 500) // 500ms delay before starting
+    }, 500)
 
     return () => clearTimeout(timeout)
   }, [images.length, imagesLoaded])
@@ -58,46 +58,70 @@ export default function Hero() {
   }
 
   return (
-    <section id="hero" className="relative h-screen flex items-center justify-center bg-black overflow-hidden">
-      {/* iOS Optimized Background Images */}
-      <div className="absolute inset-0">
-        {images.map((image, index) => (
+    <section 
+      id="hero" 
+      className="relative h-screen flex items-center justify-center bg-black overflow-hidden"
+      style={{
+        isolation: 'isolate', // Create stacking context
+        willChange: 'auto' // Don't keep hardware acceleration active
+      }}
+    >
+      {/* FIXED: Static Background Container - No Framer Motion */}
+      <div 
+        className="absolute inset-0"
+        style={{
+          backfaceVisibility: 'hidden',
+          WebkitBackfaceVisibility: 'hidden',
+          transform: 'translate3d(0, 0, 0)', // Single hardware acceleration
+          WebkitTransform: 'translate3d(0, 0, 0)',
+          transformStyle: 'preserve-3d',
+          WebkitTransformStyle: 'preserve-3d'
+        }}
+      >
+        {/* Use AnimatePresence for smoother transitions */}
+        <AnimatePresence mode="wait">
           <motion.img
-            key={`hero-image-${index}`}
-            src={image}
-            alt={`Auto kuća ${index + 1}`}
+            key={currentImageIndex} // Force re-mount on change
+            src={images[currentImageIndex]}
+            alt={`Auto kuća ${currentImageIndex + 1}`}
             className="absolute inset-0 w-full h-full object-cover"
-            initial={{opacity: 0}}
-            animate={{
-              opacity: currentImageIndex === index ? 1 : 0
-            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{
-              opacity: {
-                duration: 1.5, 
-                ease: [0.4, 0, 0.2, 1] // Custom easing for iOS
-              }
+              duration: 1.2,
+              ease: "easeInOut"
             }}
             style={{
-              willChange: 'opacity',
+              // CRITICAL: Remove hardware acceleration from individual images
+              willChange: 'opacity', // Only animate opacity
               backfaceVisibility: 'hidden',
               WebkitBackfaceVisibility: 'hidden',
-              perspective: 1000,
-              WebkitPerspective: 1000,
-              transform: 'translateZ(0)', // Force hardware acceleration
-              WebkitTransform: 'translateZ(0)',
-              imageRendering: 'optimizeQuality',
-              WebkitImageRendering: 'optimizeQuality'
+              // Remove transform properties that cause flicker
+              imageRendering: 'auto', // Let browser decide
+              WebkitImageRendering: 'auto'
             }}
-            // Prevent iOS Safari from optimizing images aggressively
             loading="eager"
-            decoding="sync"
+            decoding="async" // Changed from sync to async
           />
-        ))}
-        <div className="absolute inset-0 bg-black/50 z-[1]"></div>
+        </AnimatePresence>
+        
+        <div 
+          className="absolute inset-0 bg-black/50 z-[1]"
+          style={{
+            // Static overlay - no animation properties
+            pointerEvents: 'none'
+          }}
+        ></div>
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 text-center px-6">
+      {/* Content - Separate stacking context */}
+      <div 
+        className="relative z-10 text-center px-6"
+        style={{
+          isolation: 'isolate' // Separate rendering layer
+        }}
+      >
         <motion.div 
           initial={{opacity: 0, y: 50}} 
           animate={{opacity: 1, y: 0}} 
@@ -148,20 +172,23 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* iOS Optimized Image Indicators */}
+      {/* Fixed Image Indicators - No Framer Motion */}
       <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-10">
         <div className="flex gap-3">
           {images.map((_, index) => (
             <button
               key={`indicator-${index}`}
               onClick={() => setCurrentImageIndex(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-500 ${
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
                 currentImageIndex === index 
                   ? 'bg-red-500 w-8' 
                   : 'bg-white/40 hover:bg-white/60'
               }`}
               style={{
-                WebkitTapHighlightColor: 'transparent'
+                WebkitTapHighlightColor: 'transparent',
+                // Remove hardware acceleration from buttons
+                transform: 'none',
+                WebkitTransform: 'none'
               }}
             />
           ))}
@@ -181,6 +208,31 @@ export default function Hero() {
           </div>
         </div>
       </motion.div>
+
+      {/* iOS Safari Specific Fixes */}
+      <style jsx>{`
+        /* Disable hardware acceleration on static elements */
+        section#hero * {
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* Force consistent rendering */
+        @media screen and (-webkit-min-device-pixel-ratio: 0) {
+          section#hero {
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+          }
+        }
+        
+        /* Prevent iOS Safari from optimizing images */
+        @supports (-webkit-appearance: none) {
+          img {
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: optimize-contrast;
+          }
+        }
+      `}</style>
     </section>
   )
 }
