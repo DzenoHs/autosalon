@@ -225,7 +225,7 @@ export default function WhyChooseUs() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="mt-16 lg:mt-22 pt-13 lg:pt-16 border-t-2 border-neutral-700"
+          className="mt-24 lg:mt-28 pt-10 lg:pt-16 border-t-2 border-neutral-700"
         >
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-10">
             {[

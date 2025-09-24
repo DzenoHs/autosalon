@@ -41,8 +41,12 @@ export default function Footer() {
           <div>
             <h4 className="text-lg font-bold mb-4">KONTAKT</h4>
             <div className="space-y-2 text-gray-400">
-              <p>📞 +49 174 7692697</p>
-              <p>✉️ info@autohaus-miftari.de</p>
+              <p>
+                📞 <a href="tel:+491747692697" className="hover:text-red-400 underline">+49 174 7692697</a>
+              </p>
+              <p>
+                ✉️ <a href="mailto:info@autohaus-miftari.de" className="hover:text-red-400 underline">info@autohaus-miftari.de</a>
+              </p>
               <p>📍 Niestetalstraße 11, 34266 Niestetal, Germany</p>
             </div>
           </div>
