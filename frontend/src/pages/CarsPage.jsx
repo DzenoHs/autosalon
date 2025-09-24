@@ -251,7 +251,7 @@ export default function CarsPage() {
   const formatPower = (powerKw) => {
     if (!powerKw) return 'N/A'
     const ps = Math.round(powerKw * 1.35962)
-    return `${powerKw} kW (${ps} PS)`
+    return `${powerKw} kW(${ps} PS)`
   }
 
   // Format HU (Hauptuntersuchung) date
@@ -586,7 +586,7 @@ export default function CarsPage() {
 
           {/* Year Range */}
           <div>
-            <label className="block text-sm font-medium text-red-300 mb-2">Baujahr</label>
+            <label className="block text-sm font-medium text-red-300 mb-2">Erstzulassung</label>
             <div className="grid grid-cols-2 gap-3">
               <input
                 type="text"
@@ -732,7 +732,7 @@ export default function CarsPage() {
                         {/* Year and Power Info */}
                         <div className="grid grid-cols-2 gap-1 mb-2">
                           <div className="text-center bg-red-900/20 px-1 py-1 rounded border border-red-500/20">
-                            <div className="text-xs text-red-400 font-medium">Baujahr</div>
+                            <div className="text-xs text-red-400 font-medium">Erstzulassung</div>
                             <div className="text-xs text-red-300 font-bold">
                               {car.year || (car.firstRegistration ? car.firstRegistration.substring(0, 4) : 'N/A')}
                             </div>
@@ -749,7 +749,6 @@ export default function CarsPage() {
                         {(car.doors || car.seats || car.driveType) && (
                           <div className="flex flex-wrap gap-2 mb-3">
                             {car.doors && (
-  
                               <span className="bg-gray-800 text-gray-300 px-2 py-1 rounded text-xs">{car.doors}</span>
                             )}
                             {car.seats && (

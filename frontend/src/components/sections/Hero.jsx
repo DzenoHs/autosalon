@@ -1,13 +1,23 @@
 import React, {useState, useEffect} from 'react'
 import {motion} from 'framer-motion'
-import autokuca1 from '../../../assets/autokuca1.jpg'
-import autokuca2 from '../../../assets/autokuca2.jpg'
+
+import autokuca1 from '/assets/autokuca1.jpg'
+import autokuca2 from '/assets/autokuca2.jpg'
+import heroslika2 from '/assets/heroslika2.jpeg'
 
 export default function Hero() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
-  const images = [autokuca1, autokuca2]
+  const images = [autokuca1, autokuca2, heroslika2]
 
-  // Rotate images every 3 seconds
+  // Preload images to prevent flickering
+  useEffect(() => {
+    images.forEach((image) => {
+      const img = new Image()
+      img.src = image
+    })
+  }, [])
+
+  // Rotate images every 4 seconds with smoother transition
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length)
@@ -18,33 +28,48 @@ export default function Hero() {
 
   return (
     <section id="hero" className="relative h-screen flex items-center justify-center bg-black overflow-hidden">
-      {/* Background Images */}
+      {/* Background Images with improved transitions */}
       <div className="absolute inset-0">
         {images.map((image, index) => (
           <motion.img
-            key={index}
+            key={`hero-image-${index}`}
             src={image}
             alt={`Auto kuća ${index + 1}`}
             className="absolute inset-0 w-full h-full object-cover"
-            initial={{opacity: 0}}
+            initial={{opacity: 0, scale: 1.05}}
             animate={{
-              opacity: currentImageIndex === index ? 1 : 0
+              opacity: currentImageIndex === index ? 1 : 0,
+              scale: currentImageIndex === index ? 1 : 1.05
             }}
-            transition={{duration: 1, ease: 'easeInOut'}}
+            transition={{
+              opacity: {duration: 1.2, ease: 'easeInOut'},
+              scale: {duration: 8, ease: 'linear'}
+            }}
+            style={{
+              willChange: 'opacity, transform',
+              backfaceVisibility: 'hidden',
+              perspective: 1000
+            }}
           />
         ))}
-        <div className="absolute inset-0 bg-black/50"></div>
+        <div className="absolute inset-0 bg-black/50 z-[1]"></div>
       </div>
 
       {/* Content */}
       <div className="relative z-10 text-center px-6">
-        <motion.div initial={{opacity: 0, y: 50}} animate={{opacity: 1, y: 0}} transition={{duration: 1, delay: 0.5}}>
+        <motion.div 
+          initial={{opacity: 0, y: 50}} 
+          animate={{opacity: 1, y: 0}} 
+          transition={{duration: 1, delay: 0.5}}
+        >
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-6 leading-tight">
             <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
               FINDEN SIE IHR
             </span>
             <br />
-            <span className="bg-gradient-to-r from-red-500 to-yellow-500 bg-clip-text text-transparent">TRAUMAUTO</span>
+            <span className="bg-gradient-to-r from-red-500 to-yellow-500 bg-clip-text text-transparent">
+              TRAUMAUTO
+            </span>
           </h1>
         </motion.div>
 
@@ -82,12 +107,29 @@ export default function Hero() {
         </motion.div>
       </div>
 
+      {/* Image Indicators */}
+      <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-10">
+        <div className="flex gap-3">
+          {images.map((_, index) => (
+            <button
+              key={`indicator-${index}`}
+              onClick={() => setCurrentImageIndex(index)}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                currentImageIndex === index 
+                  ? 'bg-red-500 w-8' 
+                  : 'bg-white/40 hover:bg-white/60'
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+
       {/* Scroll Indicator */}
       <motion.div
         initial={{opacity: 0}}
         animate={{opacity: 1}}
         transition={{delay: 2, duration: 1}}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10"
       >
         <div className="animate-bounce">
           <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">

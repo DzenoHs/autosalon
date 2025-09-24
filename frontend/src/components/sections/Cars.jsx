@@ -227,7 +227,7 @@ const Cars = () => {
                       <div className="text-center bg-gradient-to-r from-red-900/40 to-red-800/40 rounded p-1 border border-red-500/20">
                         <Calendar className="w-3 h-3 text-red-400 mx-auto mb-0.5" />
                         <div className="text-xs text-red-300 font-bold text-center">{car.year || (car.firstRegistration ? car.firstRegistration.substring(0, 4) : 'N/A')}</div>
-                        <div className="text-xs text-red-400 text-center">Baujahr</div>
+                        <div className="text-xs text-red-400 text-center">Erstzulassung</div>
                       </div>
                       <div className="text-center bg-neutral-800/60 rounded p-1 border border-neutral-600/30">
                         <Zap className="w-3 h-3 text-amber-400 mx-auto mb-0.5" />

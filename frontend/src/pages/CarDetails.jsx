@@ -711,15 +711,7 @@ const parseEquipmentList = (plainTextDescription) => {
               </p>
             </div>
 
-            <div className="flex items-center gap-4">
-              <button className="p-3 bg-neutral-800 hover:bg-neutral-700 rounded-xl border border-neutral-600 transition-colors duration-300 transform-gpu">
-                <Heart size={24} className="text-neutral-400" />
-              </button>
-
-              <button className="p-3 bg-neutral-800 hover:bg-neutral-700 rounded-xl border border-neutral-600 transition-colors duration-300 transform-gpu">
-                <Share2 size={24} className="text-neutral-400" />
-              </button>
-            </div>
+            
           </div>
         </div>
       </div>
@@ -897,7 +889,7 @@ const parseEquipmentList = (plainTextDescription) => {
                 <div className="text-sm sm:text-lg font-bold text-white">
                   {car.firstRegistration ? car.firstRegistration.substring(0, 4) : 'N/A'}
                 </div>
-                <div className="text-xs text-neutral-400">Baujahr</div>
+                <div className="text-xs text-neutral-400">Erstzulassung</div>
               </div>
 
               <div className="text-center p-2 sm:p-3 bg-black/40 rounded-lg border border-red-600/20">

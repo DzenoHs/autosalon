@@ -14,6 +14,7 @@ import CarsPage from './pages/CarsPage';
 import BuyCarPage from './pages/buycarpage';
 import WhyChooseUs from './components/sections/WhyChooseUs';
 
+import VideosSection from './components/sections/videos';
 function App() {
   return (
     
@@ -24,6 +25,7 @@ function App() {
           <div className="min-h-screen bg-neutral-900 text-white">
             <Header />
             <Hero />
+<VideosSection />
             <Cars />
             <Brands />
             <BuyingProcess />
