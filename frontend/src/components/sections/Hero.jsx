@@ -7,28 +7,59 @@ import heroslika2 from '/assets/heroslika2.jpeg'
 
 export default function Hero() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [imagesLoaded, setImagesLoaded] = useState(false)
   const images = [autokuca1, autokuca2, heroslika2]
 
-  // Preload images to prevent flickering
+  // Enhanced image preloading for iOS
   useEffect(() => {
-    images.forEach((image) => {
-      const img = new Image()
-      img.src = image
+    let loadedCount = 0
+    const imagePromises = images.map((image) => {
+      return new Promise((resolve) => {
+        const img = new Image()
+        img.onload = () => {
+          loadedCount++
+          if (loadedCount === images.length) {
+            setImagesLoaded(true)
+          }
+          resolve()
+        }
+        img.onerror = () => resolve() // Still resolve on error
+        img.src = image
+      })
+    })
+    
+    Promise.all(imagePromises).then(() => {
+      setImagesLoaded(true)
     })
   }, [])
 
-  // Rotate images every 4 seconds with smoother transition
+  // Delayed start for iOS stability
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length)
-    }, 4000)
+    if (!imagesLoaded) return
 
-    return () => clearInterval(interval)
-  }, [images.length])
+    const timeout = setTimeout(() => {
+      const interval = setInterval(() => {
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length)
+      }, 4000)
+
+      return () => clearInterval(interval)
+    }, 500) // 500ms delay before starting
+
+    return () => clearTimeout(timeout)
+  }, [images.length, imagesLoaded])
+
+  // Don't render until images are loaded
+  if (!imagesLoaded) {
+    return (
+      <section id="hero" className="relative h-screen flex items-center justify-center bg-black overflow-hidden">
+        <div className="text-white text-xl">Loading...</div>
+      </section>
+    )
+  }
 
   return (
     <section id="hero" className="relative h-screen flex items-center justify-center bg-black overflow-hidden">
-      {/* Background Images with improved transitions */}
+      {/* iOS Optimized Background Images */}
       <div className="absolute inset-0">
         {images.map((image, index) => (
           <motion.img
@@ -36,20 +67,30 @@ export default function Hero() {
             src={image}
             alt={`Auto kuća ${index + 1}`}
             className="absolute inset-0 w-full h-full object-cover"
-            initial={{opacity: 0, scale: 1.05}}
+            initial={{opacity: 0}}
             animate={{
-              opacity: currentImageIndex === index ? 1 : 0,
-              scale: currentImageIndex === index ? 1 : 1.05
+              opacity: currentImageIndex === index ? 1 : 0
             }}
             transition={{
-              opacity: {duration: 1.2, ease: 'easeInOut'},
-              scale: {duration: 8, ease: 'linear'}
+              opacity: {
+                duration: 1.5, 
+                ease: [0.4, 0, 0.2, 1] // Custom easing for iOS
+              }
             }}
             style={{
-              willChange: 'opacity, transform',
+              willChange: 'opacity',
               backfaceVisibility: 'hidden',
-              perspective: 1000
+              WebkitBackfaceVisibility: 'hidden',
+              perspective: 1000,
+              WebkitPerspective: 1000,
+              transform: 'translateZ(0)', // Force hardware acceleration
+              WebkitTransform: 'translateZ(0)',
+              imageRendering: 'optimizeQuality',
+              WebkitImageRendering: 'optimizeQuality'
             }}
+            // Prevent iOS Safari from optimizing images aggressively
+            loading="eager"
+            decoding="sync"
           />
         ))}
         <div className="absolute inset-0 bg-black/50 z-[1]"></div>
@@ -107,18 +148,21 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* Image Indicators */}
+      {/* iOS Optimized Image Indicators */}
       <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-10">
         <div className="flex gap-3">
           {images.map((_, index) => (
             <button
               key={`indicator-${index}`}
               onClick={() => setCurrentImageIndex(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              className={`w-3 h-3 rounded-full transition-all duration-500 ${
                 currentImageIndex === index 
                   ? 'bg-red-500 w-8' 
                   : 'bg-white/40 hover:bg-white/60'
               }`}
+              style={{
+                WebkitTapHighlightColor: 'transparent'
+              }}
             />
           ))}
         </div>
