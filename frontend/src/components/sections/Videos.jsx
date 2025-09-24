@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Play, Pause, Volume2, VolumeX, RotateCcw } from 'lucide-react'
 
+
+
+ //solved the error
 // Simple direct imports
 import herovideo1 from '/assets/herovideo1.mp4'
 import herovideo2 from '/assets/herovideo2.mp4'
