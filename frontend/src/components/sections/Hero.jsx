@@ -70,7 +70,9 @@ export default function Hero() {
             style={{
               backgroundImage: `url(${image})`,
             }}
-          />
+          >
+            <img src={image} alt={`Hero ${index+1}`} loading="lazy" style={{display: 'none'}} />
+          </div>
         ))}
         <div className="absolute inset-0 bg-black/50 z-[1]"></div>
       </div>

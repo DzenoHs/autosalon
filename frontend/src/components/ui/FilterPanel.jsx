@@ -638,6 +638,24 @@ const FilterPanel = ({ isOpen, onToggle, allCars, filteredCars, applyFilters, re
               </div>
             </div>
           )}
+          {/* Dugme za resetovanje filtera */}
+          <div className="mt-6 flex justify-end">
+            <button
+              className="bg-gray-700 hover:bg-gray-800 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-all duration-300 mr-3"
+              onClick={resetFilters}
+            >
+              <FaTimes className="inline mr-2" /> Filter zurücksetzen
+            </button>
+            <button
+              className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-all duration-300"
+              onClick={() => {
+                applyFilters();
+                if (onToggle) onToggle();
+              }}
+            >
+              <FaSearch className="inline mr-2" /> Suchen
+            </button>
+          </div>
         </div>
 
       </div>

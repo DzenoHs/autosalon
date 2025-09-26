@@ -658,9 +658,18 @@ export default function CarsPage() {
           {/* Reset Button */}
           <button
             onClick={resetFilters}
-            className="w-full py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:from-red-700 hover:to-red-800 transition-all transform hover:scale-105 shadow-lg shadow-red-600/30 font-medium"
+            className="w-full py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:from-red-700 hover:to-red-800 transition-all transform hover:scale-105 shadow-lg shadow-red-600/30 font-medium mb-3"
           >
             Filter zurücksetzen
+          </button>
+          <button
+            onClick={() => {
+              applyFilters(filters);
+              setIsFilterOpen(false);
+            }}
+            className="w-full py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all transform hover:scale-105 shadow-lg shadow-red-600/30 font-medium"
+          >
+            <FaSearch className="inline mr-2" /> Suchen
           </button>
         </div>
       </div>
