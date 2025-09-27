@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react'
 
-import autokuca1 from '/assets/autokuca1.jpg'
+import autokuca1 from '/assets/autokuca1.webp'
 import autokuca2 from '/assets/autokuca2.jpg'
-import heroslika2 from '/assets/heroslika2.jpeg'
+import heroslika2 from '/assets/heroslika2.webp'
 
 export default function Hero() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
