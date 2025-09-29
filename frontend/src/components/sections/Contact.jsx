@@ -1,5 +1,6 @@
 import {useState} from 'react'
 import {Phone, Mail, Send, User, MessageSquare} from 'lucide-react'
+import mobileApiService from '../../services/mobileApiService'
 
 export default function Contact() {
   const [form, setForm] = useState({
@@ -33,11 +34,24 @@ export default function Contact() {
       setErrors(newErrors)
       return
     }
+
     setIsSubmitting(true)
-    await new Promise((r) => setTimeout(r, 1000))
-    alert('Nachricht erfolgreich gesendet!')
-    setForm({name: '', email: '', message: ''})
-    setIsSubmitting(false)
+    try {
+      await mobileApiService.sendContactData({
+        name: form.name,
+        email: form.email,
+        message: form.message
+      })
+      alert('Nachricht erfolgreich gesendet!')
+      setForm({name: '', email: '', message: ''})
+    } catch (error) {
+      console.error(
+        'Fehler beim Senden der Nachricht:',
+        error
+      )('Fehler beim Senden der Nachricht. Bitte versuchen Sie es erneut.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (

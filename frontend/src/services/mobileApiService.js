@@ -568,6 +568,34 @@ class MobileApiService {
     }
   }
 
+  async sendContactData({ name, email, message }) {
+    try {
+      console.log(`📨 Sende Kontaktformular: ${name}, ${email}`);
+
+      const url = `${this.proxyUrl}/api/send`;
+      console.log('📡 Kontaktformular-URL:', url);
+
+      const response = await axios.post(
+        url,
+        { name, email, message },
+        {
+          timeout: 15000,
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      console.log('✅ Antwort vom Server:', response.data);
+
+      return response.data;
+    } catch (error) {
+      console.error('Kontaktformular Fehler:', error);
+      throw error;
+    }
+  }
+
   // Status provjera
   // getStatus() {
   //   return {

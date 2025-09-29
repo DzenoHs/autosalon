@@ -7,6 +7,21 @@ import { topExpensiveCars } from './controllers/topExpensiveCars.js';
 import { clearCache, getCacheStats } from './utils/cache.js';
 import morgan from 'morgan';
 import { getCarsFuel, getCarsGearbox, getCarsMake, getCarsModels } from './controllers/filters.js';
+import './utils/cron.js';
+import { initDb } from './utils/db.js';
+import { checkCarsAndPostToInstagram } from './utils/postToInstagramCheck.js';
+import { sendEmail } from './controllers/sendEmail.js';
+// import { postInstagramCarousel } from './utils/postToInstagram.js';
+
+// postInstagramCarousel({
+//   imageUrls: ["https://img.classistatic.de/api/v1/mo-prod/images/87/87d862ac-b0bf-4941-b0a9-36b3c85c58e8?rule=mo-1600.jpg",
+//     "https://img.classistatic.de/api/v1/mo-prod/images/38/38ef9b4b-2de3-4128-a158-f1a7ef432af8?rule=mo-1600.jpg"],
+//   caption: "PORSCHE 992 911 GT3 RS Clubsport Matrix Lift Ceramic Käf"
+// })
+
+checkCarsAndPostToInstagram()
+
+initDb()
 
 const app = express();
 const PORT = process.env.PORT || 5003;
@@ -35,7 +50,7 @@ app.options('*', (req, res) => {
 });
 
 //Basic Rate limit
-// checkRateLimit()
+
 
 app.get('/', (req, res) => {
   res.status(200).send('Backend is running!!!');
@@ -49,6 +64,7 @@ app.get("/api/cars/gearbox", getCarsGearbox)
 app.get("/api/cars/fuel", getCarsFuel)
 app.get("/api/cars/top/expensive", topExpensiveCars);
 app.get("/api/cars/:id", getCarById);
+app.post("/api/send", sendEmail)
 
 // Cache management endpoints
 app.get("/api/cache/stats", getCacheStats);

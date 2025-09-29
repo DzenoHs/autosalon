@@ -44,7 +44,7 @@ export const cars = async (req, res) => {
 
     const { allCars, totalCount } = await fetchCarsFromMobileAPI(apiParams, 5); // Fetch up to 5 pages
     const cars = allCars.slice(0, requestedPageSize);
-
+    console.log(totalCount)
     const responseData = {
       success: true,
       total: totalCount || cars.length,
