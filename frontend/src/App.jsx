@@ -16,12 +16,15 @@ import WhyChooseUs from './components/sections/WhyChooseUs';
 import VideosSection from './components/sections/Videos';
 import Datenschutzerklarung from './pages/Datenschutzerklarung';
 import Impressum from './pages/Impressum';
+import CookiePolicy from './pages/CookiePolicy';
+import { CookieConsentProvider } from './hooks/useCookieConsent.jsx';
+import CookieBanner from './components/cookies/CookieBanner';
+import CookieFloatingButton from './components/cookies/CookieFloatingButton';
 
 function App() {
   return (
-    
- 
-    <Router>
+    <CookieConsentProvider>
+      <Router>
       <Routes>
         <Route path="/" element={
           <div className="min-h-screen bg-neutral-900 text-white">
@@ -42,8 +45,14 @@ function App() {
         <Route path="/kako-kupiti" element={<BuyCarPage />} />
   <Route path="/datenschutzerklarung" element={<Datenschutzerklarung />} />
   <Route path="/impressum" element={<Impressum />} />
+  <Route path="/cookie-policy" element={<CookiePolicy />} />
       </Routes>
+      
+      {/* Global Cookie Components */}
+      <CookieBanner />
+      <CookieFloatingButton />
     </Router>
+    </CookieConsentProvider>
   );
 }
 

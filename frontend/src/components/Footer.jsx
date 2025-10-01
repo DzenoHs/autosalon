@@ -55,6 +55,8 @@ export default function Footer() {
           <a href="/datenschutzerklarung" className="hover:text-red-500 transition underline mx-2">Datenschutzerklärung</a>
           |
           <a href="/impressum" className="hover:text-red-500 transition underline mx-2">Impressum</a>
+          |
+          <a href="/cookie-policy" className="hover:text-red-500 transition underline mx-2">Cookie-Richtlinie</a>
         </div>
         
         <div className="border-t border-gray-800 pt-8 mt-8 text-center text-gray-400">
