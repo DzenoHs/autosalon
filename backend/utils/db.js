@@ -1,8 +1,11 @@
 import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
 
+const dbPath = path.resolve(__dirname, 'utils', 'postedMedia.db');
+console.log("DB path:", dbPath); // Debugging
+
 const dbPromise = open({
-  filename: './utils/postedMedia.db',
+  filename: dbPath,
   driver: sqlite3.Database
 });
 
