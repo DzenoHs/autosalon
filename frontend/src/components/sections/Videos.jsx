@@ -102,7 +102,7 @@ export default function VideosSection() {
     <div className="bg-black rounded-3xl p-6 md:p-8">
       {/* Simple Title */}
       <div className="text-center mb-6">
-        <h2 className="text-2xl md:text-4xl font-bold text-red-500 mb-2">
+        <h2 className="text-2xl md:text-4xl font-bold text-white mb-2">
           Car-Impressionen
         </h2>
         <p className="text-neutral-400 text-sm md:text-base">

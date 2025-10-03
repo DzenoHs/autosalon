@@ -65,10 +65,10 @@ export default function WhyChooseUs() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            <span className="bg-gradient-to-r from-red-500 via-yellow-500 to-red-600 bg-clip-text text-transparent drop-shadow-2xl">
+            <span className="text-white drop-shadow-2xl">
               WARUM
             </span>
-            <span className="bg-gradient-to-r from-yellow-500 via-red-500 to-orange-600 bg-clip-text text-transparent ml-4">
+            <span className="text-white ml-4">
               MIFTARI?
             </span>
           </motion.h2>
@@ -82,7 +82,7 @@ export default function WhyChooseUs() {
           />
           
           <motion.p 
-            className="text-gray-300 text-lg md:text-xl max-w-3xl mx-auto font-medium"
+            className="text-white text-lg md:text-xl max-w-3xl mx-auto font-medium"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -266,7 +266,7 @@ export default function WhyChooseUs() {
                 </motion.div>
                 
                 <motion.div 
-                  className={`text-3xl lg:text-5xl font-black bg-gradient-to-r ${stat.color} bg-clip-text text-transparent mb-2 leading-none transition-transform duration-300`}
+                  className="text-3xl lg:text-5xl font-black text-white mb-2 leading-none transition-transform duration-300"
                   animate={{
                     scale: hoveredStat === index ? 1.1 : 1
                   }}
@@ -276,10 +276,7 @@ export default function WhyChooseUs() {
                 </motion.div>
                 
                 <motion.div 
-                  className="text-xs lg:text-base font-bold tracking-wider transition-colors duration-300"
-                  animate={{
-                    color: hoveredStat === index ? 'rgb(255 255 255)' : 'rgb(156 163 175)'
-                  }}
+                  className="text-xs lg:text-base font-bold tracking-wider text-white transition-colors duration-300"
                 >
                   {stat.label}
                 </motion.div>

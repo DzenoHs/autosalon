@@ -72,12 +72,12 @@ export default function Contact() {
         {/* Title */}
         <div className="text-center mb-14">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-black mb-4 tracking-tight leading-none">
-            <span className="bg-gradient-to-r from-red-500 via-yellow-500 to-red-600 bg-clip-text text-transparent drop-shadow-2xl">
+            <span className="text-white drop-shadow-2xl">
               KONTAKT
             </span>
           </h2>
           <div className="h-1 bg-gradient-to-r from-red-500 via-yellow-500 to-red-500 mx-auto mb-4 rounded-full shadow-lg w-28" />
-          <p className="text-gray-300 text-base md:text-lg max-w-2xl mx-auto font-medium">
+          <p className="text-white text-base md:text-lg max-w-2xl mx-auto font-medium">
             <span className="text-transparent bg-gradient-to-r from-gray-200 to-gray-400 bg-clip-text">
               Ihr Traumauto wartet auf Sie - Kontaktieren Sie uns jetzt!
             </span>

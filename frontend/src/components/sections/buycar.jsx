@@ -67,7 +67,7 @@ export default function BuyingProcessStrip() {
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white tracking-tight mb-4 sm:mb-6 bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">
             Wie Sie bei uns ein Auto kaufen
           </h2>
-          <p className="text-gray-300 text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed px-4">
+          <p className="text-white text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed px-4">
             Vier einfache Schritte zu Ihrem Traumfahrzeug – transparent, sicher und professionell
           </p>
         </div>
@@ -106,7 +106,7 @@ export default function BuyingProcessStrip() {
                 {/* Step Content */}
                 <div className="mt-6 text-center max-w-[12rem] lg:max-w-[14rem]">
                   <h3 className="text-lg lg:text-xl font-bold text-white mb-2 font-sans">{step.title}</h3>
-                  <p className="text-gray-300 text-sm lg:text-base leading-relaxed">{step.description}</p>
+                  <p className="text-white text-sm lg:text-base leading-relaxed">{step.description}</p>
                 </div>
               </div>
             ))}
@@ -139,7 +139,7 @@ export default function BuyingProcessStrip() {
                   {/* Content */}
                   <div className="flex-1 min-w-0">
                     <h3 className="text-xl font-bold text-white mb-2">{step.title}</h3>
-                    <p className="text-gray-300 text-sm leading-relaxed">{step.shortDesc}</p>
+                    <p className="text-white text-sm leading-relaxed">{step.shortDesc}</p>
                   </div>
                 </div>
               </div>

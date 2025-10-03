@@ -37,6 +37,7 @@ export const getCarById = async (req, res) => {
       responseTime: Date.now() - startTime,
       timestamp: new Date().toISOString(),
     });
+    
   } catch (error) {
     console.error('❌ Error fetching car by ID:', error);
     res.status(500).json({

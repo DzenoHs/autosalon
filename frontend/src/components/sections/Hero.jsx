@@ -90,7 +90,7 @@ export default function Hero() {
             </span>
           </h1>
 
-          <p className="text-lg sm:text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed px-4">
+          <p className="text-lg sm:text-xl md:text-2xl text-white mb-8 max-w-2xl mx-auto leading-relaxed px-4">
             Premium-Fahrzeuge für diejenigen, die das Beste verdienen
           </p>
 
