@@ -55,19 +55,19 @@ function generateInstagramCaption(car) {
 
   return `
 🚗 ${car.make} ${car.model} ${car.trimLine || ''}
-💶 Preis: ${formatPrice(car.price?.consumerPriceGross)}
+💶 Preis Brutto: ${formatPrice(car.price?.consumerPriceGross)}
+💶 Preis Netto: ${formatPrice(car.price?.consumerPriceNet)}
 📅 Erstzulassung: ${firstReg}
 📊 Laufleistung: ${car.mileage?.toLocaleString('de-DE')} km
 ⚙️ Getriebe: ${formatGearbox(car.gearbox)}
 ⛽ Kraftstoff: ${mapFuel(car.fuel)}
-🧠 Leistung: ${car.power} kW / ${Math.round(car.power * 1.341)} PS
+⚡️ Leistung: ${car.power} kW / ${Math.round(car.power * 1.341)} PS
 
-👉 Jetzt entdecken:  
-${car.detailPageUrl}
-https://autohausmiftari.com/car/${car.mobileAdId}
+👉 Jetzt entdecken:
+https://autohausmiftari.de/car/${car.mobileAdId}
 
 📞 Autohaus MIFTARI: +49 174 7692697  
-🌍 www.autohausmiftari.com
+🌍 www.autohausmiftari.de
 
 #${car.make} #${car.model} #UsedCars #GermanyCars
 `;
