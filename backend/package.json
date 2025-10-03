@@ -15,6 +15,7 @@
     "express",
     "automotive"
   ],
+  "type": "module",
   "author": "GM-TOP-CARS",
   "license": "MIT",
   "dependencies": {
