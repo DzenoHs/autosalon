@@ -1,5 +1,6 @@
 import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
+import path from 'path';
 
 const dbPath = path.resolve(__dirname, 'utils', 'postedMedia.db');
 console.log("DB path:", dbPath); // Debugging
