@@ -88,7 +88,7 @@ export default function BrandShowcase() {
       </div>
 
       {/* CSS Keyframes za marquee */}
-      <style jsx="true">{`
+      <style jsx>{`
         @keyframes marquee {
           0% {
             transform: translateX(0%);
