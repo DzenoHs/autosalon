@@ -99,7 +99,7 @@ const Cars = () => {
       <div className="container mx-auto px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-5xl lg:text-6xl font-bold text-white mb-4">
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
             <span className="text-white">
               Exklusive
             </span>

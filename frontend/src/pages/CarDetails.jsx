@@ -38,6 +38,7 @@ export default function CarDetails() {
   const [showImageModal, setShowImageModal] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
 
+
   // Fetch car details
   useEffect(() => {
     const fetchCarDetails = async () => {
@@ -1009,23 +1010,11 @@ export default function CarDetails() {
                   </button>
 
                   <button
-                    className="w-full bg-gradient-to-r from-neutral-700 to-neutral-800 hover:from-neutral-600 hover:to-neutral-700 text-white py-3 px-4 rounded-lg font-medium transition-colors duration-300 flex items-center justify-center gap-3 text-sm lg:text-base transform-gpu"
-                    onClick={() => {
-                      if (car.seller?.email) {
-                        const subject = encodeURIComponent(`Anfrage zu ${car.make} ${car.model}`)
-                        const body = encodeURIComponent(
-                          `Hallo,\n\nich interessiere mich für Ihr Fahrzeug:\n${car.make} ${
-                            car.model
-                          }\nPreis: ${formatPrice(
-                            car.price
-                          )}\n\nBitte kontaktieren Sie mich für weitere Informationen.\n\nMit freundlichen Grüßen`
-                        )
-                        window.location.href = `mailto:${car.seller.email}?subject=${subject}&body=${body}`
-                      }
-                    }}
+                    className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-3 px-4 rounded-lg font-medium transition-colors duration-300 flex items-center justify-center gap-3 text-sm lg:text-base transform-gpu"
+                    onClick={() => navigate(`/car-message/${car.mobileAdId}`)}
                   >
                     <Mail size={20} />
-                    Nachricht senden
+                    Inzahlungnahme
                   </button>
                 </div>
               </div>
@@ -1600,6 +1589,8 @@ export default function CarDetails() {
           </div>
         </div>
       )}
+
+
     </div>
   )
 }
