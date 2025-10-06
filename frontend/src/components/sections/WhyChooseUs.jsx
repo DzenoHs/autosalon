@@ -229,13 +229,13 @@ export default function WhyChooseUs() {
         >
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-10">
             {[
-              { number: '500+', label: 'ZUFRIEDENE KUNDEN', icon: <Users size={26} />, color: 'from-green-400 to-emerald-600' },
-              { number: '15+', label: 'JAHRE ERFAHRUNG', icon: <Award size={26} />, color: 'from-blue-400 to-cyan-600' },
-              { number: '400+', label: 'FAHRZEUGE', icon: <Car size={26} />, color: 'from-purple-400 to-pink-600' },
+              { number: '6000+', label: 'ZUFRIEDENE KUNDEN', icon: <Users size={26} />, color: 'from-green-400 to-emerald-600' },
+              { number: '30+', label: 'JAHRE ERFAHRUNG', icon: <Award size={26} />, color: 'from-blue-400 to-cyan-600' },
+              { number: '150+', label: 'FAHRZEUGBESTAND', icon: <Car size={26} />, color: 'from-purple-400 to-pink-600' },
               { number: '24/7', label: 'SUPPORT', icon: <Clock size={26} />, color: 'from-orange-400 to-red-600' }
             ].map((stat, index) => (
               <motion.div
-                key={index}
+                key={index} 
                 initial={{ opacity: 0, scale: 0.6 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}

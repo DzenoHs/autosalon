@@ -189,11 +189,11 @@ export default function Contact() {
                 +49 174 7692697
               </a>
               <a
-                href="mailto:info@autohaus-miftari.de"
+                href="mailto:info@autohausmiftari.de"
                 className="flex items-center justify-center gap-2 text-blue-500 hover:text-blue-400 transition-colors break-all"
               >
                 <Mail size={24} />
-                info@autohaus-miftari.de
+                info@autohausmiftari.de
               </a>
             </div>
           </div>

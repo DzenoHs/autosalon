@@ -106,7 +106,8 @@ export default function CarDetails() {
       return `${power.kw} kW (${power.hp} PS)`
     }
     if (typeof power === 'number') {
-      return `${power} kW`
+      const ps = Math.round(power * 1.35962)
+      return `${power}kW(${ps}PS)`
     }
     return 'k.A.'
   }
@@ -866,6 +867,29 @@ export default function CarDetails() {
               </h1>
               <p className="text-lg lg:text-xl text-neutral-400">
                 {car.year} • {formatMileage(car.mileage)} • {car.fuel}
+                {/* Additional Technical Specifications in same line */}
+                {car.firstRegistration && ` • Erstzulassung: ${(() => {
+                  const dateStr = car.firstRegistration.toString();
+                  if (dateStr.length === 6) {
+                    const year = dateStr.substring(0, 4);
+                    return year;
+                  }
+                  return dateStr.substring(0, 4) || 'N/A';
+                })()}`}
+                {car.power && ` • ${formatPower(car.power)}`}
+                {car.gearbox && ` • Getriebe: ${car.gearbox === 'MANUAL_GEAR' ? 'Manuell' : 'Automatik'}`}
+                {car.numberOfPreviousOwners !== undefined && ` • Vorbesitzer: ${car.numberOfPreviousOwners}`}
+                {car.generalInspection && ` • TÜV bis: ${(() => {
+                  const dateStr = car.generalInspection.toString();
+                  if (dateStr.length === 6) {
+                    const year = dateStr.substring(0, 4);
+                    const month = dateStr.substring(4, 6);
+                    return `${month}/${year}`;
+                  }
+                  return dateStr;
+                })()}`}
+                {car.numberOfDoors && ` • Türen: ${car.numberOfDoors}`}
+                {car.color && ` • Farbe: ${car.color}`}
               </p>
             </div>
 
@@ -1002,11 +1026,11 @@ export default function CarDetails() {
                   <button
                     className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white py-3 px-4 rounded-lg font-medium transition-colors duration-300 flex items-center justify-center gap-3 shadow-lg text-sm lg:text-base transform-gpu"
                     onClick={() => {
-                      window.location.href = `tel:+4917476926697`
+                      window.location.href = `tel:+491747692697`
                     }}
                   >
                     <Phone size={20} />
-                    +49 174 7692697
+                    Anrufen
                   </button>
 
                   <button
@@ -1014,7 +1038,7 @@ export default function CarDetails() {
                     onClick={() => navigate(`/car-message/${car.mobileAdId}`)}
                   >
                     <Mail size={20} />
-                    Inzahlungnahme
+                    BEWERTUNGSFORMULAR
                   </button>
                 </div>
               </div>
@@ -1049,7 +1073,18 @@ export default function CarDetails() {
                   </div>
                   <div className="flex justify-between py-3 border-b border-neutral-700/50">
                     <span className="text-neutral-400 font-medium">Erstzulassung:</span>
-                    <span className="text-white">{car.firstRegistration || (car.year ? `01.${car.year}` : 'N/A')}</span>
+                    <span className="text-white">{car.firstRegistration ? 
+                      (() => {
+                        const dateStr = car.firstRegistration.toString();
+                        if (dateStr.length === 6) {
+                          // Format YYYYMM -> YYYY/MM
+                          const year = dateStr.substring(0, 4);
+                          const month = dateStr.substring(4, 6);
+                          return `${year}/${month}`;
+                        }
+                        return dateStr;
+                      })() : 
+                      (car.year ? `${car.year}/01` : 'N/A')}</span>
                   </div>
                   <div className="flex justify-between py-3 border-b border-neutral-700/50">
                     <span className="text-neutral-400 font-medium">Kilometerstand:</span>
@@ -1118,7 +1153,7 @@ export default function CarDetails() {
                     <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
                       <span className="text-white text-xs font-bold">✓</span>
                     </div>
-                    <span className="text-white font-medium">Inzahlungnahme</span>
+                    <span className="text-white font-medium">Bewertungsformular</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
@@ -1479,12 +1514,12 @@ export default function CarDetails() {
             <div className="bg-gradient-to-r from-red-900/20 to-red-800/20 rounded-lg p-4 border border-red-600/30">
               <h3 className="text-white font-semibold mb-3">Besuchen Sie unsere Homepage:</h3>
               <a
-                href="info@autohaus-miftari.de"
+                href="mailto:info@autohausmiftari.de"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-red-300 hover:text-red-200 font-medium underline"
               >
-                info@autohaus-miftari.de
+                info@autohausmiftari.de
               </a>
             </div>
 
@@ -1515,12 +1550,12 @@ export default function CarDetails() {
                 <p className="mt-3">
                   Unter diesem Link können Sie unsere AGB's herunterladen und ausdrucken:
                   <a
-                    href="info@autohaus-miftari.de"
+                    href="mailto:info@autohausmiftari.de"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-red-300 hover:text-red-200 ml-1 underline"
                   >
-                    info@autohaus-miftari.de
+                    info@autohausmiftari.de
                   </a>
                 </p>
               </div>

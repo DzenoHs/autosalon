@@ -85,7 +85,7 @@ export default function Hero() {
               FINDEN SIE IHR
             </span>
             <br />
-            <span className="bg-gradient-to-r from-red-500 to-yellow-500 bg-clip-text text-transparent">
+            <span className="text-white">
               TRAUMAUTO
             </span>
           </h1>

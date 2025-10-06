@@ -150,8 +150,17 @@ const Cars = () => {
                   <div className="flex flex-wrap gap-1 mb-3">
                     <div className="bg-gray-100 rounded-full px-2 py-1 text-xs text-gray-700 border border-gray-400">
                       <span className="font-medium">Erstzulassung:</span> {car.firstRegistration ? 
-                        `${car.firstRegistration.substring(5, 7)}.${car.firstRegistration.substring(0, 4)}` : 
-                        (car.year ? `01.${car.year}` : 'N/A')}
+                        (() => {
+                          const dateStr = car.firstRegistration.toString();
+                          if (dateStr.length === 6) {
+                            // Format YYYYMM -> YYYY/MM
+                            const year = dateStr.substring(0, 4);
+                            const month = dateStr.substring(4, 6);
+                            return `${year}/${month}`;
+                          }
+                          return dateStr;
+                        })() : 
+                        (car.year ? `${car.year}/01` : 'N/A')}
                     </div>
                     <div className="bg-gray-100 rounded-full px-2 py-1 text-xs text-gray-700 border border-gray-400">
                       <span className="font-medium">Kilometerstand:</span> {formatMileage(car.mileage)}

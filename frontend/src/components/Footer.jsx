@@ -45,7 +45,7 @@ export default function Footer() {
                 📞 <a href="tel:+491747692697" className="hover:text-red-400 underline">+49 174 7692697</a>
               </p>
               <p>
-                ✉️ <a href="mailto:info@autohaus-miftari.de" className="hover:text-red-400 underline">info@autohaus-miftari.de</a>
+                ✉️ <a href="mailto:info@autohausmiftari.de" className="hover:text-red-400 underline">info@autohausmiftari.de</a>
               </p>
               <p>📍 Niestetalstraße 11, 34266 Niestetal, Germany</p>
             </div>

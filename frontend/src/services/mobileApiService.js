@@ -596,6 +596,30 @@ class MobileApiService {
     }
   }
 
+  async sendCarMessageData(formData) {
+    try {
+      console.log('📨 Sende CarMessage mit Attachments');
+
+      const url = `${this.proxyUrl}/api/send-carmessage`;
+      console.log('📡 CarMessage URL:', url);
+
+      const response = await axios.post(url, formData, {
+        timeout: 30000, // Longer timeout for file uploads
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      console.log('✅ CarMessage Antwort:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ CarMessage Fehler:', error);
+      throw error;
+    }
+  }
+
+
+
   // Status provjera
   // getStatus() {
   //   return {
