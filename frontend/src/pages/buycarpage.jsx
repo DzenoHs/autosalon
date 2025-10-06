@@ -47,7 +47,7 @@ export default function KakoKupitiAuto() {
     {
       question: 'Kann ich mein altes Auto in Zahlung geben?',
       answer:
-        'Für eine schnelle Bewertung Ihres Fahrzeugs klicken Sie in den Fahrzeugdetails auf "BEWERTUNGSFORMULAR" und senden Sie uns folgende Angaben:\n\nFahrzeugdaten:\n\nMarke, Modell und Baujahr\n\nKilometerstand und Zustand\n\nServiceheft und TÜV-Bericht\n\nAktuelle Fotos\n\nUnser Expertenteam erstellt Ihnen innerhalb von 24 Stunden ein faires Angebot. Die Bewertung kann als:\n\n✅ Anzahlung für Ihr neues Fahrzeug\n\n✅ Reduzierung der Finanzierungssumme\n\n✅ Teilzahlung verwendet werden\n\nEinfach Formular ausfüllen, Fotos anhängen und absenden - kostenlos und unverbindlich!'
+        'Für eine schnelle Bewertung Ihres Fahrzeugs klicken Sie in den Fahrzeugdetails auf "BEWERTUNGSFORMULAR" und senden Sie uns folgende Angaben:\n\nFahrzeugdaten:\n\n• Marke, Modell und Baujahr\n\n• Kilometerstand und Zustand\n\n• Serviceheft und TÜV-Bericht\n\n• Zusätzliche Fahrzeuginformationen\n\nUnser Expertenteam erstellt Ihnen innerhalb von 24 Stunden ein faires Angebot. Die Bewertung kann als:\n\n• Anzahlung für Ihr neues Fahrzeug\n\n• Reduzierung der Finanzierungssumme\n\n• Teilzahlung verwendet werden\n\nEinfach Formular ausfüllen und absenden - kostenlos und unverbindlich!'
     },
     {
       question: 'Wie lange dauert der gesamte Kaufprozess?',
