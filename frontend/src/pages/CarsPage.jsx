@@ -732,10 +732,7 @@ export default function CarsPage() {
                             <FaCogs className="text-red-500 text-sm" />
                             {car.gearbox || 'N/A'}
                           </div>
-                          <div className="flex items-center gap-2 text-gray-400">
-                            <ClipboardCheck className="w-4 h-4 text-red-500" />
-                            HU {formatHU(car.generalInspection)}
-                          </div>
+
                         </div>
 
                         {/* Year and Power Info */}

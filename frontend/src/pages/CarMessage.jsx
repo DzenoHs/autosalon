@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Upload, Car, FileText, Camera, Check, AlertCircle } from 'lucide-react'
+import { ArrowLeft, Upload, Car, Check, AlertCircle } from 'lucide-react'
 import mobileApiService from '../services/mobileApiService'
 
 const CarMessage = () => {
@@ -24,9 +24,7 @@ const CarMessage = () => {
     tradeInFuel: '',
     tradeInCondition: '',
     tradeInVIN: '',
-    tradeInRegistration: '',
-    vehicleImages: [],
-    vehicleDocuments: []
+    tradeInRegistration: ''
   })
 
   // Fetch car details
@@ -47,65 +45,44 @@ const CarMessage = () => {
     }
   }, [carId])
 
-  const handleFileChange = (e, type) => {
-    const files = Array.from(e.target.files)
-    setFormData(prev => ({
-      ...prev,
-      [type]: files
-    }))
-  }
 
-  const removeFile = (index, type) => {
-    setFormData(prev => ({
-      ...prev,
-      [type]: prev[type].filter((_, i) => i !== index)
-    }))
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsSubmitting(true)
     
     try {
-      // Kreiranje FormData objekta za file upload
-      const formDataToSend = new FormData()
-      
-      // Osnovni podaci
-      formDataToSend.append('name', `${formData.firstName} ${formData.lastName}`)
-      formDataToSend.append('email', formData.email)
-      formDataToSend.append('phone', formData.phone)
-      formDataToSend.append('message', formData.message)
-      formDataToSend.append('gender', formData.gender)
-      
-      // Podaci o vozilu koje interesuje
-      formDataToSend.append('carId', carId)
-      formDataToSend.append('carMake', car?.make || '')
-      formDataToSend.append('carModel', car?.model || '')
-      formDataToSend.append('carPrice', car?.price || '')
-      
-      // Trade-in podaci
-      formDataToSend.append('tradeInBrand', formData.tradeInBrand)
-      formDataToSend.append('tradeInModel', formData.tradeInModel)
-      formDataToSend.append('tradeInYear', formData.tradeInYear)
-      formDataToSend.append('tradeInMileage', formData.tradeInMileage)
-      formDataToSend.append('tradeInFuel', formData.tradeInFuel)
-      formDataToSend.append('tradeInCondition', formData.tradeInCondition)
-      formDataToSend.append('tradeInVIN', formData.tradeInVIN)
-      formDataToSend.append('tradeInRegistration', formData.tradeInRegistration)
-      
-      // Dodavanje slika
-      formData.vehicleImages.forEach((file) => {
-        formDataToSend.append('vehicleImages', file)
-      })
-      
-      // Dodavanje dokumenata
-      formData.vehicleDocuments.forEach((file) => {
-        formDataToSend.append('vehicleDocuments', file)
-      })
+      // Kreiranje objekta sa podacima
+      const dataToSend = {
+        name: `${formData.firstName} ${formData.lastName}`,
+        email: formData.email,
+        phone: formData.phone,
+        message: formData.message,
+        gender: formData.gender,
+        
+        // Podaci o vozilu koje interesuje
+        carId: carId,
+        carMake: car?.make || '',
+        carModel: car?.model || '',
+        carPrice: car?.price || '',
+        
+        // Trade-in podaci
+        tradeInBrand: formData.tradeInBrand,
+        tradeInModel: formData.tradeInModel,
+        tradeInYear: formData.tradeInYear,
+        tradeInMileage: formData.tradeInMileage,
+        tradeInFuel: formData.tradeInFuel,
+        tradeInCondition: formData.tradeInCondition,
+        tradeInVIN: formData.tradeInVIN,
+        tradeInRegistration: formData.tradeInRegistration
+      }
       
       const response = await fetch('http://localhost:5003/api/send-tradein', {
         method: 'POST',
-        body: formDataToSend // Ne stavi Content-Type header za FormData
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSend)
       })
       
       if (!response.ok) {
@@ -120,8 +97,7 @@ const CarMessage = () => {
       setFormData({
         gender: '', firstName: '', lastName: '', email: '', phone: '', message: '',
         tradeInBrand: '', tradeInModel: '', tradeInYear: '', tradeInMileage: '',
-        tradeInFuel: '', tradeInCondition: '', tradeInVIN: '', tradeInRegistration: '',
-        vehicleImages: [], vehicleDocuments: []
+        tradeInFuel: '', tradeInCondition: '', tradeInVIN: '', tradeInRegistration: ''
       })
       
     } catch (error) {
@@ -400,95 +376,7 @@ const CarMessage = () => {
               </div>
             </div>
 
-            {/* File Uploads */}
-            <div className="space-y-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-purple-500/20 rounded-full flex items-center justify-center">
-                  <Upload className="text-purple-400" size={20} />
-                </div>
-                <h2 className="text-2xl font-bold text-white">Fahrzeugdokumente</h2>
-              </div>
 
-              <div className="grid md:grid-cols-2 gap-6">
-                {/* Vehicle Images */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-3">
-                    <Camera className="inline mr-2" size={16} />
-                    Fahrzeugbilder
-                  </label>
-                  <div className="border-2 border-dashed border-gray-600 hover:border-red-500 transition-colors rounded-xl p-6 text-center">
-                    <input
-                      type="file"
-                      multiple
-                      accept="image/*"
-                      onChange={(e) => handleFileChange(e, 'vehicleImages')}
-                      className="hidden"
-                      id="vehicle-images"
-                    />
-                    <label htmlFor="vehicle-images" className="cursor-pointer">
-                      <Camera className="mx-auto mb-3 text-gray-400" size={48} />
-                      <p className="text-gray-300">Bilder hochladen</p>
-                      <p className="text-sm text-gray-500 mt-1">JPG, PNG bis 10MB</p>
-                    </label>
-                  </div>
-                  {formData.vehicleImages.length > 0 && (
-                    <div className="mt-3 space-y-2">
-                      {formData.vehicleImages.map((file, index) => (
-                        <div key={index} className="flex items-center justify-between bg-gray-800 p-2 rounded">
-                          <span className="text-sm text-gray-300 truncate">{file.name}</span>
-                          <button
-                            type="button"
-                            onClick={() => removeFile(index, 'vehicleImages')}
-                            className="text-red-400 hover:text-red-300 ml-2"
-                          >
-                            ✕
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* Vehicle Documents */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-3">
-                    <FileText className="inline mr-2" size={16} />
-                    Fahrzeugdokumente
-                  </label>
-                  <div className="border-2 border-dashed border-gray-600 hover:border-red-500 transition-colors rounded-xl p-6 text-center">
-                    <input
-                      type="file"
-                      multiple
-                      accept=".pdf,.doc,.docx,image/*"
-                      onChange={(e) => handleFileChange(e, 'vehicleDocuments')}
-                      className="hidden"
-                      id="vehicle-documents"
-                    />
-                    <label htmlFor="vehicle-documents" className="cursor-pointer">
-                      <FileText className="mx-auto mb-3 text-gray-400" size={48} />
-                      <p className="text-gray-300">Dokumente hochladen</p>
-                      <p className="text-sm text-gray-500 mt-1">PDF, DOC, Bilder bis 10MB</p>
-                    </label>
-                  </div>
-                  {formData.vehicleDocuments.length > 0 && (
-                    <div className="mt-3 space-y-2">
-                      {formData.vehicleDocuments.map((file, index) => (
-                        <div key={index} className="flex items-center justify-between bg-gray-800 p-2 rounded">
-                          <span className="text-sm text-gray-300 truncate">{file.name}</span>
-                          <button
-                            type="button"
-                            onClick={() => removeFile(index, 'vehicleDocuments')}
-                            className="text-red-400 hover:text-red-300 ml-2"
-                          >
-                            ✕
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
 
             {/* Message */}
             <div>

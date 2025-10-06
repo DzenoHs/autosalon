@@ -53,7 +53,7 @@ export default function Impressum() {
             
             <div className="bg-neutral-800/50 rounded-2xl p-6 mb-6">
               <h3 className="text-xl font-bold text-white mb-4">Autohaus Miftari</h3>
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid md:grid-cols-3 gap-6">
                 <div>
                   <h4 className="text-red-400 font-semibold mb-2 flex items-center gap-2">
                     <MapPin className="w-4 h-4" />
@@ -73,23 +73,21 @@ export default function Impressum() {
                     in Gründung
                   </p>
                 </div>
-              </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6 mb-6">
-              <div className="bg-neutral-800/30 rounded-xl p-4">
-                <h4 className="text-red-400 font-semibold mb-2">Handelsregister</h4>
-                <p className="text-neutral-300 text-sm">wird nachgetragen</p>
-              </div>
-              <div className="bg-neutral-800/30 rounded-xl p-4">
-                <h4 className="text-red-400 font-semibold mb-2">Registergericht</h4>
-                <p className="text-neutral-300 text-sm">wird nachgetragen</p>
+                <div>
+                  <h4 className="text-red-400 font-semibold mb-2">Kontaktperson</h4>
+                  <p className="text-neutral-300 leading-relaxed">
+                    Laurin Miftari<br />
+                    Geschäftsführer<br />
+                    <span className="text-sm text-neutral-400">in Gründung</span>
+                  </p>
+                </div>
               </div>
             </div>
 
             <div className="bg-neutral-800/30 rounded-xl p-4">
-              <h4 className="text-red-400 font-semibold mb-2">Vertreten durch</h4>
-              <p className="text-neutral-300">die Gründer [wird nachgetragen]</p>
+              <h4 className="text-red-400 font-semibold mb-2">Geschäftsführung</h4>
+              <p className="text-neutral-300">Autohaus Miftari (haftungsbeschränkt) in Gründung</p>
+              <p className="text-neutral-300 text-sm mt-2">Handelsregister- und Geschäftsführerangaben werden nach erfolgter Gründung nachgetragen.</p>
             </div>
           </section>
 
@@ -110,12 +108,12 @@ export default function Impressum() {
                 </div>
                 <div>
                   <div className="text-red-400 font-medium">Telefon</div>
-                  <div className="text-neutral-300">+49 174 7692697</div>
+                  <div className="text-neutral-300">0174 7692697</div>
                 </div>
               </a>
               
               <a 
-                href="mailto:info@autohaus-miftari.de"
+                href="mailto:laurin.miftari@gmx.de"
                 className="flex items-center gap-3 bg-neutral-800/50 rounded-xl p-4 hover:bg-neutral-700/50 transition-colors group"
               >
                 <div className="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -123,7 +121,7 @@ export default function Impressum() {
                 </div>
                 <div>
                   <div className="text-red-400 font-medium">E-Mail</div>
-                  <div className="text-neutral-300">info@autohaus-miftari.de</div>
+                  <div className="text-neutral-300">laurin.miftari@gmx.de</div>
                 </div>
               </a>
             </div>
@@ -158,12 +156,41 @@ export default function Impressum() {
           <section className="mb-8">
             <h2 className="text-2xl font-bold text-red-500 mb-4 flex items-center gap-2">
               <Shield className="w-6 h-6" />
-              Umsatzsteuer
+              Steuerliche Angaben
             </h2>
-            <div className="bg-neutral-800/30 rounded-xl p-4">
-              <p className="text-neutral-300 leading-relaxed">
-                Eine Umsatzsteuer-Identifikationsnummer gemäß §27 a Umsatzsteuergesetz wird beantragt und nachgereicht.
-              </p>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="bg-neutral-800/50 rounded-xl p-4">
+                <h4 className="text-red-400 font-semibold mb-2">USt-IdNr.</h4>
+                <p className="text-neutral-300">DE364840933</p>
+              </div>
+              <div className="bg-neutral-800/50 rounded-xl p-4">
+                <h4 className="text-red-400 font-semibold mb-2">Steuer-Nr.</h4>
+                <p className="text-neutral-300">026 846 66920</p>
+              </div>
+            </div>
+          </section>
+
+          {/* Bank Information */}
+          <section className="mb-8">
+            <h2 className="text-2xl font-bold text-red-500 mb-4 flex items-center gap-2">
+              <Building className="w-6 h-6" />
+              Bankverbindung
+            </h2>
+            <div className="bg-neutral-800/50 rounded-xl p-6">
+              <div className="grid md:grid-cols-3 gap-4">
+                <div>
+                  <h4 className="text-red-400 font-semibold mb-2">Bank</h4>
+                  <p className="text-neutral-300">Sparkasse Göttingen</p>
+                </div>
+                <div>
+                  <h4 className="text-red-400 font-semibold mb-2">BIC</h4>
+                  <p className="text-neutral-300">NOLADE21GOE</p>
+                </div>
+                <div>
+                  <h4 className="text-red-400 font-semibold mb-2">IBAN</h4>
+                  <p className="text-neutral-300">DE35 2605 0001 0056 1133 68</p>
+                </div>
+              </div>
             </div>
           </section>
 
@@ -208,14 +235,14 @@ export default function Impressum() {
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <a 
-                href="tel:+4917476926970"
+                href="tel:01747692697"
                 className="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl font-medium transition-colors"
               >
                 <Phone className="w-4 h-4" />
                 Anrufen
               </a>
               <a 
-                href="mailto:info@autohaus-miftari.de"
+                href="mailto:laurin.miftari@gmx.de"
                 className="flex items-center justify-center gap-2 border border-red-500 text-red-400 hover:bg-red-500 hover:text-white px-6 py-3 rounded-xl font-medium transition-colors"
               >
                 <Mail className="w-4 h-4" />
@@ -236,7 +263,7 @@ export default function Impressum() {
             <span className="hidden sm:block">•</span>
             <span>Impressum nach § 5 TMG</span>
             <span className="hidden sm:block">•</span>
-            <a href="mailto:info@autohaus-miftari.de" className="hover:text-red-400 transition-colors">
+            <a href="mailto:laurin.miftari@gmx.de" className="hover:text-red-400 transition-colors">
               Rechtliche Anfragen
             </a>
           </div>
