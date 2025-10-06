@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer';
 export const sendEmail = async (req, res) => {
   const { name, email, message } = req.body;
 
-  console.log(name, email, message)
+  console.log('📧 Email zahtev:', { name, email, message: message ? message.substring(0, 100) + '...' : 'No message' })
 
   if (!name || !email || !message) {
     return res.status(400).json({ error: 'Alle Felder sind erforderlich.' });
