@@ -9,7 +9,7 @@ const norm = (v) => String(v || '').trim().toUpperCase().replace(/\s+/g, '_');
 const GEARBOX_MAP = {
   MANUAL_GEAR: 'Manuell',
   AUTOMATIC_GEAR: 'Automatik',
-  SEMI_AUTOMATIC_GEAR: 'Halbautomatik',
+  SEMIAUTOMATIC_GEAR: 'Halbautomatik',
 
   // aliasi koji se nekad pojavljuju u podacima
   MANUAL: 'Manuell',
