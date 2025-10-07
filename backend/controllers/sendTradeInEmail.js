@@ -33,7 +33,7 @@ export const sendTradeInEmail = async (req, res) => {
 • Fahrzeug-ID: ${carId || 'Nicht angegeben'}
 • Fahrzeug: ${carMake || ''} ${carModel || ''}
 • Preis: ${carPrice ? new Intl.NumberFormat('de-DE').format(carPrice) + ' €' : 'Auf Anfrage'}
-• Mobile.de Link: https://home.mobile.de/GM-TOP-CARS#des_${carId}
+• Fahrzeug Link: https://www.autohausmiftari.de/car/${carId}
 
 🚗 INZAHLUNGNAHME FAHRZEUG:
 • Marke: ${tradeInBrand}

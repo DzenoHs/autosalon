@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Upload, Car, Check, AlertCircle } from 'lucide-react'
+import { ArrowLeft, Upload, Car, FileText, Camera, Check, AlertCircle } from 'lucide-react'
 import mobileApiService from '../services/mobileApiService'
 
 const CarMessage = () => {
@@ -97,7 +97,8 @@ const CarMessage = () => {
       setFormData({
         gender: '', firstName: '', lastName: '', email: '', phone: '', message: '',
         tradeInBrand: '', tradeInModel: '', tradeInYear: '', tradeInMileage: '',
-        tradeInFuel: '', tradeInCondition: '', tradeInVIN: '', tradeInRegistration: ''
+        tradeInFuel: '', tradeInCondition: '', tradeInVIN: '', tradeInRegistration: '',
+        vehicleImages: [], vehicleDocuments: []
       })
       
     } catch (error) {

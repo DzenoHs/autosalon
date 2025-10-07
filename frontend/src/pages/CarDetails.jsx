@@ -872,7 +872,8 @@ export default function CarDetails() {
                   const dateStr = car.firstRegistration.toString();
                   if (dateStr.length === 6) {
                     const year = dateStr.substring(0, 4);
-                    return year;
+                    const month = dateStr.substring(4, 6);
+                    return `${month}/${year}`;
                   }
                   return dateStr.substring(0, 4) || 'N/A';
                 })()}`}
@@ -1038,7 +1039,7 @@ export default function CarDetails() {
                     onClick={() => navigate(`/car-message/${car.mobileAdId}`)}
                   >
                     <Mail size={20} />
-                    BEWERTUNGSFORMULAR
+                    Inzahlungnahme 
                   </button>
                 </div>
               </div>
@@ -1077,14 +1078,14 @@ export default function CarDetails() {
                       (() => {
                         const dateStr = car.firstRegistration.toString();
                         if (dateStr.length === 6) {
-                          // Format YYYYMM -> YYYY/MM
+                          // Format YYYYMM -> MM/YYYY
                           const year = dateStr.substring(0, 4);
                           const month = dateStr.substring(4, 6);
-                          return `${year}/${month}`;
+                          return `${month}/${year}`;
                         }
                         return dateStr;
                       })() : 
-                      (car.year ? `${car.year}/01` : 'N/A')}</span>
+                      (car.year ? `01/${car.year}` : 'N/A')}</span>
                   </div>
                   <div className="flex justify-between py-3 border-b border-neutral-700/50">
                     <span className="text-neutral-400 font-medium">Kilometerstand:</span>

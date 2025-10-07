@@ -1,4 +1,4 @@
-import { checkCarsAndPostToInstagram } from "../utils/postToInstagramCheck";
+import { checkCarsAndPostToInstagram } from "../utils/postToInstagramCheck.js";
 
 export const cron = () => {
   if (req.headers.get('Authorization') !== `Bearer ${process.env.CRON_SECRET}`) {

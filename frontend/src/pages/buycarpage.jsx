@@ -37,7 +37,7 @@ export default function KakoKupitiAuto() {
     {
       question: 'Welche Finanzierungsmöglichkeiten bieten Sie an?',
       answer:
-        'Wir bieten verschiedene Finanzierungsmöglichkeiten an, einschließlich Bankdarlehen, Leasing und Ratenzahlung. Unsere Experten helfen Ihnen, die beste Option für Ihre Bedürfnisse zu finden. Wir arbeiten mit zwei renommierten Finanzpartnern zusammen:\n\nBank11 - bonitätsunabhängige Festzinsen ab 5,49%, Kreditsummen von 2.500€ bis 150.000€, Laufzeiten bis 96 Monate, kostenlose Sondertilgungen möglich.\n\nSantander - Deutschlands größter herstellerunabhängiger Kfz-Finanzierer mit zwei Optionen: ClassicCredit mit gleichbleibenden Raten oder BudgetCredit mit niedrigeren monatlichen Raten durch Schlussrate.\n\nBeide Partner bieten schnelle Online-Bearbeitung und flexible Konditionen - unabhängig von Automarke oder Händler.'
+        'Wir bieten attraktive Finanzierungsangebote über unsere Partner Santander und Bank11 an.\n\nProfitieren Sie von flexiblen Konditionen, verschiedenen Finanzierungsmöglichkeiten und schneller Bearbeitung – unabhängig von Automarke oder Händler.\n\nUnsere Experten unterstützen Sie dabei, die passende Lösung für Ihre individuellen Bedürfnisse zu finden.'
     },
     {
       question: 'Gibt es eine Garantie auf die Fahrzeuge?',
@@ -47,7 +47,7 @@ export default function KakoKupitiAuto() {
     {
       question: 'Kann ich mein altes Auto in Zahlung geben?',
       answer:
-        'Für eine schnelle Bewertung Ihres Fahrzeugs klicken Sie in den Fahrzeugdetails auf "BEWERTUNGSFORMULAR" und senden Sie uns folgende Angaben:\n\nFahrzeugdaten:\n\n• Marke, Modell und Baujahr\n\n• Kilometerstand und Zustand\n\n• Serviceheft und TÜV-Bericht\n\n• Zusätzliche Fahrzeuginformationen\n\nUnser Expertenteam erstellt Ihnen innerhalb von 24 Stunden ein faires Angebot. Die Bewertung kann als:\n\n• Anzahlung für Ihr neues Fahrzeug\n\n• Reduzierung der Finanzierungssumme\n\n• Teilzahlung verwendet werden\n\nEinfach Formular ausfüllen und absenden - kostenlos und unverbindlich!'
+        'Für eine schnelle Bewertung Ihres Fahrzeugs klicken Sie in den Fahrzeugdetails auf "Inzahlungnahme" und senden Sie uns folgende Angaben:\n\nFahrzeugdaten:\n\n• Marke, Modell und Baujahr\n\n• Kilometerstand und Zustand\n\n• Serviceheft und TÜV-Bericht\n\n• Zusätzliche Fahrzeuginformationen\n\nUnser Expertenteam erstellt Ihnen innerhalb von 24 Stunden ein faires Angebot. Die Bewertung kann als:\n\n• Anzahlung für Ihr neues Fahrzeug\n\n• Reduzierung der Finanzierungssumme\n\n• Teilzahlung verwendet werden\n\nEinfach Formular ausfüllen und absenden - kostenlos und unverbindlich!'
     },
     {
       question: 'Wie lange dauert der gesamte Kaufprozess?',
