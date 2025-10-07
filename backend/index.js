@@ -12,6 +12,7 @@ import { initDb } from './utils/db.js';
 import { checkCarsAndPostToInstagram } from './utils/postToInstagramCheck.js';
 import { sendEmail } from './controllers/sendEmail.js';
 import { sendTradeInEmail } from './controllers/sendTradeInEmail.js';
+import { cron } from './controllers/cron.js';
 // import { postInstagramCarousel } from './utils/postToInstagram.js';
 
 // postInstagramCarousel({
@@ -67,6 +68,7 @@ app.get("/api/cars/top/expensive", topExpensiveCars);
 app.get("/api/cars/:id", getCarById);
 app.post("/api/send", sendEmail);
 app.post("/api/send-tradein", sendTradeInEmail);
+app.get("/api/corn", cron)
 
 // Cache management endpoints
 app.get("/api/cache/stats", getCacheStats);
