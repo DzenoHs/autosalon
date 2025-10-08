@@ -12,7 +12,7 @@ import Footer from './components/Footer';
 import CarDetails from './pages/CarDetails';
 import CarsPage from './pages/CarsPage';
 import BuyCarPage from './pages/buycarpage';
-import CarMessage from './pages/CarMessage';
+import TradeInPage from './pages/TradeInPage';
 import WhyChooseUs from './components/sections/WhyChooseUs';
 import VideosSection from './components/sections/Videos';
 import Datenschutzerklarung from './pages/Datenschutzerklarung';
@@ -43,7 +43,7 @@ function App() {
         } />
         <Route path="/cars" element={<CarsPage />} />
         <Route path="/car/:id" element={<CarDetails />} />
-        <Route path="/car-message/:carId" element={<CarMessage />} />
+        <Route path="/trade-in/:id" element={<TradeInPage />} />
         <Route path="/kako-kupiti" element={<BuyCarPage />} />
   <Route path="/datenschutzerklarung" element={<Datenschutzerklarung />} />
   <Route path="/impressum" element={<Impressum />} />
