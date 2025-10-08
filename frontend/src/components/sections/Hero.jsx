@@ -1,13 +1,13 @@
 import React, {useState, useEffect} from 'react'
 
-import autokuca1 from '/assets/autokuca1.webp'
-import autokuca2 from '/assets/autokuca2.jpg'
-import heroslika2 from '/assets/heroslika2.webp'
+import slika1 from '/assets/slika1.jpeg'
+import slika2 from '/assets/slika2.jpeg'
+import slika3 from '/assets/slika3.jpeg'
 
 export default function Hero() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [imagesLoaded, setImagesLoaded] = useState(false)
-  const images = [autokuca1, autokuca2, heroslika2]
+  const images = [slika1, slika2, slika3]
 
   // Enhanced image preloading for iOS
   useEffect(() => {
@@ -74,7 +74,7 @@ export default function Hero() {
             <img src={image} alt={`Hero ${index+1}`} loading="lazy" style={{display: 'none'}} />
           </div>
         ))}
-        <div className="absolute inset-0 bg-black/50 z-[1]"></div>
+        <div className="absolute inset-0 bg-black/30 z-[1]"></div>
       </div>
 
       {/* Content - NO FRAMER MOTION */}

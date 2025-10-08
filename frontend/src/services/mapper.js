@@ -224,6 +224,22 @@ function capitalizeFirst(s) {
 export function mapCarValues(raw) {
   if (!raw) return null
 
+  // Extract year from various possible fields
+  let year = null;
+  if (raw.buildYear) {
+    year = parseInt(raw.buildYear);
+  } else if (raw.year) {
+    year = parseInt(raw.year);
+  } else if (raw.firstRegistration) {
+    // Extract year from date string like "2023/03" or "2023-03-15"
+    const yearMatch = raw.firstRegistration.match(/(\d{4})/);
+    if (yearMatch) {
+      year = parseInt(yearMatch[1]);
+    }
+  } else if (raw.baujahr) {
+    year = parseInt(raw.baujahr);
+  }
+
   return {
     ...raw,
     fuel: mapFuel(raw.fuel),
@@ -234,5 +250,8 @@ export function mapCarValues(raw) {
     condition: mapCondition(raw.condition),
     driveType: mapDriveType(raw.driveType),
     doors: mapDoorCount(raw.doors),
+    // Ensure we always have a year field
+    year: year || null,
+    buildYear: year || null, // Keep both for compatibility
   }
 }

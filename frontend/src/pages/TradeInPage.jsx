@@ -313,77 +313,68 @@ const TradeInPage = () => {
                 </p>
               </div>
 
-              {/* Progress Bar - Pixel Perfect */}
-              <div className="mb-12">
-                <div className="flex items-center justify-between mb-8">
-                  {steps.map((step, index) => (
-                    <div key={step.number} className="flex items-center flex-1">
-                      <div className="flex flex-col items-center flex-1">
+              {/* Progress Bar - Pipeline Through Icons */}
+              <div className="mb-4">
+                <div className="relative px-5">
+                  {/* Background Progress Line - from first to last icon */}
+                  <div className="absolute top-5 left-5 right-5 h-0.5 bg-neutral-700 rounded-full"></div>
+                  
+                  {/* Active Progress Line - from first to last icon */}
+                  <div 
+                    className="absolute top-5 left-5 h-0.5 bg-gradient-to-r from-red-500 to-red-600 rounded-full transition-all duration-700"
+                    style={{ width: `calc(${getStepProgress()}% * (100% - 2.5rem) / 100)` }}
+                  ></div>
+                  
+                  {/* Steps */}
+                  <div className="flex justify-between items-center relative z-10">
+                    {steps.map((step, index) => (
+                      <div key={step.number} className="flex flex-col items-center">
                         <div className={`
-                          w-14 h-14 rounded-full flex items-center justify-center font-bold text-lg border-2 mb-3
+                          w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm border-2 mb-3 bg-neutral-900
                           ${currentStep >= step.number 
                             ? 'bg-gradient-to-br from-red-500 to-red-700 text-white border-red-500' 
                             : 'bg-neutral-800 text-neutral-400 border-neutral-600'
                           }
-                          ${currentStep === step.number ? 'ring-4 ring-red-500/40 scale-110' : ''}
+                          ${currentStep === step.number ? 'ring-2 ring-red-500/40 scale-105' : ''}
                           transition-all duration-300
                         `}>
                           {currentStep > step.number ? (
-                            <CheckCircle className="w-7 h-7" />
+                            <CheckCircle className="w-5 h-5" />
                           ) : (
-                            step.number
+                            <step.icon className="w-4 h-4" />
                           )}
                         </div>
                         
                         <div className="text-center">
-                          <div className={`text-sm font-bold mb-1 ${currentStep >= step.number ? 'text-white' : 'text-neutral-400'}`}>
+                          <div className={`text-xs font-bold mb-1 ${currentStep >= step.number ? 'text-white' : 'text-neutral-400'}`}>
                             {step.title}
                           </div>
                           <div className="text-xs text-neutral-500">{step.description}</div>
                         </div>
                       </div>
-                      
-                      {index < steps.length - 1 && (
-                        <div className={`
-                          h-px flex-1 mx-6 mt-[-60px]
-                          ${currentStep > step.number ? 'bg-gradient-to-r from-red-600 to-red-700' : 'bg-neutral-700'}
-                          transition-colors duration-300
-                        `} />
-                      )}
-                    </div>
-                  ))}
-                </div>
-                
-                {/* Progress Line */}
-                <div className="w-full bg-neutral-800 rounded-full h-2 mb-4">
-                  <div 
-                    className="bg-gradient-to-r from-red-600 to-red-700 h-2 rounded-full transition-all duration-500"
-                    style={{ width: `${getStepProgress()}%` }}
-                  />
-                </div>
-                <div className="text-center text-sm text-neutral-400 font-medium">
-                  Schritt {currentStep} von {steps.length} • {Math.round(getStepProgress())}% abgeschlossen
+                    ))}
+                  </div>
                 </div>
               </div>
 
               {/* Form Content - Pixel Perfect */}
-              <div className="bg-neutral-900 rounded-2xl p-8 border border-red-600/20 shadow-2xl">
+              <div className="bg-neutral-900 rounded-xl p-2 border border-red-600/20 shadow-2xl">
                 
                 {/* Step 1: Personal Data */}
                 {currentStep === 1 && (
-                  <div className="space-y-6">
-                    <div className="text-center mb-8">
-                      <h3 className="text-2xl font-bold text-white mb-2 flex items-center justify-center gap-3">
-                        <User className="w-7 h-7 text-red-500" />
+                  <div className="space-y-2">
+                    <div className="text-center mb-2">
+                      <h3 className="text-lg font-bold text-white mb-1 flex items-center justify-center gap-2">
+                        <User className="w-5 h-5 text-red-500" />
                         Ihre Kontaktdaten
                       </h3>
-                      <p className="text-neutral-400">Damit wir Sie erreichen können</p>
+                      <p className="text-sm text-neutral-400">Damit wir Sie erreichen können</p>
                     </div>
                     
-                    <div className="space-y-6">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         <div>
-                          <label className="block text-sm font-semibold text-neutral-300 mb-3">
+                          <label className="block text-sm font-semibold text-neutral-300 mb-2">
                             Anrede *
                           </label>
                           <select
@@ -459,19 +450,19 @@ const TradeInPage = () => {
 
                 {/* Step 2: Vehicle Data */}
                 {currentStep === 2 && (
-                  <div className="space-y-6">
-                    <div className="text-center mb-8">
-                      <h3 className="text-2xl font-bold text-white mb-2 flex items-center justify-center gap-3">
-                        <Car className="w-7 h-7 text-red-500" />
+                  <div className="space-y-3">
+                    <div className="text-center mb-3">
+                      <h3 className="text-lg font-bold text-white mb-1 flex items-center justify-center gap-2">
+                        <Car className="w-5 h-5 text-red-500" />
                         Ihr Fahrzeug
                       </h3>
                       <p className="text-neutral-400">Angaben zu Ihrem Tauschfahrzeug</p>
                     </div>
                     
-                    <div className="space-y-6">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-3">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div>
-                          <label className="block text-sm font-semibold text-neutral-300 mb-3">
+                          <label className="block text-sm font-semibold text-neutral-300 mb-2">
                             Marke *
                           </label>
                           <input
@@ -502,7 +493,7 @@ const TradeInPage = () => {
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div>
                           <label className="block text-sm font-semibold text-neutral-300 mb-3">
-                            Baujahr *
+                            Erstzulassung *
                           </label>
                           <input
                             type="number"
@@ -597,16 +588,16 @@ const TradeInPage = () => {
 
                 {/* Step 3: Files */}
                 {currentStep === 3 && (
-                  <div className="space-y-6">
-                    <div className="text-center mb-8">
-                      <h3 className="text-2xl font-bold text-white mb-2 flex items-center justify-center gap-3">
-                        <Upload className="w-7 h-7 text-red-500" />
+                  <div className="space-y-3">
+                    <div className="text-center mb-3">
+                      <h3 className="text-lg font-bold text-white mb-1 flex items-center justify-center gap-2">
+                        <Upload className="w-5 h-5 text-red-500" />
                         Dokumente & Bilder
                       </h3>
                       <p className="text-neutral-400">Helfen Sie uns bei der Bewertung (optional)</p>
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {/* Vehicle Images */}
                       <div>
                         <label className="block text-sm font-semibold text-neutral-300 mb-4">
@@ -614,9 +605,9 @@ const TradeInPage = () => {
                         </label>
                         <div 
                           onClick={() => triggerFileInput('vehicleImages')}
-                          className="border-2 border-dashed border-neutral-600 rounded-xl p-8 text-center cursor-pointer hover:border-red-500 transition-colors duration-200 bg-neutral-800/30 hover:bg-neutral-800/50"
+                          className="border-2 border-dashed border-neutral-600 rounded-xl p-4 text-center cursor-pointer hover:border-red-500 transition-colors duration-200 bg-neutral-800/30 hover:bg-neutral-800/50"
                         >
-                          <Image className="w-10 h-10 text-neutral-400 mx-auto mb-3" />
+                          <Image className="w-8 h-8 text-neutral-400 mx-auto mb-2" />
                           <p className="text-neutral-300 font-semibold mb-1">Bilder auswählen</p>
                           <p className="text-xs text-neutral-500">JPEG, PNG (max. 10 MB)</p>
                         </div>
@@ -656,9 +647,9 @@ const TradeInPage = () => {
                         </label>
                         <div 
                           onClick={() => triggerFileInput('vehicleDocuments')}
-                          className="border-2 border-dashed border-neutral-600 rounded-xl p-8 text-center cursor-pointer hover:border-red-500 transition-colors duration-200 bg-neutral-800/30 hover:bg-neutral-800/50"
+                          className="border-2 border-dashed border-neutral-600 rounded-xl p-4 text-center cursor-pointer hover:border-red-500 transition-colors duration-200 bg-neutral-800/30 hover:bg-neutral-800/50"
                         >
-                          <FileText className="w-10 h-10 text-neutral-400 mx-auto mb-3" />
+                          <FileText className="w-8 h-8 text-neutral-400 mx-auto mb-2" />
                           <p className="text-neutral-300 font-semibold mb-1">Dokumente auswählen</p>
                           <p className="text-xs text-neutral-500">PDF, DOC (max. 10 MB)</p>
                         </div>
@@ -707,19 +698,19 @@ const TradeInPage = () => {
                 )}
 
                 {/* Navigation */}
-                <div className="flex justify-between mt-10 pt-8 border-t border-neutral-700/50">
+                <div className="flex justify-between mt-6 pt-4 border-t border-neutral-700/50">
                   <button
                     onClick={prevStep}
                     disabled={currentStep === 1}
                     className={`
-                      px-8 py-4 rounded-xl font-semibold flex items-center gap-3 transition-colors duration-200
+                      px-6 py-2.5 rounded-lg font-medium flex items-center gap-2 transition-colors duration-200 text-sm
                       ${currentStep === 1 
                         ? 'bg-neutral-800 text-neutral-500 cursor-not-allowed' 
                         : 'bg-neutral-700 text-white hover:bg-neutral-600'
                       }
                     `}
                   >
-                    <ChevronLeft className="w-5 h-5" />
+                    <ChevronLeft className="w-4 h-4" />
                     Zurück
                   </button>
 
@@ -728,7 +719,7 @@ const TradeInPage = () => {
                       onClick={nextStep}
                       disabled={!isStepValid(currentStep)}
                       className={`
-                        px-8 py-4 rounded-xl font-semibold flex items-center gap-3 transition-colors duration-200
+                        px-6 py-2.5 rounded-lg font-medium flex items-center gap-2 transition-colors duration-200 text-sm
                         ${!isStepValid(currentStep)
                           ? 'bg-neutral-700 text-neutral-500 cursor-not-allowed'
                           : 'bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 shadow-lg'
@@ -736,14 +727,14 @@ const TradeInPage = () => {
                       `}
                     >
                       <span>Weiter</span>
-                      <ChevronRight className="w-5 h-5" />
+                      <ChevronRight className="w-4 h-4" />
                     </button>
                   ) : (
                     <button
                       onClick={handleSubmit}
                       disabled={isSubmitting}
                       className={`
-                        px-10 py-4 rounded-xl font-semibold flex items-center gap-3 transition-colors duration-200
+                        px-8 py-2.5 rounded-lg font-medium flex items-center gap-2 transition-colors duration-200 text-sm
                         ${isSubmitting
                           ? 'bg-neutral-700 text-neutral-500 cursor-not-allowed'
                           : 'bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 shadow-lg'
@@ -861,9 +852,9 @@ const TradeInPage = () => {
                       <div className="flex items-center justify-between py-2 border-b border-neutral-800">
                         <div className="flex items-center gap-2 text-neutral-400">
                           <Calendar className="w-4 h-4 text-red-500" />
-                          <span className="text-sm font-medium">Baujahr</span>
+                          <span className="text-sm font-medium">Erstzulassung</span>
                         </div>
-                        <span className="text-white font-semibold">{car.year || 'N/A'}</span>
+                        <span className="text-white font-semibold">{car.buildYear || car.year || car.firstRegistration?.substring(0, 4) || 'N/A'}</span>
                       </div>
                       
                       <div className="flex items-center justify-between py-2 border-b border-neutral-800">

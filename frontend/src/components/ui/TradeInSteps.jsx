@@ -173,74 +173,134 @@ const TradeInSteps = ({ selectedCar }) => {
             </div>
             <div>
               <h3 className="text-xl font-bold text-white">
-                {selectedCar.make} {selectedCar.modelDescription}
+                {selectedCar.make} {selectedCar.modelDescription?.replace(/&amp;/g, '&').replace(/&quot;/g, '"') || selectedCar.model}
               </h3>
               <p className="text-red-100 opacity-90">
                 Inzahlungnahme anfragen für €{selectedCar.price?.toLocaleString('de-DE')}
               </p>
+              <div className="flex items-center gap-4 mt-2 text-sm text-red-100/80">
+                <span>Erstzulassung: {selectedCar.buildYear || selectedCar.year || selectedCar.firstRegistration?.substring(0, 4) || 'N/A'}</span>
+                <span>•</span>
+                <span>Kraftstoff: {selectedCar.fuel || 'N/A'}</span>
+                <span>•</span>
+                <span>Kilometerstand: {selectedCar.mileage?.toLocaleString('de-DE') || 'N/A'} km</span>
+              </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Progress bar */}
-      <div className="bg-black/50 p-6">
-        <div className="flex items-center justify-between mb-4">
-          {steps.map((step, index) => (
-            <div key={step.number} className="flex items-center">
-              <div className={`
-                w-12 h-12 rounded-full flex items-center justify-center font-bold text-sm
-                ${currentStep >= step.number 
-                  ? 'bg-gradient-to-r from-red-600 to-red-800 text-white shadow-lg shadow-red-600/30' 
-                  : 'bg-neutral-700 text-neutral-400'
-                }
-                ${currentStep === step.number ? 'ring-4 ring-red-600/30 scale-110' : ''}
-                transition-all duration-300
-              `}>
-                {currentStep > step.number ? (
-                  <CheckCircle className="w-6 h-6" />
-                ) : (
-                  <step.icon className="w-6 h-6" />
+      {/* Progress bar with icons */}
+      <div className="bg-black/50 p-4">
+        <div className="flex items-center justify-center mb-4">
+          <div className="flex items-center">
+            {steps.map((step, index) => (
+              <React.Fragment key={step.number}>
+                {/* Step Icon Container */}
+                <div className="flex flex-col items-center">
+                  <div className={`
+                    w-16 h-16 rounded-full flex items-center justify-center font-bold text-sm relative
+                    ${currentStep >= step.number 
+                      ? 'bg-gradient-to-br from-red-600 via-red-700 to-red-800 text-white shadow-xl shadow-red-600/40' 
+                      : 'bg-gradient-to-br from-neutral-700 to-neutral-800 text-neutral-400'
+                    }
+                    ${currentStep === step.number ? 'ring-4 ring-red-500/30 scale-110 animate-pulse' : ''}
+                    transition-all duration-500 transform hover:scale-105
+                  `}>
+                    {currentStep > step.number ? (
+                      <CheckCircle className="w-8 h-8" />
+                    ) : (
+                      <step.icon className="w-8 h-8" />
+                    )}
+                    
+                    {/* Glow effect for active step */}
+                    {currentStep === step.number && (
+                      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-red-600 to-red-800 blur-lg opacity-60 animate-pulse -z-10" />
+                    )}
+                  </div>
+                  
+                  {/* Step Title */}
+                  <div className="mt-3 text-center">
+                    <p className={`text-sm font-semibold ${
+                      currentStep >= step.number ? 'text-white' : 'text-neutral-400'
+                    }`}>
+                      {step.title}
+                    </p>
+                    <p className="text-xs text-neutral-500 mt-1">
+                      Schritt {step.number}
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Connecting Line - Fixed consistent spacing */}
+                {index < steps.length - 1 && (
+                  <div className="flex items-center justify-center mx-8 -mt-12">
+                    <div className={`
+                      h-3 w-32 rounded-full transition-all duration-700 relative overflow-hidden
+                      ${currentStep > step.number 
+                        ? 'bg-gradient-to-r from-red-600 to-red-800 shadow-lg shadow-red-600/30' 
+                        : 'bg-neutral-700'
+                      }
+                    `}>
+                      {/* Animated progress fill */}
+                      {currentStep > step.number && (
+                        <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-red-600 animate-pulse opacity-50" />
+                      )}
+                      
+                      {/* Moving glow effect */}
+                      {currentStep === step.number + 1 && (
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent transform translate-x-full animate-pulse" />
+                      )}
+                      
+                      {/* Decorative dots */}
+                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex gap-2">
+                        <div className={`w-1 h-1 rounded-full ${
+                          currentStep > step.number ? 'bg-red-300' : 'bg-neutral-500'
+                        }`} />
+                        <div className={`w-1 h-1 rounded-full ${
+                          currentStep > step.number ? 'bg-red-300' : 'bg-neutral-500'
+                        }`} />
+                        <div className={`w-1 h-1 rounded-full ${
+                          currentStep > step.number ? 'bg-red-300' : 'bg-neutral-500'
+                        }`} />
+                      </div>
+                    </div>
+                  </div>
                 )}
-              </div>
-              {index < steps.length - 1 && (
-                <div className={`
-                  h-1 w-16 mx-2 rounded-full transition-all duration-500
-                  ${currentStep > step.number 
-                    ? 'bg-gradient-to-r from-red-600 to-red-800' 
-                    : 'bg-neutral-700'
-                  }
-                `} />
-              )}
-            </div>
-          ))}
+              </React.Fragment>
+            ))}
+          </div>
         </div>
         
-        <div className="mb-2">
+        {/* Progress info */}
+        <div className="mb-1">
           <div className="flex justify-between text-sm text-neutral-400 mb-1">
-            <span>{steps[currentStep - 1]?.title}</span>
-            <span>{Math.round(getStepProgress())}%</span>
+            <span className="font-medium">{steps[currentStep - 1]?.title}</span>
+            <span className="text-red-400 font-bold">{Math.round(getStepProgress())}% abgeschlossen</span>
           </div>
-          <div className="w-full bg-neutral-800 rounded-full h-2">
+          <div className="w-full bg-neutral-800 rounded-full h-2 overflow-hidden">
             <div 
-              className="bg-gradient-to-r from-red-600 to-red-800 h-2 rounded-full transition-all duration-500 shadow-lg shadow-red-600/30"
+              className="bg-gradient-to-r from-red-600 via-red-500 to-red-800 h-2 rounded-full transition-all duration-700 shadow-lg shadow-red-600/30 relative"
               style={{ width: `${getStepProgress()}%` }}
-            />
+            >
+              {/* Animated shine effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 animate-pulse" />
+            </div>
           </div>
         </div>
       </div>
 
       {/* Form content */}
-      <div className="p-6">
+      <div className="p-4">
         {/* Step 1: Personal Data */}
         {currentStep === 1 && (
-          <div className="space-y-6">
-            <h4 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-              <User className="w-6 h-6 text-red-600" />
+          <div className="space-y-4">
+            <h4 className="text-xl font-bold text-white mb-4 flex items-center gap-3">
+              <User className="w-5 h-5 text-red-600" />
               Persönliche Daten
             </h4>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-neutral-300 mb-2">
                   Anrede *
@@ -316,13 +376,13 @@ const TradeInSteps = ({ selectedCar }) => {
 
         {/* Step 2: Vehicle Data */}
         {currentStep === 2 && (
-          <div className="space-y-6">
-            <h4 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-              <Car className="w-6 h-6 text-red-600" />
+          <div className="space-y-4">
+            <h4 className="text-xl font-bold text-white mb-4 flex items-center gap-3">
+              <Car className="w-5 h-5 text-red-600" />
               Ihr Fahrzeug
             </h4>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-neutral-300 mb-2">
                   Marke *
@@ -354,7 +414,7 @@ const TradeInSteps = ({ selectedCar }) => {
               <div>
                 <label className="block text-sm font-medium text-neutral-300 mb-2">
                   <Calendar className="inline w-4 h-4 mr-1" />
-                  Baujahr *
+                  Erstzulassung *
                 </label>
                 <input
                   type="number"
@@ -448,13 +508,13 @@ const TradeInSteps = ({ selectedCar }) => {
 
         {/* Step 3: Files */}
         {currentStep === 3 && (
-          <div className="space-y-6">
-            <h4 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-              <Upload className="w-6 h-6 text-red-600" />
+          <div className="space-y-4">
+            <h4 className="text-xl font-bold text-white mb-4 flex items-center gap-3">
+              <Upload className="w-5 h-5 text-red-600" />
               Dokumente & Bilder
             </h4>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Vehicle Images */}
               <div>
                 <label className="block text-sm font-medium text-neutral-300 mb-2">
@@ -540,7 +600,7 @@ const TradeInSteps = ({ selectedCar }) => {
               </div>
             </div>
 
-            <div className="bg-neutral-800/50 rounded-lg p-4">
+            <div className="bg-neutral-800/50 rounded-lg p-3">
               <p className="text-sm text-neutral-400 mb-2">
                 <strong>Empfohlene Dokumente:</strong>
               </p>
@@ -556,7 +616,7 @@ const TradeInSteps = ({ selectedCar }) => {
         )}
 
         {/* Navigation buttons */}
-        <div className="flex justify-between mt-8 pt-6 border-t border-neutral-700">
+        <div className="flex justify-between mt-6 pt-4 border-t border-neutral-700">
           <button
             onClick={prevStep}
             disabled={currentStep === 1}
