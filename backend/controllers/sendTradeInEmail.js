@@ -30,15 +30,38 @@ export const uploadMiddleware = upload.fields([
 
 // Konfiguracija SMTP transporta
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: process.env.EMAIL_HOST,
+  port: 587,
+  secure: false, // true for 465, false for other ports
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    pass: process.env.EMAIL_PASSWORD,
   },
 });
 
 export const sendTradeInEmail = async (req, res) => {
   try {
+    console.log('📨 TRADE-IN REQUEST RECEIVED:');
+    console.log('📋 Request Body:', JSON.stringify(req.body, null, 2));
+    console.log('📎 Files received:', {
+      vehicleImages: req.files?.vehicleImages?.length || 0,
+      vehicleDocuments: req.files?.vehicleDocuments?.length || 0
+    });
+    
+    if (req.files?.vehicleImages) {
+      console.log('🖼️ Vehicle Images Details:');
+      req.files.vehicleImages.forEach((file, index) => {
+        console.log(`  Image ${index + 1}: ${file.originalname} (${file.size} bytes, ${file.mimetype})`);
+      });
+    }
+    
+    if (req.files?.vehicleDocuments) {
+      console.log('📄 Vehicle Documents Details:');
+      req.files.vehicleDocuments.forEach((file, index) => {
+        console.log(`  Document ${index + 1}: ${file.originalname} (${file.size} bytes, ${file.mimetype})`);
+      });
+    }
+
     const {
       name, email, phone, message,
       carId, carMake, carModel, carPrice,
@@ -130,12 +153,24 @@ ${message || 'Keine Nachricht'}
       attachments: attachments.length > 0 ? attachments : undefined
     };
 
-    await transporter.sendMail(mailOptions);
+    console.log('📤 Sending email with options:', {
+      from: mailOptions.from,
+      to: mailOptions.to,
+      subject: mailOptions.subject,
+      attachmentsCount: mailOptions.attachments?.length || 0
+    });
+
+    const emailResult = await transporter.sendMail(mailOptions);
     
-    console.log('✅ Inzahlungnahme E-Mail erfolgreich gesendet');
+    console.log('✅ Email sent successfully:', {
+      messageId: emailResult.messageId,
+      response: emailResult.response
+    });
+    
     res.status(200).json({ 
       success: true,
-      message: 'Inzahlungnahme Anfrage erfolgreich gesendet!'
+      message: 'Inzahlungnahme Anfrage erfolgreich gesendet!',
+      emailId: emailResult.messageId
     });
 
   } catch (error) {

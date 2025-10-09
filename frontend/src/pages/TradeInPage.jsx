@@ -232,7 +232,34 @@ const TradeInPage = () => {
   };
 
   const getStepProgress = () => {
-    return (currentStep / 3) * 100;
+    // Brojimo koliko je koraka validno završeno
+    let completedSteps = 0;
+    
+    // Proveravamo svaki korak da li je validno završen
+    for (let step = 1; step <= 3; step++) {
+      if (step < currentStep && isStepValid(step)) {
+        completedSteps++;
+      } else if (step === currentStep && isStepValid(step)) {
+        // Ako je trenutni korak valjan, dodajemo ga kao završen
+        completedSteps++;
+      } else {
+        // Čim naiđemo na nevaljan korak, prekidamo
+        break;
+      }
+    }
+    
+    // Poseban slučaj: ako je forma uspešno poslana, sve je završeno
+    if (submitStatus === 'success') {
+      completedSteps = 3;
+    }
+    
+    // Konvertujemo u procenat
+    // 0 koraka = 0%, 1 korak = 50%, 2 koraka = 100% (linija do poslednje ikone)
+    if (completedSteps === 0) return 0;
+    if (completedSteps === 1) return 50;
+    if (completedSteps >= 2) return 100;
+    
+    return 0;
   };
 
   const formatPrice = (priceObj) => {
@@ -322,7 +349,10 @@ const TradeInPage = () => {
                   {/* Active Progress Line - from first to last icon */}
                   <div 
                     className="absolute top-5 left-5 h-0.5 bg-gradient-to-r from-red-500 to-red-600 rounded-full transition-all duration-700"
-                    style={{ width: `calc(${getStepProgress()}% * (100% - 2.5rem) / 100)` }}
+                    style={{ 
+                      width: `calc((100% - 2.5rem) * ${getStepProgress() / 100})`,
+                      maxWidth: 'calc(100% - 2.5rem)'
+                    }}
                   ></div>
                   
                   {/* Steps */}
