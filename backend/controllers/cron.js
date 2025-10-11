@@ -1,10 +1,17 @@
 import { checkCarsAndPostToInstagram } from "../utils/postToInstagramCheck.js";
 
 export const cron = (req, res) => {
-  if (req.headers.get('Authorization') !== `Bearer ${process.env.CRON_SECRET}`) {
-    return res.status(401).end('Unauthorized');
-  }
-  console.log("Running crone job for instagram posts")
-  checkCarsAndPostToInstagram()
+  const token = req.get('Authorization'); // ili req.headers['authorization']
 
-}
+  if (token !== `Bearer ${process.env.CRON_SECRET}`) {
+    return res.status(401).send('Unauthorized');
+  }
+
+  console.log("Running cron job for Instagram posts");
+
+  // Pokreće funkciju, ali ne čekamo njen rezultat
+  checkCarsAndPostToInstagram();
+
+  // Odmah vraćamo odgovor
+  res.json({ status: 'ok', message: 'Cron job started' });
+};
