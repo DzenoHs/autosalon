@@ -1,8 +1,8 @@
-name: Call API every minute
+name: Call API every 5 minute
 
 on:
   schedule:
-    - cron: '*/1 * * * *' # Pokreće se svake minute
+    - cron: '*/5 * * * *' # Pokreće se svake minute
   workflow_dispatch:       # Ručno pokretanje (opcionalno)
 
 jobs:
