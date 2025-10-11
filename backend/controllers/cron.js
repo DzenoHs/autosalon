@@ -1,6 +1,6 @@
 import { checkCarsAndPostToInstagram } from "../utils/postToInstagramCheck.js";
 
-export const cron = () => {
+export const cron = (req, res) => {
   if (req.headers.get('Authorization') !== `Bearer ${process.env.CRON_SECRET}`) {
     return res.status(401).end('Unauthorized');
   }

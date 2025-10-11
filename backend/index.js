@@ -68,7 +68,7 @@ app.get("/api/cars/top/expensive", topExpensiveCars);
 app.get("/api/cars/:id", getCarById);
 app.post("/api/send", sendEmail);
 app.post("/api/send-tradein", uploadMiddleware, sendTradeInEmail);
-app.get("/api/corn", cron)
+app.get("/api/cron", cron)
 
 // Cache management endpoints
 app.get("/api/cache/stats", getCacheStats);
