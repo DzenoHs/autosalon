@@ -247,13 +247,19 @@ ${attachmentsSection}
     `
         : ''
       }
-${uploadedDocs.length
+${uploadedImages.length
         ? `
-    <div class="block" style="margin-top: 15px;">
-      📄 <strong>Fahrzeugdokumente:</strong><br>
-      ${uploadedDocs.map((url) => `<a href="${url}" target="_blank">${url}</a>`).join('<br>')}
-    </div>
-    `
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; margin-top: 15px;">
+  ${uploadedImages
+          .map(
+            (url) =>
+              `<a href="${url}" target="_blank" rel="noopener noreferrer">
+          <img src="${url}" alt="Fahrzeugbild" style="width: 100%; max-height: 120px; object-fit: cover; border-radius: 6px; border: 1px solid #ddd;" />
+        </a>`
+          )
+          .join('')}
+</div>
+`
         : ''
       }
 

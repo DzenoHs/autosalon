@@ -1,8 +1,6 @@
 import admin from "firebase-admin";
 import path from "path";
 
-console.log("path.resolve(serviceAccountKey.json)")
-console.log(path.resolve("serviceAccountKey.json"))
 // Initialize Firebase Admin once
 if (!admin.apps.length) {
   admin.initializeApp({
