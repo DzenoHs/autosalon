@@ -9,7 +9,7 @@ import morgan from 'morgan';
 import { getCarsFuel, getCarsGearbox, getCarsMake, getCarsModels } from './controllers/filters.js';
 import './utils/cron.js';
 import { initDb } from './utils/db.js';
-import { checkCarsAndPostToInstagram } from './utils/postToInstagramCheck.js';
+// import { checkCarsAndPostToInstagram } from './utils/postToInstagramCheck.js';
 import { sendEmail } from './controllers/sendEmail.js';
 import { sendTradeInEmail, uploadMiddleware } from './controllers/sendTradeInEmail.js';
 import { cron } from './controllers/cron.js';
@@ -21,7 +21,7 @@ import { cron } from './controllers/cron.js';
 //   caption: "PORSCHE 992 911 GT3 RS Clubsport Matrix Lift Ceramic Käf"
 // })
 
-checkCarsAndPostToInstagram()
+// checkCarsAndPostToInstagram()
 
 initDb()
 

@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 import multer from 'multer';
 import path from 'path';
+import { uploadBufferToFirebase } from '../utils/uploadToFirebase.js'; // Make sure this util exists
 
 // Multer konfiguracija za file upload
 const storage = multer.memoryStorage();
@@ -14,7 +15,7 @@ const upload = multer({
     const allowedTypes = /jpeg|jpg|png|gif|pdf|doc|docx/;
     const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
     const mimetype = allowedTypes.test(file.mimetype);
-    
+
     if (mimetype && extname) {
       return cb(null, true);
     } else {
@@ -39,6 +40,12 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+const generateNewFileName = (originalname) => {
+  const ext = path.extname(originalname).toLowerCase();
+  const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+  return `${uniqueSuffix}${ext}`;
+};
+
 export const sendTradeInEmail = async (req, res) => {
   try {
     console.log('📨 TRADE-IN REQUEST RECEIVED:');
@@ -47,20 +54,6 @@ export const sendTradeInEmail = async (req, res) => {
       vehicleImages: req.files?.vehicleImages?.length || 0,
       vehicleDocuments: req.files?.vehicleDocuments?.length || 0
     });
-    
-    if (req.files?.vehicleImages) {
-      console.log('🖼️ Vehicle Images Details:');
-      req.files.vehicleImages.forEach((file, index) => {
-        console.log(`  Image ${index + 1}: ${file.originalname} (${file.size} bytes, ${file.mimetype})`);
-      });
-    }
-    
-    if (req.files?.vehicleDocuments) {
-      console.log('📄 Vehicle Documents Details:');
-      req.files.vehicleDocuments.forEach((file, index) => {
-        console.log(`  Document ${index + 1}: ${file.originalname} (${file.size} bytes, ${file.mimetype})`);
-      });
-    }
 
     const {
       name, email, phone, message,
@@ -70,7 +63,6 @@ export const sendTradeInEmail = async (req, res) => {
       gender
     } = req.body;
 
-    // Dobijanje upload-ovanih fajlova
     const vehicleImages = req.files?.vehicleImages || [];
     const vehicleDocuments = req.files?.vehicleDocuments || [];
 
@@ -78,7 +70,43 @@ export const sendTradeInEmail = async (req, res) => {
       return res.status(400).json({ error: 'Erforderliche Daten fehlen.' });
     }
 
-    // Kreiranje email sadržaja
+    // 🔼 Upload images & documents to Firebase
+    const uploadedImages = await Promise.all(
+      vehicleImages.map(file => {
+        const newName = generateNewFileName(file.originalname);
+        return uploadBufferToFirebase(
+          file.buffer,
+          `tradeins/images/${newName}`,
+          file.mimetype
+        )
+      }
+
+      )
+    );
+
+    const uploadedDocs = await Promise.all(
+      vehicleDocuments.map(file => {
+        const newName = generateNewFileName(file.originalname);
+        return uploadBufferToFirebase(
+          file.buffer,
+          `tradeins/docs/${newName}`,
+          file.mimetype
+        )
+      }
+
+      )
+    );
+
+    console.log('✅ Uploaded to Firebase:', {
+      images: uploadedImages.length,
+      docs: uploadedDocs.length
+    });
+
+    // 🔹 Create email content including links
+    let attachmentsSection = '';
+    if (uploadedImages.length) attachmentsSection += '🖼️ Fahrzeugbilder:\n' + uploadedImages.join('\n') + '\n';
+    if (uploadedDocs.length) attachmentsSection += '📄 Fahrzeugdokumente:\n' + uploadedDocs.join('\n') + '\n';
+
     const emailContent = `
 🔄 NEUE INZAHLUNGNAHME ANFRAGE
 
@@ -115,69 +143,164 @@ ${message || 'Keine Nachricht'}
 ═══════════════════════════════════════
 
 📎 ANHÄNGE:
-• Fahrzeugbilder: ${vehicleImages.length} Dateien
-• Fahrzeugdokumente: ${vehicleDocuments.length} Dateien
+• Fahrzeugbilder: ${uploadedImages.length} Dateien
+• Fahrzeugdokumente: ${uploadedDocs.length} Dateien
+
+${attachmentsSection}
 
 ═══════════════════════════════════════
 
 ⚡ AutoHaus Miftari
 📧 Diese Anfrage wurde über das Kontaktformular gesendet.
-    `;
+`;
+    const emailContentHtml = `
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      color: #333;
+      background: #f9f9f9;
+      padding: 20px;
+    }
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 700px;
+      margin: auto;
+    }
+    h2 {
+      color: #8c1d1d;
+    }
+    h3 {
+      margin-top: 25px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 5px;
+    }
+    p {
+      margin: 5px 0;
+    }
+    .label {
+      font-weight: bold;
+    }
+    .block {
+      background: #f4f4f4;
+      padding: 10px;
+      border-radius: 5px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      margin-top: 10px;
+    }
+    a {
+      color: #0073e6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🔄 Neue Inzahlungnahme Anfrage</h2>
 
-    // Priprema email attachments
-    const attachments = [];
-    
-    // Dodavanje slika vozila
-    vehicleImages.forEach((file, index) => {
-      attachments.push({
-        filename: `vozilo_slika_${index + 1}_${file.originalname}`,
-        content: file.buffer,
-        contentType: file.mimetype
-      });
-    });
-    
-    // Dodavanje dokumenata vozila
-    vehicleDocuments.forEach((file, index) => {
-      attachments.push({
-        filename: `vozilo_dokument_${index + 1}_${file.originalname}`,
-        content: file.buffer,
-        contentType: file.mimetype
-      });
-    });
+    <h3>👤 Kundendaten</h3>
+    <p><span class="label">Anrede:</span> ${gender || 'Nicht angegeben'}</p>
+    <p><span class="label">Name:</span> ${name}</p>
+    <p><span class="label">E-Mail:</span> <a href="mailto:${email}">${email}</a></p>
+    <p><span class="label">Telefon:</span> ${phone || 'Nicht angegeben'}</p>
+
+    <h3>📞 Nachricht</h3>
+    <p>${message || 'Keine Nachricht'}</p>
+
+    <h3>🚗 Interessiertes Fahrzeug</h3>
+    <p><span class="label">Fahrzeug-ID:</span> ${carId || 'Nicht angegeben'}</p>
+    <p><span class="label">Marke:</span> ${carMake || 'Nicht angegeben'}</p>
+    <p><span class="label">Modell:</span> ${carModel || 'Nicht angegeben'}</p>
+    <p><span class="label">Preis:</span> ${carPrice ? `€${carPrice.toLocaleString('de-DE')}` : 'Nicht angegeben'}</p>
+    <p><span class="label">Link:</span> <a href="https://www.autohausmiftari.com/car/${carId}">Fahrzeug ansehen</a></p>
+
+    <h3>🔄 Inzahlungnahme Fahrzeug</h3>
+    <p><span class="label">Marke:</span> ${tradeInBrand}</p>
+    <p><span class="label">Modell:</span> ${tradeInModel}</p>
+    <p><span class="label">Baujahr:</span> ${tradeInYear || 'Nicht angegeben'}</p>
+    <p><span class="label">Kilometerstand:</span> ${tradeInMileage ? `${tradeInMileage.toLocaleString('de-DE')} km` : 'Nicht angegeben'}</p>
+    <p><span class="label">Kraftstoff:</span> ${tradeInFuel || 'Nicht angegeben'}</p>
+    <p><span class="label">Zustand:</span> ${tradeInCondition || 'Nicht angegeben'}</p>
+    <p><span class="label">Fahrgestellnummer:</span> ${tradeInVIN || 'Nicht angegeben'}</p>
+    <p><span class="label">Erstzulassung:</span> ${tradeInRegistration || 'Nicht angegeben'}</p>
+
+    <h3>📎 Anhänge</h3>
+    <p><span class="label">Fahrzeugbilder:</span> ${uploadedImages.length} Dateien</p>
+    <p><span class="label">Fahrzeugdokumente:</span> ${uploadedDocs.length} Dateien</p>
+
+    ${uploadedImages.length
+        ? `
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; margin-top: 15px;">
+      ${uploadedImages
+          .map(
+            (url) =>
+              `<img src="${url}" alt="Fahrzeugbild" style="width: 100%; max-height: 120px; object-fit: cover; border-radius: 6px;" />`
+          )
+          .join('')}
+    </div>
+    `
+        : ''
+      }
+${uploadedDocs.length
+        ? `
+    <div class="block" style="margin-top: 15px;">
+      📄 <strong>Fahrzeugdokumente:</strong><br>
+      ${uploadedDocs.map((url) => `<a href="${url}" target="_blank">${url}</a>`).join('<br>')}
+    </div>
+    `
+        : ''
+      }
+
+    <p style="margin-top: 30px; font-size: 14px; color: #666;">
+      ⚡ <strong>AutoHaus Miftari</strong><br />
+      📧 Diese Anfrage wurde über das Kontaktformular gesendet.
+    </p>
+  </div>
+</body>
+</html>
+`;
 
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: process.env.EMAIL_RECIPITENT,
       subject: `🔄 Inzahlungnahme Anfrage - ${tradeInBrand} ${tradeInModel} (${name})`,
       text: emailContent,
-      attachments: attachments.length > 0 ? attachments : undefined
+      html: emailContentHtml,
     };
 
     console.log('📤 Sending email with options:', {
       from: mailOptions.from,
       to: mailOptions.to,
       subject: mailOptions.subject,
-      attachmentsCount: mailOptions.attachments?.length || 0
+      attachmentsCount: uploadedImages.length + uploadedDocs.length
     });
 
     const emailResult = await transporter.sendMail(mailOptions);
-    
+
     console.log('✅ Email sent successfully:', {
       messageId: emailResult.messageId,
       response: emailResult.response
     });
-    
-    res.status(200).json({ 
+
+    res.status(200).json({
       success: true,
       message: 'Inzahlungnahme Anfrage erfolgreich gesendet!',
-      emailId: emailResult.messageId
+      emailId: emailResult.messageId,
+      uploadedImages,
+      uploadedDocs
     });
 
   } catch (error) {
     console.error('❌ Fehler beim Senden der Inzahlungnahme E-Mail:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Fehler beim Senden der Anfrage.',
-      details: error.message 
+      details: error.message
     });
   }
 };

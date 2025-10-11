@@ -10,7 +10,7 @@ cron.schedule('0 10 * * *', () => {
 
 cron.schedule('0 * * * *', () => {
   console.log('Check mobile.de to post new cars to instagram')
-  checkCarsAndPostToInstagram()
+  // checkCarsAndPostToInstagram()
 })
 
 // Optional immediate check on app start

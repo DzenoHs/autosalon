@@ -1,0 +1,16 @@
+name: Call API every minute
+
+on:
+  schedule:
+    - cron: '*/1 * * * *' # Pokreće se svake minute
+  workflow_dispatch: # Ručno pokretanje (opcionalno)
+
+jobs:
+  call_api:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call protected API endpoint
+        run: |
+          curl -X GET "https://autosalon-t95d.vercel.app/api/cron" \
+            -H "Authorization: Bearer ${{ secrets.CRON_TOKEN }}" \
+            -H "Content-Type: application/json"

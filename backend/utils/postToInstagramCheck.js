@@ -53,10 +53,10 @@ function generateInstagramCaption(car) {
       ? `${car.firstRegistration.slice(4, 6)}/${car.firstRegistration.slice(0, 4)}`
       : car.firstRegistration || '';
 
+  //💶 Preis Brutto: ${formatPrice(car.price?.consumerPriceGross)}
+  //💶 Preis Netto: ${formatPrice(car.price?.consumerPriceNet)}
   return `
 🚗 ${car.make} ${car.model} ${car.trimLine || ''}
-💶 Preis Brutto: ${formatPrice(car.price?.consumerPriceGross)}
-💶 Preis Netto: ${formatPrice(car.price?.consumerPriceNet)}
 📅 Erstzulassung: ${firstReg}
 📊 Laufleistung: ${car.mileage?.toLocaleString('de-DE')} km
 ⚙️ Getriebe: ${formatGearbox(car.gearbox)}
