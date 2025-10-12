@@ -180,17 +180,39 @@ export default function Contact() {
             </div>
 
             {/* Contact Info ispod mape */}
-            <div className="text-center mt-6 flex flex-col sm:flex-row justify-center gap-6 text-white font-bold tracking-wide text-lg select-none">
+            <div className="text-center mt-6 flex flex-col sm:flex-row justify-center gap-6 text-white font-bold tracking-wide text-lg">
               <a
-                href="tel:+49 174 7692697"
-                className="flex items-center justify-center gap-2 text-red-500 hover:text-red-400 transition-colors"
+                href="tel:+491747692697"
+                className="flex items-center justify-center gap-2 text-red-500 hover:text-red-400 transition-colors cursor-pointer hover:underline active:scale-95 transform transition-transform duration-150"
+                style={{ 
+                  textDecoration: 'none',
+                  userSelect: 'none',
+                  WebkitUserSelect: 'none',
+                  WebkitTouchCallout: 'default',
+                  WebkitTapHighlightColor: 'transparent'
+                }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.location.href = 'tel:+491747692697';
+                }}
               >
                 <Phone size={24} />
                 +49 174 7692697
               </a>
               <a
                 href="mailto:info@autohausmiftari.de"
-                className="flex items-center justify-center gap-2 text-blue-500 hover:text-blue-400 transition-colors break-all"
+                className="flex items-center justify-center gap-2 text-blue-500 hover:text-blue-400 transition-colors cursor-pointer hover:underline active:scale-95 transform transition-transform duration-150 break-all"
+                style={{ 
+                  textDecoration: 'none',
+                  userSelect: 'none',
+                  WebkitUserSelect: 'none',
+                  WebkitTouchCallout: 'default',
+                  WebkitTapHighlightColor: 'transparent'
+                }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.location.href = 'mailto:info@autohausmiftari.de';
+                }}
               >
                 <Mail size={24} />
                 info@autohausmiftari.de

@@ -36,7 +36,7 @@ export default function Datenschutzerklaerung() {
               Datenschutzerklärung
             </h1>
           </div>
-          <p className="text-neutral-400 text-lg">
+          <p className="text-white text-lg">
             Autohaus Miftari - Schutz Ihrer persönlichen Daten
           </p>
         </div>
@@ -47,8 +47,8 @@ export default function Datenschutzerklaerung() {
             
             {/* Section 1 */}
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-red-500 mb-4 flex items-center gap-2">
-                <span className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">1</span>
+              <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                <span className="w-8 h-8 bg-white rounded-lg flex items-center justify-center text-black font-bold text-sm">1</span>
                 Datenschutz auf einen Blick
               </h2>
               
@@ -59,27 +59,27 @@ export default function Datenschutzerklaerung() {
 
               <h3 className="text-xl font-semibold text-white mb-3">Datenerfassung auf dieser Website</h3>
               
-              <h4 className="text-lg font-medium text-red-400 mb-2">Wer ist verantwortlich für die Datenerfassung auf dieser Website?</h4>
+              <h4 className="text-lg font-medium text-white mb-2">Wer ist verantwortlich für die Datenerfassung auf dieser Website?</h4>
               <p className="text-neutral-300 mb-4 leading-relaxed">
                 Die Datenverarbeitung auf dieser Website erfolgt durch den Websitebetreiber. Dessen Kontaktdaten können Sie dem Abschnitt „Hinweis zur Verantwortlichen Stelle" in dieser Datenschutzerklärung entnehmen.
               </p>
 
-              <h4 className="text-lg font-medium text-red-400 mb-2">Wie erfassen wir Ihre Daten?</h4>
+              <h4 className="text-lg font-medium text-white mb-2">Wie erfassen wir Ihre Daten?</h4>
               <p className="text-neutral-300 mb-4 leading-relaxed">
                 Ihre Daten werden zum einen dadurch erhoben, dass Sie uns diese mitteilen (z. B. Eingaben im Kontaktformular). Andere Daten werden automatisch oder nach Ihrer Einwilligung beim Besuch der Website durch unsere IT-Systeme erfasst (z. B. Browser, Betriebssystem, Uhrzeit des Seitenaufrufs). Die Erfassung erfolgt automatisch, sobald Sie die Website betreten.
               </p>
 
-              <h4 className="text-lg font-medium text-red-400 mb-2">Wofür nutzen wir Ihre Daten?</h4>
+              <h4 className="text-lg font-medium text-white mb-2">Wofür nutzen wir Ihre Daten?</h4>
               <p className="text-neutral-300 mb-4 leading-relaxed">
                 Ein Teil der Daten wird erhoben, um eine fehlerfreie Bereitstellung der Website zu gewährleisten. Andere Daten können zur Analyse Ihres Nutzerverhaltens verwendet werden.
               </p>
 
-              <h4 className="text-lg font-medium text-red-400 mb-2">Welche Rechte haben Sie bezüglich Ihrer Daten?</h4>
+              <h4 className="text-lg font-medium text-white mb-2">Welche Rechte haben Sie bezüglich Ihrer Daten?</h4>
               <p className="text-neutral-300 mb-4 leading-relaxed">
                 Sie haben jederzeit das Recht, unentgeltlich Auskunft über Herkunft, Empfänger und Zweck Ihrer gespeicherten personenbezogenen Daten zu erhalten. Sie haben außerdem ein Recht auf Berichtigung oder Löschung dieser Daten, auf Widerruf erteilter Einwilligungen für die Zukunft sowie – unter bestimmten Umständen – auf Einschränkung der Verarbeitung. Des Weiteren steht Ihnen ein Beschwerderecht bei der zuständigen Aufsichtsbehörde zu. Hierzu sowie zu weiteren Fragen zum Datenschutz können Sie sich jederzeit an uns wenden.
               </p>
 
-              <h4 className="text-lg font-medium text-red-400 mb-2">Analyse-Tools und Tools von Drittanbietern</h4>
+              <h4 className="text-lg font-medium text-white mb-2">Analyse-Tools und Tools von Drittanbietern</h4>
               <p className="text-neutral-300 mb-6 leading-relaxed">
                 Beim Besuch dieser Website kann Ihr Surf-Verhalten statistisch ausgewertet werden, vor allem mit sogenannten Analyseprogrammen. Details finden Sie unten in dieser Datenschutzerklärung.
               </p>
@@ -87,8 +87,8 @@ export default function Datenschutzerklaerung() {
 
             {/* Section 2 */}
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-red-500 mb-4 flex items-center gap-2">
-                <span className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">2</span>
+              <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                <span className="w-8 h-8 bg-white rounded-lg flex items-center justify-center text-black font-bold text-sm">2</span>
                 Hosting
               </h2>
               
@@ -103,7 +103,7 @@ export default function Datenschutzerklaerung() {
                 Unser(e) Hoster verarbeiten Ihre Daten nur insoweit, wie dies zur Erfüllung der Leistungspflichten erforderlich ist und folgen unseren Weisungen.
               </p>
               <p className="text-neutral-300 mb-4 leading-relaxed">
-                <strong className="text-red-400">Wir setzen folgenden Hoster ein:</strong><br />
+                <strong className="text-white">Wir setzen folgenden Hoster ein:</strong><br />
                 One.com Group AB, Carlsgatan 3, 211 20 Malmö
               </p>
 
@@ -115,8 +115,8 @@ export default function Datenschutzerklaerung() {
 
             {/* Section 3 */}
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-red-500 mb-4 flex items-center gap-2">
-                <span className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">3</span>
+              <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                <span className="w-8 h-8 bg-white rounded-lg flex items-center justify-center text-black font-bold text-sm">3</span>
                 Allgemeine Hinweise und Pflichtinformationen
               </h2>
               
@@ -128,11 +128,11 @@ export default function Datenschutzerklaerung() {
               <h3 className="text-xl font-semibold text-white mb-3">Hinweis zur verantwortlichen Stelle</h3>
               <div className="bg-neutral-800/50 rounded-xl p-4 mb-4">
                 <p className="text-neutral-300 leading-relaxed">
-                  <strong className="text-red-400">Autohaus Miftari</strong><br />
+                  <strong className="text-white">Autohaus Miftari</strong><br />
                   Niestetalstraße 11<br />
                   34266 Niestetal, Germany<br />
-                  Telefon: <a href="tel:+4917476926970" className="text-red-400 hover:text-red-300">+49 174 7692697</a><br />
-                  E-Mail: <a href="mailto:info@autohaus-miftari.de" className="text-red-400 hover:text-red-300">info@autohaus-miftari.de</a>
+                  Telefon: <a href="tel:+4917476926970" className="text-white hover:text-neutral-300">+49 174 7692697</a><br />
+                  E-Mail: <a href="mailto:info@autohausmiftari.de" className="text-white hover:text-neutral-300">info@autohausmiftari.de</a>
                 </p>
               </div>
 
@@ -149,8 +149,8 @@ export default function Datenschutzerklaerung() {
 
             {/* Section 4 */}
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-red-500 mb-4 flex items-center gap-2">
-                <span className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">4</span>
+              <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                <span className="w-8 h-8 bg-white rounded-lg flex items-center justify-center text-black font-bold text-sm">4</span>
                 Datenerfassung auf dieser Website
               </h2>
               
@@ -172,20 +172,20 @@ export default function Datenschutzerklaerung() {
 
             {/* Section 5 */}
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-red-500 mb-4 flex items-center gap-2">
-                <span className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">5</span>
+              <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                <span className="w-8 h-8 bg-white rounded-lg flex items-center justify-center text-black font-bold text-sm">5</span>
                 Soziale Medien
               </h2>
               
               <div className="grid md:grid-cols-2 gap-4 mb-6">
                 <div className="bg-neutral-800/30 rounded-xl p-4">
-                  <h4 className="text-lg font-medium text-red-400 mb-2">Facebook</h4>
+                  <h4 className="text-lg font-medium text-white mb-2">Facebook</h4>
                   <p className="text-neutral-300 text-sm leading-relaxed">
                     Anbieter: Meta Platforms Ireland Limited. Bei aktiven Elementen Übertragung auch in Drittländer (u. a. USA). Gemeinsame Verantwortlichkeit mit Meta für Erfassung/Weitergabe (Art. 26 DSGVO).
                   </p>
                 </div>
                 <div className="bg-neutral-800/30 rounded-xl p-4">
-                  <h4 className="text-lg font-medium text-red-400 mb-2">Instagram</h4>
+                  <h4 className="text-lg font-medium text-white mb-2">Instagram</h4>
                   <p className="text-neutral-300 text-sm leading-relaxed">
                     Anbieter: Meta Platforms Ireland Limited. Direkte Verbindung zu Instagram-Servern; gemeinsame Verantwortung wie bei Facebook.
                   </p>
@@ -195,8 +195,8 @@ export default function Datenschutzerklaerung() {
 
             {/* Section 6 */}
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-red-500 mb-4 flex items-center gap-2">
-                <span className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">6</span>
+              <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                <span className="w-8 h-8 bg-white rounded-lg flex items-center justify-center text-black font-bold text-sm">6</span>
                 Plugins und Tools
               </h2>
               
@@ -213,8 +213,8 @@ export default function Datenschutzerklaerung() {
 
             {/* Section 7 */}
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-red-500 mb-4 flex items-center gap-2">
-                <span className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">7</span>
+              <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                <span className="w-8 h-8 bg-white rounded-lg flex items-center justify-center text-black font-bold text-sm">7</span>
                 Eigene Dienste
               </h2>
               
@@ -238,7 +238,7 @@ export default function Datenschutzerklaerung() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-neutral-500">
             <span>Stand: {new Date().toLocaleDateString('de-DE')}</span>
             <span className="hidden sm:block">•</span>
-            <a href="mailto:info@autohaus-miftari.de" className="hover:text-red-400 transition-colors">
+            <a href="mailto:info@autohausmiftari.de" className="hover:text-white transition-colors">
               Fragen zum Datenschutz
             </a>
           </div>

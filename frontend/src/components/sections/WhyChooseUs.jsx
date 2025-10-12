@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Shield, CheckCircle, CreditCard, Zap, Car, Award, Clock, Users } from 'lucide-react';
+import { Shield, CheckCircle, CreditCard, Zap, Car, Award, Clock, Users, Star } from 'lucide-react';
 
 const features = [
   {
     icon: <CheckCircle size={52} />,
     title: 'GARANTIE',
-    description: 'Erweiterte Garantie bis zu 5 Jahren für maximale Sicherheit',
+    description: 'Erweiterte Garantie  für maximale Sicherheit',
     gradient: 'from-emerald-400 via-green-500 to-emerald-700',
     shadowColor: 'shadow-emerald-500/25'
   },
@@ -20,14 +20,14 @@ const features = [
   {
     icon: <CreditCard size={52} />,
     title: 'FINANZIERUNG',
-    description: 'Zahlungspläne für jeden Geldbeutel',
+    description: 'Flexible Zahlungspläne über SANTANDER und BANK11',
     gradient: 'from-violet-400 via-purple-500 to-fuchsia-700',
     shadowColor: 'shadow-purple-500/25'
   },
   {
     icon: <Zap size={52} />,
     title: 'EXPRESS',
-    description: 'Blitzschnelle Lieferung in maximal 48 Stunden',
+    description: 'Expresse Kaufabwicklung in 48 Stunden',
     gradient: 'from-amber-400 via-orange-500 to-red-600',
     shadowColor: 'shadow-orange-500/25'
   }
@@ -59,7 +59,7 @@ export default function WhyChooseUs() {
           className="text-center mb-16"
         >
           <motion.h2 
-            className="text-5xl md:text-6xl font-black mb-6 tracking-tight leading-none"
+            className="text-5xl md:text-6xl font-black mb-4 tracking-tight leading-none"
             initial={{ scale: 0.9, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
             viewport={{ once: true }}
@@ -72,6 +72,93 @@ export default function WhyChooseUs() {
               MIFTARI?
             </span>
           </motion.h2>
+
+          {/* Mobile.de Rating - Premium Badge */}
+          <motion.div
+            className="mb-6 flex justify-center"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            <motion.a 
+              href="https://www.mobile.de/bewertungen/GM-TOP-CARS?showTotal=true"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              {/* Glow background effect */}
+              <div className="absolute -inset-2 bg-gradient-to-r from-yellow-400/20 via-orange-400/20 to-yellow-400/20 
+                              rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              
+              {/* Main container */}
+              <div className="relative bg-gradient-to-br from-neutral-900/80 via-black/60 to-neutral-800/80 
+                              backdrop-blur-md rounded-2xl border border-yellow-400/20 
+                              px-8 py-4 shadow-2xl
+                              group-hover:border-yellow-400/40 group-hover:shadow-yellow-400/10
+                              transition-all duration-300">
+                
+                {/* Mobile.de logo text */}
+                <div className="flex items-center justify-center mb-3">
+                  <span className="text-yellow-400 text-sm font-bold tracking-wider">MOBILE.DE</span>
+                  <div className="w-1 h-1 bg-yellow-400 rounded-full mx-2"></div>
+                  <span className="text-white/80 text-xs font-medium">ZERTIFIZIERT</span>
+                </div>
+                
+                {/* Stars with enhanced glow */}
+                <div className="flex items-center justify-center gap-1 mb-3">
+                  {[...Array(5)].map((_, index) => (
+                    <Star 
+                      key={index} 
+                      className="w-7 h-7 text-yellow-400 fill-yellow-400 
+                                 drop-shadow-lg group-hover:scale-110 group-hover:drop-shadow-2xl
+                                 transition-all duration-300"
+                      style={{ 
+                        animationDelay: `${index * 100}ms`,
+                        filter: 'drop-shadow(0 0 8px rgba(250, 204, 21, 0.3))'
+                      }}
+                    />
+                  ))}
+                </div>
+                
+                {/* Rating info */}
+                <div className="flex items-center justify-between text-center">
+                  <div className="flex-1">
+                    <div className="text-white font-bold text-lg">5.0</div>
+                    <div className="text-yellow-400 text-xs font-medium">RATING</div>
+                  </div>
+                  
+                  <div className="w-px h-8 bg-gradient-to-b from-transparent via-yellow-400/30 to-transparent"></div>
+                  
+                  <div className="flex-1">
+                    <div className="text-white font-bold text-lg">299</div>
+                    <div className="text-white/60 text-xs font-medium">BEWERTUNGEN</div>
+                  </div>
+                </div>
+                
+                {/* Call to action */}
+                <div className="mt-3 pt-3 border-t border-yellow-400/20">
+                  <div className="flex items-center justify-center gap-2 text-yellow-400 group-hover:text-yellow-300 
+                                  transition-colors duration-300">
+                    <span className="text-sm font-medium">Bewertungen ansehen</span>
+                    <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" 
+                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Floating verification badge */}
+              <div className="absolute -top-2 -right-2 bg-gradient-to-r from-green-400 to-emerald-500 
+                              rounded-full p-1.5 shadow-lg transform rotate-12 
+                              group-hover:rotate-0 transition-transform duration-300">
+                <CheckCircle className="w-4 h-4 text-white" />
+              </div>
+            </motion.a>
+          </motion.div>
           
           <motion.div
             initial={{ width: 0 }}
@@ -89,7 +176,7 @@ export default function WhyChooseUs() {
             transition={{ delay: 0.5, duration: 0.6 }}
           >
             <span className="text-transparent bg-gradient-to-r from-gray-200 to-gray-400 bg-clip-text">
-              Über 15 Jahre Erfahrung in Premium-Automobildienstleistungen
+              Über 30 Jahre Erfahrung in Premium-Automobildienstleistungen
             </span>
           </motion.p>
         </motion.div>
@@ -232,7 +319,7 @@ export default function WhyChooseUs() {
               { number: '6000+', label: 'ZUFRIEDENE KUNDEN', icon: <Users size={26} />, color: 'from-green-400 to-emerald-600' },
               { number: '30+', label: 'JAHRE ERFAHRUNG', icon: <Award size={26} />, color: 'from-blue-400 to-cyan-600' },
               { number: '150+', label: 'FAHRZEUGBESTAND', icon: <Car size={26} />, color: 'from-purple-400 to-pink-600' },
-              { number: '24/7', label: 'SUPPORT', icon: <Clock size={26} />, color: 'from-orange-400 to-red-600' }
+              { number: '24/7', label: 'E-MAIL SUPPORT', icon: <Clock size={26} />, color: 'from-orange-400 to-red-600' }
             ].map((stat, index) => (
               <motion.div
                 key={index} 
