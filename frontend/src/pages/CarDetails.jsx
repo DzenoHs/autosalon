@@ -1013,7 +1013,7 @@ export default function CarDetails() {
                 <h3 className="text-xl font-bold text-white mb-4">Kontakt</h3>
 
                 <div className="p-4 bg-neutral-800/50 rounded-lg space-y-3">
-                  <div className="text-white font-semibold text-lg">Autohausmiftari</div>
+                  <div className="text-white font-semibold text-lg">Autohaus Miftari</div>
                   <div className="text-neutral-300 text-sm leading-relaxed">
                     Niestetalstr. 11, 34266 Niestetal-Heiligenrode bei Kassel, DE
                   </div>
@@ -1513,7 +1513,7 @@ export default function CarDetails() {
             </div>
 
             <div className="bg-gradient-to-r from-red-900/20 to-red-800/20 rounded-lg p-4 border border-red-600/30">
-              <h3 className="text-white font-semibold mb-3">Besuchen Sie unsere Homepage:</h3>
+              <h3 className="text-white font-semibold mb-3">Kontaktieren Sie uns per E-Mail:</h3>
               <a
                 href="mailto:info@autohausmiftari.de"
                 target="_blank"
@@ -1548,17 +1548,7 @@ export default function CarDetails() {
                   Vertragsabschlüssen. Unsere AGB's können hier nicht abgedruckt werden.
                 </p>
 
-                <p className="mt-3">
-                  Unter diesem Link können Sie unsere AGB's herunterladen und ausdrucken:
-                  <a
-                    href="mailto:info@autohausmiftari.de"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-red-300 hover:text-red-200 ml-1 underline"
-                  >
-                    info@autohausmiftari.de
-                  </a>
-                </p>
+                
               </div>
             </div>
           </div>

@@ -104,7 +104,7 @@ const Cars = () => {
               Exklusive
             </span>
             <span className="text-white ml-4">
-              Sportwagen
+             Fahrzeuge
             </span>
           </h2>
           
