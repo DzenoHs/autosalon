@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { FaInstagram, FaTiktok, FaFacebook } from 'react-icons/fa';
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -72,13 +73,47 @@ export default function Header() {
           </li>
         </ul>
 
-        {/* CTA Button - OSTAJE */}
-        <button 
-          onClick={() => scrollToSection("contact")}
-          className="hidden md:block bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-2 rounded-full font-bold shadow-lg hover:scale-105 transition"
-        >
-          Kontakt
-        </button>
+        {/* Social Media Icons & Contact */}
+        <div className="hidden md:flex items-center gap-4">
+          {/* Social Media Icons */}
+          <div className="flex items-center gap-3">
+            <a 
+              href="https://www.instagram.com/autohaus.miftari/" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white hover:text-red-500 transition duration-300 text-xl"
+              title="Instagram"
+            >
+              <FaInstagram />
+            </a>
+            <a 
+              href="https://www.tiktok.com/@autohausmiftari" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white hover:text-red-500 transition duration-300 text-xl"
+              title="TikTok"
+            >
+              <FaTiktok />
+            </a>
+            <a 
+              href="https://www.facebook.com/share/1ErPznw2xR/?mibextid=wwXIfr" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white hover:text-red-500 transition duration-300 text-xl"
+              title="Facebook"
+            >
+              <FaFacebook />
+            </a>
+          </div>
+
+          {/* CTA Button */}
+          <button 
+            onClick={() => scrollToSection("contact")}
+            className="bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-2 rounded-full font-bold shadow-lg hover:scale-105 transition"
+          >
+            Kontakt
+          </button>
+        </div>
 
         {/* Mobile Menu Button */}
         <button
@@ -132,6 +167,39 @@ export default function Header() {
               >
                 Kontakt
               </button>
+            </li>
+            
+            {/* Mobile Social Media */}
+            <li className="pt-4 border-t border-neutral-700 mt-4">
+              <div className="flex justify-center gap-6">
+                <a 
+                  href="https://www.instagram.com/autohaus.miftari/" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-red-500 transition duration-300 text-2xl"
+                  title="Instagram"
+                >
+                  <FaInstagram />
+                </a>
+                <a 
+                  href="https://www.tiktok.com/@autohausmiftari" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-red-500 transition duration-300 text-2xl"
+                  title="TikTok"
+                >
+                  <FaTiktok />
+                </a>
+                <a 
+                  href="https://www.facebook.com/share/1ErPznw2xR/?mibextid=wwXIfr" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-red-500 transition duration-300 text-2xl"
+                  title="Facebook"
+                >
+                  <FaFacebook />
+                </a>
+              </div>
             </li>
           </ul>
         </div>

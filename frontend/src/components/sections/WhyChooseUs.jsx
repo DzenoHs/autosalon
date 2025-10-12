@@ -126,7 +126,7 @@ export default function WhyChooseUs() {
                 {/* Rating info */}
                 <div className="flex items-center justify-between text-center">
                   <div className="flex-1">
-                    <div className="text-white font-bold text-lg">5.0</div>
+                    <div className="text-white font-bold text-lg">4.8</div>
                     <div className="text-yellow-400 text-xs font-medium">RATING</div>
                   </div>
                   

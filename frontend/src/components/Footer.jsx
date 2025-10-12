@@ -1,4 +1,5 @@
 import React from 'react';
+import { FaInstagram, FaTiktok, FaFacebook } from 'react-icons/fa';
 
 export default function Footer() {
   return (
@@ -17,24 +18,55 @@ export default function Footer() {
           </div>
           
           <div>
-            <h4 className="text-lg font-bold mb-4">SCHNELLE LINKS</h4>
-            <ul className="space-y-2 text-gray-400">
-              <li><a href="#hero" className="hover:text-red-500 transition">Startseite</a></li>
-              <li><a href="#about" className="hover:text-red-500 transition">Über uns</a></li>
-              <li><a href="#cars" className="hover:text-red-500 transition">Fahrzeuge</a></li>
-              <li><a href="#services" className="hover:text-red-500 transition">Dienstleistungen</a></li>
-              <li><a href="#contact" className="hover:text-red-500 transition">Kontakt</a></li>
-            </ul>
-          </div>
-          
-          <div>
             <h4 className="text-lg font-bold mb-4">DIENSTLEISTUNGEN</h4>
             <ul className="space-y-2 text-gray-400">
               <li>Finanzierung</li>
               <li>Zulassung</li>
               <li>Service</li>
               <li>Garantie</li>
-              <li>Fahrzeugimport</li>
+          
+            </ul>
+          </div>
+          
+          <div>
+            <h4 className="text-lg font-bold mb-4">SOCIAL MEDIA</h4>
+            <ul className="space-y-3 text-gray-400">
+              <li>
+                <a 
+                  href="https://www.instagram.com/autohaus.miftari/" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-red-500 transition flex items-center gap-2"
+                  title="Instagram"
+                >
+                  <FaInstagram className="text-lg" />
+                  Instagram
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="https://www.tiktok.com/@autohausmiftari" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-red-500 transition flex items-center gap-2"
+                  title="TikTok"
+                >
+                  <FaTiktok className="text-lg" />
+                  TikTok
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="https://www.facebook.com/share/1ErPznw2xR/?mibextid=wwXIfr" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-red-500 transition flex items-center gap-2"
+                  title="Facebook"
+                >
+                  <FaFacebook className="text-lg" />
+                  Facebook
+                </a>
+              </li>
             </ul>
           </div>
           
