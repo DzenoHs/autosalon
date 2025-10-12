@@ -69,7 +69,7 @@ export default function WhyChooseUs() {
               WARUM
             </span>
             <span className="text-white ml-4">
-              MIFTARI?
+             AUTOHAUS MIFTARI?
             </span>
           </motion.h2>
 

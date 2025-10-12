@@ -49,7 +49,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-red-500 transition flex items-center gap-2"
-                  title="TikTok"
+                  title="TikTok"suppressContentEditableWarning
                 >
                   <FaTiktok className="text-lg" />
                   TikTok
