@@ -6,14 +6,14 @@ const features = [
   {
     icon: <CheckCircle size={52} />,
     title: 'GARANTIE',
-    description: 'Erweiterte Garantie  für maximale Sicherheit',
+    description: 'Erweiterte Garantie  für maximale Sicherheit Auf Wunsch',
     gradient: 'from-emerald-400 via-green-500 to-emerald-700',
     shadowColor: 'shadow-emerald-500/25'
   },
   {
     icon: <Shield size={52} />,
     title: 'GEPRÜFT',
-    description: 'Detaillierte technische Inspektion durch zertifizierte Experten',
+    description: 'Detaillierte technische Inspektion durch zertifizierte Experten Auf Wunsch',
     gradient: 'from-cyan-400 via-blue-500 to-indigo-700',
     shadowColor: 'shadow-blue-500/25'
   },
@@ -43,10 +43,6 @@ export default function WhyChooseUs() {
     className="relative py-20 bg-gradient-to-b from-black via-neutral-900 to-black overflow-hidden">
       {/* Background particles */}
       <div className="absolute inset-0">
-        <div className="absolute top-20 left-10 w-2 h-2 bg-red-500 rounded-full animate-pulse opacity-60"></div>
-        <div className="absolute top-40 right-20 w-1 h-1 bg-yellow-500 rounded-full animate-ping opacity-40"></div>
-        <div className="absolute bottom-32 left-1/4 w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse opacity-50"></div>
-        <div className="absolute bottom-20 right-1/3 w-1 h-1 bg-green-500 rounded-full animate-ping opacity-30"></div>
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
@@ -213,7 +209,7 @@ export default function WhyChooseUs() {
               
               {/* Main Card - CELA KARTICA POSTAJE GRADIJENT */}
               <motion.div 
-                className="relative p-5 lg:p-6 rounded-3xl border-2 transition-all duration-500 shadow-2xl backdrop-blur-sm min-h-[256px] lg:min-h-[288px]"
+                className="relative p-5 lg:p-6 rounded-3xl border-2 transition-all duration-500 shadow-2xl backdrop-blur-sm h-[280px] lg:h-[320px]"
                 animate={{
                   y: hoveredCard === index ? -12 : 0,
                   scale: hoveredCard === index ? 1.03 : 1,

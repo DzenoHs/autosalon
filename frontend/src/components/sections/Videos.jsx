@@ -236,11 +236,7 @@ export default function VideosSection() {
                   <span className="text-white text-xs font-bold">{index + 1}</span>
                 </div>
                 
-                {index === currentVideo && (
-                  <div className="absolute top-2 right-2">
-                    <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                  </div>
-                )}
+
               </div>
             </button>
           ))}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaInstagram, FaTiktok, FaFacebook } from 'react-icons/fa';
+import logo from '../../assets/Miftari Logo 04 (PNG).png';
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -31,10 +32,11 @@ export default function Header() {
     >
       <nav className="max-w-7xl mx-auto flex items-center justify-between px-4 py-4">
         <div className="flex items-center">
-          <h1 className="text-2xl font-bold">
-            <span className="text-white">Autohaus</span>
-            <span className="text-red-500 ml-1">Miftari</span>
-          </h1>
+          <img 
+            src={logo} 
+            alt="Autohaus Miftari" 
+            className="h-10 w-32 object-contain"
+          />
         </div>
 
         {/* Desktop Menu */}

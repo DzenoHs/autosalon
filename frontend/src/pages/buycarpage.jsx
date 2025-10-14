@@ -40,7 +40,7 @@ export default function KakoKupitiAuto() {
         'Wir bieten attraktive Finanzierungsangebote über unsere Partner Santander und Bank11 an.\n\nProfitieren Sie von flexiblen Konditionen, verschiedenen Finanzierungsmöglichkeiten und schneller Bearbeitung – unabhängig von Automarke oder Händler.\n\nUnsere Experten unterstützen Sie dabei, die passende Lösung für Ihre individuellen Bedürfnisse zu finden.'
     },
     {
-      question: 'Gibt es eine Garantie auf die Fahrzeuge?',
+      question: 'Gibt es eine Garantie auf die Fahrzeuge? (optional)',
       answer:
         'Ja, alle unsere Fahrzeuge kommen mit einer Garantie. Die Garantiedauer variiert je nach Fahrzeugalter und -zustand. Detaillierte Informationen erhalten Sie bei der Besichtigung.'
     },
