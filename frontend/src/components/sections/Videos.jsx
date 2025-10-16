@@ -2,13 +2,11 @@ import React, { useState, useRef, useEffect } from 'react'
 import { Play, Pause, Volume2, VolumeX, RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react'
 
 // Direct video sources
-import herovideo1 from '/assets/herovideo1.mp4'
-import herovideo2 from '/assets/herovideo2.mp4'
-import herovideo3 from '/assets/herovideo3.mp4'
-import herovideo4 from '/assets/herovideo4.mp4'
-import herovideo5 from '/assets/herovideo5.mp4'
-import herovideo6 from '/assets/herovideo6.mp4'
-import herovideo7 from '/assets/herovideo7.mp4'
+import video1 from '/assets/video1.mov'
+import video2 from '/assets/video2.mov'
+import video3 from '/assets/video3.mp4'
+import video4 from '/assets/video4.mov'
+import video5 from '/assets/video5.mov'
 
 export default function VideosSection() {
   const [currentVideo, setCurrentVideo] = useState(0)
@@ -19,13 +17,11 @@ export default function VideosSection() {
   const scrollContainerRef = useRef(null)
 
   const videos = [
-    { src: herovideo1, name: "AMG GT Black Series" },
-    { src: herovideo2, name: "BRABUS Rocket 900" },
-    { src: herovideo3, name: "911 GT3 RS" },
-    { src: herovideo4, name: "AMG S 63 E Performance" },
-    { src: herovideo5, name: "RS6 Avant C8" },
-    { src: herovideo6, name: "G-Class 4×4²" },
-    { src: herovideo7, name: "GLS 63 AMG" }
+    { src: video1, name: "Mercedes" },
+    { src: video2, name: "Audi" },
+    { src: video3, name: "Audi" },
+    { src: video4, name: "Mercedes" },
+    { src: video5, name: "Mercedes" }
   ]
 
   // Simple progress update
@@ -121,6 +117,9 @@ export default function VideosSection() {
               muted={isMuted}
               loop
               playsInline
+              preload="metadata"
+              poster=""
+              style={{ objectPosition: 'center' }}
             />
 
             {/* Overlay */}
