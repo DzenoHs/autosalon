@@ -1,16 +1,16 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useCallback, useMemo} from 'react'
 
-import slika1 from '/assets/slika1.jpeg'
-import slika2 from '/assets/slika2.jpeg'
-import slika3 from '/assets/slika3.jpeg'
+import slika1 from '/assets/slika1.webp'
+import slika2 from '/assets/slika2.webp'
+import slika3 from '/assets/slika3.webp'
 
-export default function Hero() {
+function Hero() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [imagesLoaded, setImagesLoaded] = useState(false)
-  const images = [slika1, slika2, slika3]
+  const images = useMemo(() => [slika1, slika2, slika3], [])
 
-  // Enhanced image preloading for iOS
-  useEffect(() => {
+  // Stable image preloading function
+  const preloadImages = useCallback(() => {
     let loadedCount = 0
     const imagePromises = images.map((image) => {
       return new Promise((resolve) => {
@@ -26,11 +26,15 @@ export default function Hero() {
         img.src = image
       })
     })
-    
+
     Promise.all(imagePromises).then(() => {
       setImagesLoaded(true)
     })
-  }, [])
+  }, [images])
+
+  useEffect(() => {
+    preloadImages()
+  }, [preloadImages])
 
   // Delayed start for iOS stability
   useEffect(() => {
@@ -47,6 +51,20 @@ export default function Hero() {
     return () => clearTimeout(timeout)
   }, [images.length, imagesLoaded])
 
+  // Memoized scroll handlers
+  const scrollToCars = useCallback(() => {
+    document.getElementById('cars')?.scrollIntoView({behavior: 'smooth'})
+  }, [])
+
+  const scrollToContact = useCallback(() => {
+    document.getElementById('contact')?.scrollIntoView({behavior: 'smooth'})
+  }, [])
+
+  // Memoized indicator click handler
+  const handleIndicatorClick = useCallback((index) => {
+    setCurrentImageIndex(index)
+  }, [])
+
   // Don't render until images are loaded
   if (!imagesLoaded) {
     return (
@@ -57,10 +75,7 @@ export default function Hero() {
   }
 
   return (
-    <section 
-      id="hero" 
-      className="relative h-screen flex items-center justify-center bg-black overflow-hidden"
-    >
+    <section id="hero" className="relative h-screen flex items-center justify-center bg-black overflow-hidden">
       {/* PURE CSS BACKGROUND SLIDESHOW - NO JAVASCRIPT ANIMATIONS */}
       <div className="absolute inset-0">
         {images.map((image, index) => (
@@ -68,10 +83,17 @@ export default function Hero() {
             key={`bg-${index}`}
             className={`hero-slide ${currentImageIndex === index ? 'active' : ''}`}
             style={{
-              backgroundImage: `url(${image})`,
+              backgroundImage: `url(${image})`
             }}
           >
-            <img src={image} alt={`Hero ${index+1}`} loading="lazy" style={{display: 'none'}} />
+            <img
+              src={image}
+              alt={`Hero ${index + 1}`}
+              loading="lazy"
+              decoding="async"
+              fetchpriority="low"
+              style={{display: 'none'}}
+            />
           </div>
         ))}
         <div className="absolute inset-0 bg-black/30 z-[1]"></div>
@@ -85,9 +107,7 @@ export default function Hero() {
               FINDEN SIE IHR
             </span>
             <br />
-            <span className="text-white">
-              TRAUMAUTO
-            </span>
+            <span className="text-white">TRAUMAUTO</span>
           </h1>
 
           <p className="text-lg sm:text-xl md:text-2xl text-white mb-8 max-w-2xl mx-auto leading-relaxed px-4">
@@ -96,14 +116,14 @@ export default function Hero() {
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center px-4">
             <button
-              onClick={() => document.getElementById('cars')?.scrollIntoView({behavior: 'smooth'})}
+              onClick={scrollToCars}
               className="group relative bg-gradient-to-r from-red-500 to-red-600 px-8 sm:px-10 py-4 sm:py-5 rounded-xl font-bold text-lg sm:text-xl text-white hover:from-red-600 hover:to-red-700 transition-all duration-300 shadow-2xl hover:shadow-red-500/25 w-full sm:w-auto overflow-hidden"
             >
               <span className="relative z-10">Fahrzeuge ansehen</span>
               <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </button>
             <button
-              onClick={() => document.getElementById('contact')?.scrollIntoView({behavior: 'smooth'})}
+              onClick={scrollToContact}
               className="group relative border-2 border-red-500 bg-transparent px-8 sm:px-10 py-4 sm:py-5 rounded-xl font-bold text-lg sm:text-xl text-white hover:bg-red-500 hover:border-red-500 transition-all duration-300 shadow-2xl hover:shadow-red-500/25 w-full sm:w-auto overflow-hidden"
             >
               <span className="relative z-10 group-hover:text-white transition-colors duration-300">
@@ -121,7 +141,7 @@ export default function Hero() {
           {images.map((_, index) => (
             <button
               key={`indicator-${index}`}
-              onClick={() => setCurrentImageIndex(index)}
+              onClick={() => handleIndicatorClick(index)}
               className={`indicator-btn ${currentImageIndex === index ? 'active' : ''}`}
             />
           ))}
@@ -219,10 +239,10 @@ export default function Hero() {
             -webkit-transform: none;
             transform: none;
           }
-          
+
           /* Faster transitions on mobile */
           .hero-slide {
-            transition: opacity 1s ease-in-out;
+            transition: opacity 0.8s ease-in-out;
           }
         }
 
@@ -236,3 +256,5 @@ export default function Hero() {
     </section>
   )
 }
+
+export default React.memo(Hero)

@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { Play, Pause, Volume2, VolumeX, RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react'
+import React, {useState, useRef, useEffect, useCallback, useMemo} from 'react'
+import {Play, Pause, Volume2, VolumeX, RotateCcw, ChevronLeft, ChevronRight} from 'lucide-react'
 
 // Direct video sources
 import herovideo1 from '/assets/herovideo1.mp4'
@@ -10,7 +10,16 @@ import herovideo5 from '/assets/herovideo5.mp4'
 import herovideo6 from '/assets/herovideo6.mp4'
 import herovideo7 from '/assets/herovideo7.mp4'
 
-export default function VideosSection() {
+// Direct poster sources
+import poster1 from '/assets/poster1.webp'
+import poster2 from '/assets/poster2.webp'
+import poster3 from '/assets/poster3.webp'
+import poster4 from '/assets/poster4.webp'
+import poster5 from '/assets/poster5.webp'
+import poster6 from '/assets/poster6.webp'
+import poster7 from '/assets/poster7.webp'
+
+function VideosSection() {
   const [currentVideo, setCurrentVideo] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(true)
@@ -18,15 +27,18 @@ export default function VideosSection() {
   const videoRef = useRef(null)
   const scrollContainerRef = useRef(null)
 
-  const videos = [
-    { src: herovideo1, name: "AMG GT Black Series" },
-    { src: herovideo2, name: "BRABUS Rocket 900" },
-    { src: herovideo3, name: "911 GT3 RS" },
-    { src: herovideo4, name: "AMG S 63 E Performance" },
-    { src: herovideo5, name: "RS6 Avant C8" },
-    { src: herovideo6, name: "G-Class 4×4²" },
-    { src: herovideo7, name: "GLS 63 AMG" }
-  ]
+  const videos = useMemo(
+    () => [
+      {src: herovideo1, name: 'AMG GT Black Series', poster: poster1},
+      {src: herovideo2, name: 'BRABUS Rocket 900', poster: poster2},
+      {src: herovideo3, name: '911 GT3 RS', poster: poster3},
+      {src: herovideo4, name: 'AMG S 63 E Performance', poster: poster4},
+      {src: herovideo5, name: 'RS6 Avant C8', poster: poster5},
+      {src: herovideo6, name: 'G-Class 4×4²', poster: poster6},
+      {src: herovideo7, name: 'GLS 63 AMG', poster: poster7}
+    ],
+    []
+  )
 
   // Simple progress update
   useEffect(() => {
@@ -39,14 +51,17 @@ export default function VideosSection() {
       }
     }
 
+    const handlePlayEvent = () => setIsPlaying(true)
+    const handlePauseEvent = () => setIsPlaying(false)
+
     video.addEventListener('timeupdate', updateProgress)
-    video.addEventListener('play', () => setIsPlaying(true))
-    video.addEventListener('pause', () => setIsPlaying(false))
+    video.addEventListener('play', handlePlayEvent)
+    video.addEventListener('pause', handlePauseEvent)
 
     return () => {
       video.removeEventListener('timeupdate', updateProgress)
-      video.removeEventListener('play', () => setIsPlaying(true))
-      video.removeEventListener('pause', () => setIsPlaying(false))
+      video.removeEventListener('play', handlePlayEvent)
+      video.removeEventListener('pause', handlePauseEvent)
     }
   }, [currentVideo])
 
@@ -55,9 +70,9 @@ export default function VideosSection() {
     if (videoRef.current && isPlaying) {
       videoRef.current.play()
     }
-  }, [currentVideo])
+  }, [currentVideo, isPlaying])
 
-  const handlePlay = () => {
+  const handlePlay = useCallback(() => {
     if (videoRef.current) {
       if (isPlaying) {
         videoRef.current.pause()
@@ -65,29 +80,29 @@ export default function VideosSection() {
         videoRef.current.play()
       }
     }
-  }
+  }, [isPlaying])
 
-  const handleMute = () => {
+  const handleMute = useCallback(() => {
     if (videoRef.current) {
       videoRef.current.muted = !isMuted
       setIsMuted(!isMuted)
     }
-  }
+  }, [isMuted])
 
-  const handleRestart = () => {
+  const handleRestart = useCallback(() => {
     if (videoRef.current) {
       videoRef.current.currentTime = 0
       setProgress(0)
     }
-  }
+  }, [])
 
-  const switchVideo = (index) => {
+  const switchVideo = useCallback((index) => {
     setCurrentVideo(index)
     setIsPlaying(true)
     setProgress(0)
-  }
+  }, [])
 
-  const scrollThumbnails = (direction) => {
+  const scrollThumbnails = useCallback((direction) => {
     const container = scrollContainerRef.current
     if (container) {
       const scrollAmount = 250
@@ -96,18 +111,54 @@ export default function VideosSection() {
         behavior: 'smooth'
       })
     }
-  }
+  }, [])
+
+  const renderThumbnail = useCallback(
+    (video, index) => {
+      const isActive = index === currentVideo
+      return (
+        <button
+          key={index}
+          onClick={() => switchVideo(index)}
+          className={`relative flex-shrink-0 transition-transform ${isActive ? 'scale-105' : 'hover:scale-102'}`}
+        >
+          <div
+            className={`relative w-48 aspect-video rounded-xl overflow-hidden border-2 ${
+              isActive ? 'border-red-500 shadow-lg shadow-red-500/30' : 'border-neutral-700 hover:border-neutral-500'
+            }`}
+          >
+            <video
+              className="w-full h-full object-cover"
+              src={video.src}
+              muted
+              playsInline
+              preload="metadata"
+              decoding="async"
+              poster={video.poster}
+            />
+
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+
+            <div className="absolute bottom-0 left-0 right-0 p-3">
+              <h4 className="text-white font-bold text-xs text-center">{video.name}</h4>
+            </div>
+
+            <div className="absolute top-2 left-2 bg-black/60 rounded-full w-6 h-6 flex items-center justify-center">
+              <span className="text-white text-xs font-bold">{index + 1}</span>
+            </div>
+          </div>
+        </button>
+      )
+    },
+    [currentVideo, switchVideo]
+  )
 
   return (
     <div className="bg-black rounded-3xl p-6 md:p-8">
       {/* Simple Title */}
       <div className="text-center mb-6">
-        <h2 className="text-2xl md:text-4xl font-bold text-white mb-2">
-          Car-Impressionen
-        </h2>
-        <p className="text-neutral-400 text-sm md:text-base">
-          {videos.length} Premium Fahrzeuge
-        </p>
+        <h2 className="text-2xl md:text-4xl font-bold text-white mb-2">Car-Impressionen</h2>
+        <p className="text-neutral-400 text-sm md:text-base">{videos.length} Premium Fahrzeuge</p>
       </div>
 
       {/* Main Video Player */}
@@ -121,17 +172,16 @@ export default function VideosSection() {
               muted={isMuted}
               loop
               playsInline
+              preload="metadata"
+              poster={videos[currentVideo].poster}
             />
 
             {/* Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20"></div>
-            
+
             {/* Progress Bar */}
             <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/50">
-              <div 
-                className="h-full bg-red-500 transition-all duration-300"
-                style={{ width: `${progress}%` }}
-              ></div>
+              <div className="h-full bg-red-500 transition-all duration-300" style={{width: `${progress}%`}}></div>
             </div>
 
             {/* Play Button */}
@@ -152,12 +202,9 @@ export default function VideosSection() {
             <div className="absolute bottom-4 left-4 right-4">
               <div className="flex items-end justify-between">
                 <div>
-                  <h3 className="text-white font-bold text-lg md:text-xl mb-1">
-                    {videos[currentVideo].name}
-                  </h3>
-                
+                  <h3 className="text-white font-bold text-lg md:text-xl mb-1">{videos[currentVideo].name}</h3>
                 </div>
-                
+
                 <div className="flex gap-2">
                   <button
                     onClick={handleRestart}
@@ -169,11 +216,7 @@ export default function VideosSection() {
                     onClick={handleMute}
                     className="w-10 h-10 bg-black/50 rounded-full flex items-center justify-center hover:bg-black/70 transition-colors"
                   >
-                    {isMuted ? (
-                      <VolumeX className="w-4 h-4 text-white" />
-                    ) : (
-                      <Volume2 className="w-4 h-4 text-white" />
-                    )}
+                    {isMuted ? <VolumeX className="w-4 h-4 text-white" /> : <Volume2 className="w-4 h-4 text-white" />}
                   </button>
                 </div>
               </div>
@@ -199,47 +242,12 @@ export default function VideosSection() {
         </button>
 
         {/* Scrollable Container */}
-        <div 
+        <div
           ref={scrollContainerRef}
           className="flex gap-4 overflow-x-auto px-8 pb-2"
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}
         >
-          {videos.map((video, index) => (
-            <button
-              key={index}
-              onClick={() => switchVideo(index)}
-              className={`relative flex-shrink-0 transition-transform ${
-                index === currentVideo ? 'scale-105' : 'hover:scale-102'
-              }`}
-            >
-              <div className={`relative w-48 aspect-video rounded-xl overflow-hidden border-2 ${
-                index === currentVideo 
-                  ? 'border-red-500 shadow-lg shadow-red-500/30' 
-                  : 'border-neutral-700 hover:border-neutral-500'
-              }`}>
-                <video
-                  className="w-full h-full object-cover"
-                  src={video.src}
-                  muted
-                  playsInline
-                />
-                
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-                
-                <div className="absolute bottom-0 left-0 right-0 p-3">
-                  <h4 className="text-white font-bold text-xs text-center">
-                    {video.name}
-                  </h4>
-                </div>
-                
-                <div className="absolute top-2 left-2 bg-black/60 rounded-full w-6 h-6 flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">{index + 1}</span>
-                </div>
-                
-
-              </div>
-            </button>
-          ))}
+          {videos.map(renderThumbnail)}
         </div>
       </div>
 
@@ -251,9 +259,7 @@ export default function VideosSection() {
               <div
                 key={index}
                 className={`w-1.5 h-1.5 rounded-full transition-all ${
-                  index === currentVideo 
-                    ? 'bg-red-500 w-6' 
-                    : 'bg-neutral-400'
+                  index === currentVideo ? 'bg-red-500 w-6' : 'bg-neutral-400'
                 }`}
               ></div>
             ))}
@@ -267,8 +273,12 @@ export default function VideosSection() {
 
       {/* Hide scrollbar */}
       <style jsx>{`
-        div::-webkit-scrollbar { display: none; }
+        div::-webkit-scrollbar {
+          display: none;
+        }
       `}</style>
     </div>
   )
 }
+
+export default React.memo(VideosSection)

@@ -41,7 +41,7 @@ const brands = [
   },
   {
     name: 'Mercedes',
-    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Mercedes-Logo.svg/2048px-Mercedes-Logo.svg.png'
+    src: 'https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/mercedes-benz.png'
   },
   {
     name: 'Porsche',
