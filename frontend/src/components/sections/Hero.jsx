@@ -1,44 +1,80 @@
 import React, {useState, useEffect} from 'react'
 
-import heroVideo from '/assets/herovideo555.mp4'
+import slika1 from '/assets/slika1.jpeg'
+import slika2 from '/assets/slika2.jpeg'
+import slika3 from '/assets/slika3.jpeg'
 
 export default function Hero() {
-  const [videoLoaded, setVideoLoaded] = useState(false)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [imagesLoaded, setImagesLoaded] = useState(false)
+  const images = [slika1, slika2, slika3]
 
-  // Video preloading
+  // Enhanced image preloading for iOS
   useEffect(() => {
-    const video = document.createElement('video')
-    video.src = heroVideo
-    video.preload = 'metadata'
-    video.onloadedmetadata = () => {
-      setVideoLoaded(true)
-    }
+    let loadedCount = 0
+    const imagePromises = images.map((image) => {
+      return new Promise((resolve) => {
+        const img = new Image()
+        img.onload = () => {
+          loadedCount++
+          if (loadedCount === images.length) {
+            setImagesLoaded(true)
+          }
+          resolve()
+        }
+        img.onerror = () => resolve()
+        img.src = image
+      })
+    })
+    
+    Promise.all(imagePromises).then(() => {
+      setImagesLoaded(true)
+    })
   }, [])
+
+  // Delayed start for iOS stability
+  useEffect(() => {
+    if (!imagesLoaded) return
+
+    const timeout = setTimeout(() => {
+      const interval = setInterval(() => {
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length)
+      }, 4000)
+
+      return () => clearInterval(interval)
+    }, 1000) // Duži delay
+
+    return () => clearTimeout(timeout)
+  }, [images.length, imagesLoaded])
+
+  // Don't render until images are loaded
+  if (!imagesLoaded) {
+    return (
+      <section id="hero" className="relative h-screen flex items-center justify-center bg-black overflow-hidden">
+        <div className="text-white text-xl">Loading...</div>
+      </section>
+    )
+  }
 
   return (
     <section 
       id="hero" 
       className="relative h-screen flex items-center justify-center bg-black overflow-hidden"
     >
-      {/* BACKGROUND VIDEO */}
+      {/* PURE CSS BACKGROUND SLIDESHOW - NO JAVASCRIPT ANIMATIONS */}
       <div className="absolute inset-0">
-        <video 
-          className="absolute inset-0 w-full h-full object-cover"
-          autoPlay 
-          muted 
-          loop 
-          playsInline
-          preload="metadata"
-          poster="/assets/slika1.jpeg"
-          style={{ objectPosition: 'center' }}
-          onLoadStart={() => console.log('Video loading started')}
-          onLoadedMetadata={() => console.log('Video metadata loaded')}
-          onCanPlay={() => console.log('Video can start playing')}
-        >
-          <source src={heroVideo} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        <div className="absolute inset-0 bg-black/40 z-[1]"></div>
+        {images.map((image, index) => (
+          <div
+            key={`bg-${index}`}
+            className={`hero-slide ${currentImageIndex === index ? 'active' : ''}`}
+            style={{
+              backgroundImage: `url(${image})`,
+            }}
+          >
+            <img src={image} alt={`Hero ${index+1}`} loading="lazy" style={{display: 'none'}} />
+          </div>
+        ))}
+        <div className="absolute inset-0 bg-black/30 z-[1]"></div>
       </div>
 
       {/* Content - NO FRAMER MOTION */}
@@ -79,7 +115,18 @@ export default function Hero() {
         </div>
       </div>
 
-
+      {/* Simple Image Indicators */}
+      <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-10">
+        <div className="flex gap-3">
+          {images.map((_, index) => (
+            <button
+              key={`indicator-${index}`}
+              onClick={() => setCurrentImageIndex(index)}
+              className={`indicator-btn ${currentImageIndex === index ? 'active' : ''}`}
+            />
+          ))}
+        </div>
+      </div>
 
       {/* Scroll Indicator */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 scroll-indicator">
@@ -90,8 +137,32 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* CSS STYLES FOR VIDEO HERO */}
+      {/* PURE CSS STYLES - NO JAVASCRIPT ANIMATIONS */}
       <style jsx>{`
+        /* Background slideshow with pure CSS */
+        .hero-slide {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+          opacity: 0;
+          transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+          /* iOS Safari optimizations */
+          -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+          will-change: opacity;
+          transform: translate3d(0, 0, 0);
+          -webkit-transform: translate3d(0, 0, 0);
+        }
+
+        .hero-slide.active {
+          opacity: 1;
+          z-index: 1;
+        }
+
         /* Content fade-in animation */
         .content-container {
           animation: contentFadeIn 2s ease-out 0.5s both;
@@ -108,10 +179,58 @@ export default function Hero() {
           }
         }
 
-        /* Video optimizations */
-        video {
-          -webkit-backface-visibility: hidden;
-          backface-visibility: hidden;
+        /* Indicator buttons */
+        .indicator-btn {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.4);
+          border: none;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          -webkit-tap-highlight-color: transparent;
+          transform: none;
+          -webkit-transform: none;
+        }
+
+        .indicator-btn:hover {
+          background: rgba(255, 255, 255, 0.6);
+        }
+
+        .indicator-btn.active {
+          background: #ef4444;
+          width: 32px;
+          border-radius: 6px;
+        }
+
+        /* iOS Safari specific fixes */
+        @supports (-webkit-appearance: none) {
+          .hero-slide {
+            -webkit-background-size: cover;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+          }
+        }
+
+        /* Disable hardware acceleration on mobile for stability */
+        @media (max-width: 768px) {
+          .hero-slide {
+            will-change: auto;
+            -webkit-transform: none;
+            transform: none;
+          }
+          
+          /* Faster transitions on mobile */
+          .hero-slide {
+            transition: opacity 1s ease-in-out;
+          }
+        }
+
+        /* Force repainting fix for iOS */
+        @media screen and (-webkit-min-device-pixel-ratio: 0) {
+          section#hero {
+            -webkit-transform: translateZ(0);
+          }
         }
       `}</style>
     </section>
