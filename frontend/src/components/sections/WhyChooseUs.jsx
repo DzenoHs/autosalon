@@ -62,10 +62,10 @@ export default function WhyChooseUs() {
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
             <span className="text-white drop-shadow-2xl">
-              WARUM
+              WARUM DAS
             </span>
             <span className="text-white ml-4">
-             AUTOHAUS MIFTARI?
+             Autohaus MIFTARI?
             </span>
           </motion.h2>
 

@@ -9,11 +9,11 @@ export default function Footer() {
           <div>
             <h3 className="text-2xl font-bold mb-4">
               <span className="bg-gradient-to-r from-red-500 to-yellow-500 bg-clip-text text-transparent">
-                Autohausmiftari
+                Autohaus MIFTARI
               </span>
             </h3>
             <p className="text-gray-400">
-              Autohausmiftari – Premium-Autohaus für Service und Verkauf aller Fahrzeugmarken.
+              Autohaus MIFTARI – Premium-Autohaus für Service und Verkauf aller Fahrzeugmarken.
             </p>
           </div>
           
@@ -92,7 +92,7 @@ export default function Footer() {
         </div>
         
         <div className="border-t border-gray-800 pt-8 mt-8 text-center text-gray-400">
-          <p>&copy; 2025 Autohausmiftari. Alle Rechte vorbehalten.</p>
+          <p>&copy; 2025 Autohaus MIFTARI. Alle Rechte vorbehalten.</p>
         </div>
       </div>
     </footer>

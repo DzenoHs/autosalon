@@ -37,7 +37,7 @@ export default function Datenschutzerklaerung() {
             </h1>
           </div>
           <p className="text-white text-lg">
-            Autohaus Miftari - Schutz Ihrer persönlichen Daten
+            Autohaus MIFTARI - Schutz Ihrer persönlichen Daten
           </p>
         </div>
 
@@ -128,7 +128,7 @@ export default function Datenschutzerklaerung() {
               <h3 className="text-xl font-semibold text-white mb-3">Hinweis zur verantwortlichen Stelle</h3>
               <div className="bg-neutral-800/50 rounded-xl p-4 mb-4">
                 <p className="text-neutral-300 leading-relaxed">
-                  <strong className="text-white">Autohaus Miftari</strong><br />
+                  <strong className="text-white">Autohaus MIFTARI</strong><br />
                   Niestetalstraße 11<br />
                   34266 Niestetal, Germany<br />
                   Telefon: <a href="tel:+4917476926970" className="text-white hover:text-neutral-300">+49 174 7692697</a><br />
@@ -233,7 +233,7 @@ export default function Datenschutzerklaerung() {
         {/* Footer Info */}
         <div className="text-center mt-12 pt-8 border-t border-neutral-800">
           <p className="text-neutral-400 mb-4">
-            © 2025 Autohaus Miftari. Alle Rechte vorbehalten.
+            © 2025 Autohaus MIFTARI. Alle Rechte vorbehalten.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-neutral-500">
             <span>Stand: {new Date().toLocaleDateString('de-DE')}</span>

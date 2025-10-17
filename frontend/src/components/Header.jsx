@@ -34,7 +34,7 @@ export default function Header() {
         <div className="flex items-center">
           <img 
             src={logo} 
-            alt="Autohaus Miftari" 
+            alt="Autohaus MIFTARI" 
             className="h-10 w-32 object-contain"
           />
         </div>

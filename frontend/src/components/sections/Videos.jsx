@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { Play, Pause, Volume2, VolumeX, RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Play, Pause, Volume2, VolumeX, RotateCcw } from 'lucide-react'
 
 // Direct video sources
 import video1 from '/assets/video1.mov'
@@ -83,16 +83,7 @@ export default function VideosSection() {
     setProgress(0)
   }
 
-  const scrollThumbnails = (direction) => {
-    const container = scrollContainerRef.current
-    if (container) {
-      const scrollAmount = 250
-      container.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth'
-      })
-    }
-  }
+
 
   return (
     <div className="bg-black rounded-3xl p-6 md:p-8">
@@ -182,27 +173,9 @@ export default function VideosSection() {
       </div>
 
       {/* Thumbnails */}
-      <div className="relative">
-        {/* Scroll Buttons */}
-        <button
-          onClick={() => scrollThumbnails('left')}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-black/60 rounded-full flex items-center justify-center hover:bg-black/80 transition-colors"
-        >
-          <ChevronLeft className="w-5 h-5 text-white" />
-        </button>
-        <button
-          onClick={() => scrollThumbnails('right')}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-black/60 rounded-full flex items-center justify-center hover:bg-black/80 transition-colors"
-        >
-          <ChevronRight className="w-5 h-5 text-white" />
-        </button>
-
-        {/* Scrollable Container */}
-        <div 
-          ref={scrollContainerRef}
-          className="flex gap-4 overflow-x-auto px-8 pb-2"
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-        >
+      <div className="flex justify-center">
+        {/* Desktop - Centered Grid, Mobile - Horizontal Scroll */}
+        <div className="hidden md:flex gap-4 justify-center flex-wrap max-w-6xl px-4">
           {videos.map((video, index) => (
             <button
               key={index}
@@ -239,6 +212,46 @@ export default function VideosSection() {
               </div>
             </button>
           ))}
+        </div>
+        
+        {/* Mobile - Horizontal Scroll */}
+        <div className="md:hidden overflow-x-auto">
+          <div className="flex gap-4 px-4 pb-4">
+            {videos.map((video, index) => (
+              <button
+                key={`mobile-${index}`}
+                onClick={() => switchVideo(index)}
+                className={`relative flex-shrink-0 transition-transform ${
+                  index === currentVideo ? 'scale-105' : 'hover:scale-102'
+                }`}
+              >
+                <div className={`relative w-48 aspect-video rounded-xl overflow-hidden border-2 ${
+                  index === currentVideo 
+                    ? 'border-red-500 shadow-lg shadow-red-500/30' 
+                    : 'border-neutral-700 hover:border-neutral-500'
+                }`}>
+                  <video
+                    className="w-full h-full object-cover"
+                    src={video.src}
+                    muted
+                    playsInline
+                  />
+                  
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                  
+                  <div className="absolute bottom-0 left-0 right-0 p-3">
+                    <h4 className="text-white font-bold text-xs text-center">
+                      {video.name}
+                    </h4>
+                  </div>
+                  
+                  <div className="absolute top-2 left-2 bg-black/60 rounded-full w-6 h-6 flex items-center justify-center">
+                    <span className="text-white text-xs font-bold">{index + 1}</span>
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 

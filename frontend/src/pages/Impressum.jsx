@@ -52,7 +52,7 @@ export default function Impressum() {
             </h2>
             
             <div className="bg-neutral-800/50 rounded-2xl p-6 mb-6">
-              <h3 className="text-xl font-bold text-white mb-4">Autohaus Miftari</h3>
+              <h3 className="text-xl font-bold text-white mb-4">Autohaus MIFTARI</h3>
               <div className="grid md:grid-cols-3 gap-6">
                 <div>
                   <h4 className="text-white font-semibold mb-2 flex items-center gap-2">
@@ -226,7 +226,7 @@ export default function Impressum() {
         {/* Footer Info */}
         <div className="text-center mt-12 pt-8 border-t border-neutral-800">
           <p className="text-neutral-400 mb-4">
-            © 2025 Autohaus Miftari. Alle Rechte vorbehalten.
+            © 2025 Autohaus MIFTARI. Alle Rechte vorbehalten.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-neutral-500">
             <span>Stand: {new Date().toLocaleDateString('de-DE')}</span>

@@ -146,8 +146,9 @@ export default function Hero() {
           width: 100%;
           height: 100%;
           background-size: cover;
-          background-position: center;
+          background-position: center center;
           background-repeat: no-repeat;
+          background-attachment: fixed;
           opacity: 0;
           transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
           /* iOS Safari optimizations */
@@ -212,12 +213,15 @@ export default function Hero() {
           }
         }
 
-        /* Disable hardware acceleration on mobile for stability */
+        /* Mobile optimizations for better image display */
         @media (max-width: 768px) {
           .hero-slide {
             will-change: auto;
             -webkit-transform: none;
             transform: none;
+            background-attachment: scroll; /* Better mobile performance */
+            background-position: center center;
+            background-size: cover;
           }
           
           /* Faster transitions on mobile */

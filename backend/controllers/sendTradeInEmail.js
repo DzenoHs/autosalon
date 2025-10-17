@@ -150,7 +150,7 @@ ${attachmentsSection}
 
 ═══════════════════════════════════════
 
-⚡ AutoHaus Miftari
+⚡ Autohaus MIFTARI
 📧 Diese Anfrage wurde über das Kontaktformular gesendet.
 `;
     const emailContentHtml = `
@@ -264,7 +264,7 @@ ${uploadedImages.length
       }
 
     <p style="margin-top: 30px; font-size: 14px; color: #666;">
-      ⚡ <strong>AutoHaus Miftari</strong><br />
+      ⚡ <strong>Autohaus MIFTARI</strong><br />
       📧 Diese Anfrage wurde über das Kontaktformular gesendet.
     </p>
   </div>

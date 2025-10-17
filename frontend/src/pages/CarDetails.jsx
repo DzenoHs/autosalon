@@ -1013,7 +1013,7 @@ export default function CarDetails() {
                 <h3 className="text-xl font-bold text-white mb-4">Kontakt</h3>
 
                 <div className="p-4 bg-neutral-800/50 rounded-lg space-y-3">
-                  <div className="text-white font-semibold text-lg">Autohaus Miftari</div>
+                  <div className="text-white font-semibold text-lg">Autohaus MIFTARI</div>
                   <div className="text-neutral-300 text-sm leading-relaxed">
                     Niestetalstr. 11, 34266 Niestetal-Heiligenrode bei Kassel, DE
                   </div>
